@@ -1,0 +1,20 @@
+// DEVELOPMENT SETTINGS
+
+{
+    "app": {
+        // URL during development.
+        "url": "https://bunq.local:8833/",
+        "ssl": {
+            // Enable SSL and set path to the key and certificate files.
+            "enabled": true,
+            "keyFile": "bunq.local.key",
+            "certFile": "bunq.local.crt",
+            // Accept self signed on dev.
+            "rejectUnauthorized": false
+        }
+    },
+    "general": {
+        // Set to true to enable debugging on development.
+        "debug": false
+    }
+}

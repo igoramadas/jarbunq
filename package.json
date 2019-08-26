@@ -1,0 +1,50 @@
+{
+    "name": "bunq-assistant",
+    "version": "0.0.1",
+    "description": "Automate your bunq account with email and Strava based actions!",
+    "keywords": [
+        "bunq",
+        "assistant",
+        "bank"
+    ],
+    "author": "Igor Ramadas <igor@devv.com>",
+    "homepage": "https://bunq-assistant.devv.com",
+    "subdomain": "bunq-assistant",
+    "license": "MIT",
+    "main": "index",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/igoramadas/bunq-assistant.git"
+    },
+    "engines": {
+        "node": ">= 10.0.0"
+    },
+    "scripts": {
+        "docs": "make docs"
+    },
+    "dependencies": {
+        "@bunq-community/bunq-js-client": "^0.42.1",
+        "anyhow": "^1.2.3",
+        "eventemitter3": "^4.0.0",
+        "expresser": "^4.0.5",
+        "express-vue": "^5.13.1",
+        "imap": "^0.8.19",
+        "jaul": "^1.0.5",
+        "lodash": "^4.17.15",
+        "lowdb": "^1.0.0",
+        "mailparser": "^2.7.1",
+        "moment": "^2.24.0",
+        "pug": "^2.0.4",
+        "request": "^2.88.0",
+        "request-promise-native": "^1.0.7",
+        "setmeup": "^1.1.6"
+    },
+    "devDependencies": {
+        "@types/express": "^4.17.1",
+        "@types/node": "^12.7.2",
+        "axios-debug-log": "^0.6.2",
+        "chalk": "^2.4.2",
+        "typedoc": "^0.15.0",
+        "typescript": "^3.5.3"
+    }
+}

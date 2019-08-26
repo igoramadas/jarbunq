@@ -1,0 +1,14 @@
+// PRODUCTION SETTINGS
+
+{
+    "app": {
+        "ssl": {
+            // Expect SSL to be done on the load balancer side.
+            "enabled": false
+        }
+    },
+    "general": {
+        // Debugging should not be enabled on production.
+        "debug": false
+    }
+}
