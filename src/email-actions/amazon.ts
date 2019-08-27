@@ -7,6 +7,13 @@ import bunq = require("../bunq")
 const logger = require("anyhow")
 const settings = require("setmeup").settings
 
+// Add a 0.5% on top of the total value found on the email (for occasional fees).
+const paymentBuffer = 1.005
+
+// Email parsing strings.
+const totalText = "Order Total Including VAT"
+const orderNumberText = "Order #"
+
 // Exported function.
 export = async (message: any) => {
     if (!message.subject) {
@@ -16,8 +23,6 @@ export = async (message: any) => {
     let orderNumber, description, amount
 
     try {
-        const totalText = "Order Total Including VAT"
-        const orderNumberText = "Order #"
         let partial
 
         // Find where the total order is defined on the email plain text.
@@ -25,7 +30,7 @@ export = async (message: any) => {
         partial = message.text.substring(totalIndex + totalText.length + 1)
         partial = partial.substring(0, partial.indexOf("\n"))
 
-        // Only proceed if order was made in euros.
+        // Only proceed if order was made in euros!
         if (!partial.includes("EUR")) {
             logger.warn("Email.Amazon", "Order not in EUR, will not process", message.subject)
             return null
@@ -45,7 +50,7 @@ export = async (message: any) => {
         description = `Order ${orderNumber}, ${amount}`
 
         const paymentOptions = {
-            amount: (parseFloat(amount) * 1.005).toFixed(2),
+            amount: (parseFloat(amount) * paymentBuffer).toFixed(2),
             description: description,
             toAlias: settings.bunq.accounts.amazon,
             reference: message.messageId
