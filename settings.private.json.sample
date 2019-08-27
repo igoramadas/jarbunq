@@ -1,0 +1,47 @@
+// PRIVATE SETTINGS SAMPLE FILE
+// For more info, please check https://github.com/igoramadas/bunq-assistant/wiki/Private-settings
+
+{
+    "bunq": {
+        "api": {
+            "clientId": "string",
+            "clientSecret": "string",
+            "key": "string",
+            "cryptoKey": "string",
+            "ips": [
+                "string"
+            ]
+        },
+        "accounts": {
+            "main": "string",
+            "amazon": "string",
+            "strava": "string"
+        },
+        "disablePayments": "boolean"
+    },
+    "email": {
+        "accounts": {
+            "devv": {
+                "inboxName": "string",
+                "host": "string",
+                "port": "number",
+                "password": "string",
+                "user": "string",
+                "tls": "boolean",
+                "tlsOptions": {
+                    "rejectUnauthorized": "boolean"
+                }
+            }
+        },
+        "rules": [
+            {
+                "action": "string",
+                "from": "string",
+                "subject": "string"
+            }
+        ]
+    },
+    "strava": {
+        "accessToken": "string"
+    }
+}

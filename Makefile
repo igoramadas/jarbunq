@@ -1,19 +1,26 @@
 TYPEDOC:= ./node_modules/.bin/typedoc
 
-docs:
-	$(TYPEDOC)
-	cp CNAME docs/
-	cp .nojekyll docs/
+build:
+	node build.js
 
 clean:
 	rm -rf ./lib
 	rm -rf ./node_modules
 	rm -f package-lock.json
 
+docs:
+	$(TYPEDOC)
+	cp CNAME docs/
+	cp .nojekyll docs/
+
 publish:
 	tsc --removeComments
 	npm publish
 	tsc
+
+run:
+	tsc
+	DEBUG=axios node index.js
 
 update:
 	rm -f package-lock.json
@@ -21,8 +28,4 @@ update:
 	npm install
 	tsc
 
-run:
-	tsc
-	DEBUG=axios node index.js
-
-.PHONY: docs
+.PHONY: build docs
