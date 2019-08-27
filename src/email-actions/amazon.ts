@@ -16,15 +16,9 @@ const orderNumberText = "Order #"
 
 // Exported function.
 export = async (message: any) => {
-    if (!message.subject) {
-        throw new Error("Message must have a valid subject.")
-    }
-
-    let orderNumber, description, amount
+    let amount, description, orderNumber, partial
 
     try {
-        let partial
-
         // Find where the total order is defined on the email plain text.
         let totalIndex = message.text.indexOf(totalText)
         partial = message.text.substring(totalIndex + totalText.length + 1)
@@ -49,6 +43,8 @@ export = async (message: any) => {
         orderNumber = partial
         description = `Order ${orderNumber}, ${amount}`
 
+        logger.info("EmailAction.Amazon", orderNumber, amount, message.subject)
+
         const paymentOptions = {
             amount: (parseFloat(amount) * paymentBuffer).toFixed(2),
             description: description,
@@ -57,10 +53,6 @@ export = async (message: any) => {
         }
 
         await bunq.makePayment(paymentOptions)
-
-        logger.info("EmailAction.Amazon", orderNumber, amount, message.subject)
-
-        return true
     } catch (ex) {
         let logReference = description || orderNumber || message.subject
         logger.error("EmailAction.Amazon", logReference, ex)

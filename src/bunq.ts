@@ -220,7 +220,31 @@ class Bunq {
     }
 
     /**
+     * Get the current account balance for the specified alias.
+     * @param alias The email, phone or IBAN of the account.
+     */
+    getAccountBalance = async (alias: string) => {
+        try {
+            await this.getAccounts()
+
+            const acc = _.find(this.accounts, a => {
+                return _.find(a.alias, {value: alias}) != null
+            })
+
+            if (!acc) {
+                throw new Error(`Account ${alias} not found.`)
+            }
+
+            return acc.balance.value
+        } catch (ex) {
+            logger.error("Bunq.getAccountBalance", alias, ex)
+            throw ex
+        }
+    }
+
+    /**
      * Make a payment to another account.
+     * @param options The payment options.
      */
     makePayment = async (options: PaymentOptions) => {
         try {
