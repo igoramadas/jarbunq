@@ -129,7 +129,7 @@ class Bunq {
         // Check if user authenticated before, and if so, load initial information.
         try {
             if (!this.authenticated) {
-                logger.warn("Bunq.init", "Not authorized yet!", `Please open ${settings.app.url + "auth"} on your browser`)
+                logger.warn("Bunq.init", "Not authorized yet!", `Please open ${settings.app.url + "login"} on your browser`)
             } else {
                 await this.refreshUserData()
             }

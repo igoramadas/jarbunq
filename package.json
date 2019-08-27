@@ -2,7 +2,11 @@
     "name": "bunq-assistant",
     "version": "0.0.2",
     "description": "Automate your bunq account with email and Strava based actions!",
-    "keywords": ["bunq", "assistant", "bank"],
+    "keywords": [
+        "bunq",
+        "assistant",
+        "bank"
+    ],
     "author": "Igor Ramadas <igor@devv.com>",
     "homepage": "https://bunq-assistant.devv.com",
     "subdomain": "bunq-assistant",
@@ -36,11 +40,15 @@
         "setmeup": "^1.1.6"
     },
     "devDependencies": {
+        "@babel/core": "^7.5.5",
         "@types/express": "^4.17.1",
         "@types/node": "^12.7.2",
         "axios-debug-log": "^0.6.2",
         "chalk": "^2.4.2",
+        "css-loader": "^3.2.0",
         "typedoc": "^0.15.0",
-        "typescript": "^3.5.3"
+        "typescript": "^3.5.3",
+        "vue-loader": "^15.7.1",
+        "webpack": "^4.39.2"
     }
 }

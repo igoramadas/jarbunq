@@ -1,5 +1,6 @@
 .DS_Store
 .nojekyll
+.expressvue/
 .git/
 .history/
 .vscode/

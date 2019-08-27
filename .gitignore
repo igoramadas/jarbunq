@@ -1,4 +1,5 @@
 .DS_Store
+.expressvue/
 .history/
 .vscode/
 coverage/
