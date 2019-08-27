@@ -65,7 +65,7 @@ class Strava {
 
         // Log successful init.
         const timeToNext = moment.duration(diff).humanize(true)
-        logger.info("Strava.init", paymentInterval, `${settings.strava.payments.pricePerKm} per km`, `Next: ${timeToNext}`)
+        logger.info("Strava.init", paymentInterval, `${settings.strava.payments.pricePerKm} EUR / km`, `Next: ${timeToNext}`)
     }
 
     // API METHODS

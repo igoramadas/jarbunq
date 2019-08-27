@@ -124,7 +124,7 @@ class Bunq {
             return process.exit()
         }
 
-        logger.info("Bunq.init", settings.bunq.api.environment, `Registered as ${settings.app.title}`)
+        logger.info("Bunq.init", settings.bunq.api.environment, `Registered as '${settings.app.title}'`)
 
         // Check if user authenticated before, and if so, load initial information.
         try {
