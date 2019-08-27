@@ -59,6 +59,15 @@ Please note that although this project is open-source and relatively simple to c
 
 And a big **thank you** to all the open-source warriors that are responsible for the libraries used by this project.
 
+## Security
+
+Security is a top priority on this project. Hell, we're dealing with money, and no one wants to wake up on a lovely sunny morning to realise his bank accounts have been leaking cash. So what do I do to make sure this won't happen?
+
+- Your bunq credentials are not known to the service, as it uses OAuth2
+- No storage of any kind of credentials or tokens (except the ones you provide yourself)
+- No logging of credentials or tokens
+- Regular security scans on the dependencies - mostly via `$ npm audit`
+
 ## Bugs or suggestions?
 
 Post it on the [issue tracker](https://github.com/igoramadas/bunq-assistant/issues).
