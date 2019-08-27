@@ -66,6 +66,10 @@ let startup = async function() {
     const database = require("./database")
     await database.init()
 
+    // Init the notifications handler.
+    const notifications = require("./notifications")
+    await notifications.init()
+
     // Start the email manager.
     const emailManager = require("./email-manager")
     await emailManager.init()
@@ -94,6 +98,15 @@ let startup = async function() {
 
     // Start the bunq wrapper.
     await bunq.init()
+
+    // Gracefully shutdown.
+    process.on("SIGTERM", () => {
+        logger.warn("Shutdown", `The ${settings.app.title} will shutdown now...`)
+        emailManager.stop()
+        strava.stop()
+        expresser.app.kill()
+    })
 }
 
+// Start the server!
 startup()

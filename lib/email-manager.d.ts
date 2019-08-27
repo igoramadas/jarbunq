@@ -10,6 +10,8 @@ declare class EmailManager {
     events: EventEmitter;
     /** Email accounts. */
     accounts: EmailAccount[];
+    /** SMTP client created via Nodemailer. */
+    smtp: any;
     /**
      * Bind callback to event. Shortcut to `events.on()`.
      * @param eventName The name of the event.

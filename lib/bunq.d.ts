@@ -57,7 +57,13 @@ declare class Bunq {
      */
     getAccounts: () => Promise<void>;
     /**
+     * Get the current account balance for the specified alias.
+     * @param alias The email, phone or IBAN of the account.
+     */
+    getAccountBalance: (alias: string) => Promise<any>;
+    /**
      * Make a payment to another account.
+     * @param options The payment options.
      */
     makePayment: (options: PaymentOptions) => Promise<any>;
 }

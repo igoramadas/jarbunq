@@ -8,6 +8,7 @@ const crypto = require("crypto")
 const database = require("./database")
 const logger = require("anyhow")
 const moment = require("moment")
+const notifications = require("./notifications")
 const settings = require("setmeup").settings
 let bunqClient
 
@@ -183,6 +184,11 @@ class Bunq {
             const users = await bunqClient.getUsers(true)
             this.user = users[Object.keys(users)[0]]
 
+            // Owner setting from public nickname.
+            if (!settings.app.owner) {
+                settings.app.owner = this.user.public_nick_name
+            }
+
             logger.info("Bunq.getUser", `ID ${this.user.id}`, this.user.public_nick_name)
         } catch (ex) {
             logger.error("Bunq.getUser", ex)
@@ -247,10 +253,10 @@ class Bunq {
      * @param options The payment options.
      */
     makePayment = async (options: PaymentOptions) => {
-        try {
-            const alias: any = {value: options.toAlias}
-            let accountId, paymentMethod
+        const alias: any = {value: options.toAlias}
+        let accountId, paymentMethod
 
+        try {
             // Basic payment validation.
             if (options.amount <= 0) {
                 return new Error("Payments must have an amount greater than 0.")
@@ -318,17 +324,21 @@ class Bunq {
             if (existingPayment.value()) {
                 throw new Error(`Duplicate payment: ${options.reference}`)
             }
+        } catch (ex) {
+            logger.error("Bunq.makePayment", "Error preparing payment", ex)
+            throw ex
+        }
 
-            // Logging info.
-            const logDraft = options.draft ? "Draft" : "Regular payment"
+        try {
+            const logDraft = options.draft ? "Draft payment" : "Regular payment"
             const logAccount = _.find(this.accounts, {id: accountId}).description
-
+            const logFromTo = `${options.amount} ${options.currency} from ${logAccount} to ${options.toAlias}`
             let payment
 
             // Check if payments are disable. If so, log instead, otherwise proceed.
             if (settings.bunq.disablePayments) {
                 payment = {disabled: true}
-                logger.warn("Bunq.makePayment", `${logDraft} DISABLED`, `${options.amount} ${options.currency} from ${logAccount} to ${options.toAlias}`, options.description)
+                logger.warn("Bunq.makePayment", `${logDraft} ! DISABLED !`, logFromTo, options.description)
             } else {
                 payment = await paymentMethod(
                     this.user.id,
@@ -347,12 +357,21 @@ class Bunq {
                 paymentRecord.date = moment().toDate()
                 database.insert("payments", paymentRecord)
 
-                logger.info("Bunq.makePayment", logDraft, `${options.amount} ${options.currency} from ${logAccount} to ${options.toAlias}`, options.description)
+                logger.info("Bunq.makePayment", logDraft, logFromTo, options.description)
             }
 
             return payment
         } catch (ex) {
-            logger.error("Bunq.makePayment", ex)
+            logger.error("Bunq.makePayment", "Error processing payment", ex)
+
+            // Build email notification message.
+            const subject = `Payment ${options.amount} failed to ${options.toAlias}`
+            const message = `Payment of ${options.amount} ${options.currency}
+                         from account ${options.fromAccount} to ${options.toAlias} failed.
+                         Description: ${options.description}
+                         <br><br>
+                         Error: ${ex.toString()}`
+            notifications.toEmail({subject: subject, message: message})
             throw ex
         }
     }

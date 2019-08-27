@@ -2,11 +2,7 @@
     "name": "bunq-assistant",
     "version": "0.0.2",
     "description": "Automate your bunq account with email and Strava based actions!",
-    "keywords": [
-        "bunq",
-        "assistant",
-        "bank"
-    ],
+    "keywords": ["bunq", "assistant", "bank"],
     "author": "Igor Ramadas <igor@devv.com>",
     "homepage": "https://bunq-assistant.devv.com",
     "subdomain": "bunq-assistant",
@@ -34,6 +30,7 @@
         "lowdb": "^1.0.0",
         "mailparser": "^2.7.1",
         "moment": "^2.24.0",
+        "nodemailer": "^6.3.0",
         "pug": "^2.0.4",
         "request": "^2.88.0",
         "request-promise-native": "^1.0.7",

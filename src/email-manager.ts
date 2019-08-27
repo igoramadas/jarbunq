@@ -24,6 +24,9 @@ class EmailManager {
     /** Email accounts. */
     accounts: EmailAccount[] = []
 
+    /** SMTP client created via Nodemailer. */
+    smtp: any
+
     // EVENTS
     // --------------------------------------------------------------------------
 
