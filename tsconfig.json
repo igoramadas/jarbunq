@@ -14,7 +14,7 @@
         "excludeExternals": true,
         "excludePrivate": true,
         "mode": "modules",
-        "name": "Bunq Assistant",
+        "name": "bunq Assistant",
         "out": "docs",
         "gaID": "UA-9331973-4"
     }
