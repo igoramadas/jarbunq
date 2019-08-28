@@ -172,7 +172,7 @@ class Strava {
     }
 
     /**
-     * Get recent activities from Strava.
+     * Get recent activities from Strava (today is always excluded).
      * @param since Since that many days, for example 7 gets all activities for last 7 days excluding today.
      */
     getRecentActivities = async (since: number) => {
@@ -214,10 +214,15 @@ class Strava {
             const since = paymentInterval == "weekly" ? 7 : 1
             const activities = await this.getRecentActivities(since)
             const distance = _.sumBy(activities, "distance")
+            const elevation = _.sumBy(activities, "elevation")
+
+            // Calculate total amount.
+            let amount = distance * settings.strava.payments.pricePerKm
+            amount += (elevation / 1000) * settings.strava.payments.pricePerKm
 
             // Define payment options.
             const paymentOptions = {
-                amount: distance * settings.strava.payments.pricePerKm,
+                amount: amount,
                 description: `Strava, ${distance}km ${paymentInterval}`,
                 toAlias: settings.bunq.accounts.strava,
                 reference: `strava-${moment().unix()}`
