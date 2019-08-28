@@ -65,14 +65,14 @@
 				<a href="#bunq-assistant-alpha-version" id="bunq-assistant-alpha-version" style="color: inherit; text-decoration: none;">
 					<h1>bunq Assistant (ALPHA VERSION)</h1>
 				</a>
-				<p>The bunq Assistant is a Node.js based service to automate tasks on your bunq accounts. It&#39;s not ready for prime time yet, but a fully working version is expected soon (first or max second week of September).</p>
+				<p>The bunq Assistant is a Node.js / TypeScript based service to automate tasks on your bunq accounts. It&#39;s not ready for prime time yet, but a fully working version is expected soon (first week of September).</p>
 				<p><strong>This is a personal &quot;weekend-project&quot;, and NOT an official bunq software.</strong></p>
 				<a href="#features" id="features" style="color: inherit; text-decoration: none;">
 					<h2>Features</h2>
 				</a>
 				<ul>
-					<li>Transfer order value from the Main account to the Amazon Card account based on order confirmation emails</li>
-					<li>Easily create your own set of email parsing rules and actions (like the Amazon auto transfer above)</li>
+					<li>Amazon.de: transfer order value from the Main account to the Amazon account based on order confirmation emails</li>
+					<li>LBB Amazon: make sure the Amazon account has enough funds to pay the LBB Amazon credit card invoice</li>
 					<li>Auto save money for kilometers and elevation ridden on Strava, daily or weekly</li>
 					<li>Transfers can be fully automated, or as draft (with approval needed by the owner)</li>
 					<li>Everything is logged to the console by default, easily customized to log elsewhere</li>
@@ -82,7 +82,8 @@
 					<h2>Planned features</h2>
 				</a>
 				<ul>
-					<li>Web frontend to manage and query options and payments</li>
+					<li>Web frontend to configure the settings and view status / logs</li>
+					<li>Make a &quot;generic&quot; email action that can be fully configured via rules / settings</li>
 				</ul>
 				<a href="#installing" id="installing" style="color: inherit; text-decoration: none;">
 					<h2>Installing</h2>
@@ -92,14 +93,14 @@
 				<a href="#settings" id="settings" style="color: inherit; text-decoration: none;">
 					<h2>Settings</h2>
 				</a>
-				<p>The bunq Assistant is using <a href="https://github.com/igoramadas/setmeup">setmeup</a> to handle its settings, which are saved into a couple of files:</p>
+				<p>The bunq Assistant is using <a href="https://github.com/igoramadas/setmeup">setmeup</a> to handle its settings, which are defined on the following files:</p>
 				<ul>
 					<li><strong>settings.json</strong> General settings shared accross all environments</li>
 					<li><strong>settings.development.json</strong> Development and test settings only</li>
 					<li><strong>settings.production.json</strong> Production settings only</li>
 					<li><strong>settings.private.json</strong> Your private settings - this is where you&#39;ll make 99% of your customizations</li>
 				</ul>
-				<p>Please note that the <code>settings.private.json</code> file is NOT synced to GIT. A <code>settings.private.json.sample</code> that you can use for reference will be provided soon on this repo.</p>
+				<p>Please note that the <code>settings.private.json</code> file is NOT synced to GIT. A <code>settings.private.json.sample</code> is provided. For a more detailed info on how to define your private settings please check the <a href="https://github.com/igoramadas/bunq-assistant/wiki/Private-settings">wiki</a>.</p>
 				<a href="#database" id="database" style="color: inherit; text-decoration: none;">
 					<h2>Database</h2>
 				</a>
@@ -111,21 +112,20 @@
 				<p>To run on your local machine you can do it via make:</p>
 				<pre><code>$ make <span class="hljs-keyword">run</span><span class="bash"></span></code></pre><p>Don&#39;t have make or prefer doing things manually? Then:</p>
 				<pre><code><span class="hljs-variable">$ </span>tsc
-<span class="hljs-variable">$ </span>npm index.js</code></pre><p>During startup the service will check for all the required settings and alert or error if something is missing.</p>
-				<a href="#what-why" id="what-why" style="color: inherit; text-decoration: none;">
-					<h2>What? Why?</h2>
+<span class="hljs-variable">$ </span>npm index.js</code></pre><p>During startup the service will check for all the required settings and alert (or possibly quit) if something is missing.</p>
+				<a href="#why" id="why" style="color: inherit; text-decoration: none;">
+					<h2>Why?</h2>
 				</a>
-				<p>The idea came up once I decided to automate some of my bike related savings. I usually spare some money every month for the eventual replacement of chains, cassette, cables and other wear-prone parts. But it would be much cooler if I could do this automatically and based on my actual mileage, insead of a fixed month value :-)</p>
+				<p>The idea came up once I decided to automate some of my bike related savings. I usually spare some money every month for the eventual replacement of chains, cassette, cables and other wear-prone parts. But it would be much cooler if I could do this automatically and based on my actual mileage, insead of a fixed monthly amount :-)</p>
 				<p>Amazon emails came next. I have an Amazon credit card used exclusively on Amazon, so whenever I purchase something, it would be great if the order amount could be moved to an account dedicated for the credit card payments.</p>
-				<p>Please note that although this project is open-source and relatively simple to customize to your needs, I am not interested in making it a full-fledged platform for bunq automations. If that&#39;s you cup of tea, you can fork the project and make your own ultra-featured version :-)</p>
+				<p>Please note that although this project is open-source and relatively simple to customize to your needs, I am not interested in making it a full-fledged platform for bunq automations. If that&#39;s you cup of tea, I suggest you try the great <a href="https://github.com/woudt/bunq2ifttt/">bunq2IFTTT</a>.</p>
 				<p>And a big <strong>thank you</strong> to all the open-source warriors that are responsible for the libraries used by this project.</p>
 				<a href="#security" id="security" style="color: inherit; text-decoration: none;">
 					<h2>Security</h2>
 				</a>
 				<p>Security is a top priority on this project. Hell, we&#39;re dealing with money, and no one wants to wake up on a lovely sunny morning to realise his bank accounts have been leaking cash. So what do I do to make sure this won&#39;t happen?</p>
 				<ul>
-					<li>Your bunq credentials are not known to the service, as it uses OAuth2</li>
-					<li>No storage of any kind of credentials or tokens (except the ones you provide yourself)</li>
+					<li>Your actual bunq credentials are not known to the service, as it uses OAuth2</li>
 					<li>No logging of credentials or tokens</li>
 					<li>Regular security scans on the dependencies - mostly via <code>$ npm audit</code></li>
 				</ul>
