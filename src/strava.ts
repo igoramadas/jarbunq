@@ -1,5 +1,7 @@
 // Strava
 
+import BaseEvents = require("./base-events")
+
 const _ = require("lodash")
 const bunq = require("./bunq")
 const logger = require("anyhow")
@@ -10,7 +12,7 @@ const settings = require("setmeup").settings
 /**
  * Gets rides and activities from Strava.
  */
-class Strava {
+class Strava extends BaseEvents {
     private static _instance: Strava
     static get Instance() {
         return this._instance || (this._instance = new this())

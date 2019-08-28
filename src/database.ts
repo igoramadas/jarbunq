@@ -1,11 +1,13 @@
 // Database
 
+import BaseEvents = require("./base-events")
+
 const lowdb = require("lowdb")
 
 /**
  * Manages data stored by the service.
  */
-class Database {
+class Database extends BaseEvents {
     private static _instance: Database
     static get Instance() {
         return this._instance || (this._instance = new this())

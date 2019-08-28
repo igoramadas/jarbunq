@@ -1,6 +1,7 @@
 // Index
 
 const fs = require("fs")
+const jaul = require("jaul")
 const path = require("path")
 
 // Env is "development" by default.
@@ -48,9 +49,12 @@ let startup = async function() {
     const expressVue = require("express-vue")
     await expressVue.use(app.expressApp, vueOptions)
 
-    // Log all requests.
+    // Log all requests on base routes.
     app.expressApp.use((req, _res, next) => {
-        logger.info("Route", req.method, req.url)
+        const ext = req.url.substring(req.url.lengrh - 4)
+        if (ext.indexOf(".") < 0) {
+            logger.info("Route", req.method, req.url, `From ${jaul.network.getClientIP(req)}`)
+        }
         next()
     })
 

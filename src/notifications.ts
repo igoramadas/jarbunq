@@ -1,5 +1,7 @@
 // Notifications
 
+import BaseEvents = require("./base-events")
+
 const fs = require("fs")
 const logger = require("anyhow")
 const nodemailer = require("nodemailer")
@@ -8,7 +10,7 @@ const settings = require("setmeup").settings
 /**
  * Used to send notifications to users.
  */
-class Notifications {
+class Notifications extends BaseEvents {
     private static _instance: Notifications
     static get Instance() {
         return this._instance || (this._instance = new this())
@@ -44,7 +46,6 @@ class Notifications {
                 logger.error("Notifications.init", "Invalid SMTP settings", err)
             } else {
                 logger.info("Notifications.init", "SMTP client ready", settings.email.smtp.host)
-                this.toEmail({subject: "Hello there", message: "This is a test"})
             }
         })
     }
@@ -52,6 +53,7 @@ class Notifications {
     /**
      * Sends an email via SMTP.
      * @param options Email sending options with to, subject, body etc.
+     * @event toEmail
      */
     toEmail = async (options: EmailOptions) => {
         try {
@@ -82,6 +84,7 @@ class Notifications {
 
             await this.smtp.sendMail(options)
 
+            this.events.emit("toEmail", options)
             logger.info("Notifications.toEmail", options.to, options.subject)
         } catch (ex) {
             logger.error("Notifications.toEmail", options.to, options.subject, ex)

@@ -1,39 +1,19 @@
-import EventEmitter = require("eventemitter3");
+import BaseEvents = require("./base-events");
 /**
  * This is a wrapper over bunq-js-client, and should have all the business
  * logic to handle notifications and transactions at bunq.
  */
-declare class Bunq {
+declare class Bunq extends BaseEvents {
     private static _instance;
     static readonly Instance: Bunq;
     /** The authentication URL used to start the OAuth2 flow. */
     readonly authenticated: boolean;
     /** The authentication URL used to start the OAuth2 flow. */
     readonly authUrl: string;
-    /** Event emitter. */
-    events: EventEmitter;
     /** The main user data. */
     user: any;
     /** List of bank accounts. */
     accounts: any[];
-    /**
-     * Bind callback to event. Shortcut to `events.on()`.
-     * @param eventName The name of the event.
-     * @param callback Callback function.
-     */
-    on(eventName: string, callback: EventEmitter.ListenerFn): void;
-    /**
-     * Bind callback to event that will be triggered only once. Shortcut to `events.once()`.
-     * @param eventName The name of the event.
-     * @param callback Callback function.
-     */
-    once(eventName: string, callback: EventEmitter.ListenerFn): void;
-    /**
-     * Unbind callback from event. Shortcut to `events.off()`.
-     * @param eventName The name of the event.
-     * @param callback Callback function.
-     */
-    off(eventName: string, callback: EventEmitter.ListenerFn): void;
     /**
      * Create the bunq-js-client and load initial data.
      */
@@ -44,6 +24,10 @@ declare class Bunq {
      * @param code The authorization code provided via the /auth URL.
      */
     getOAuthToken: (code: string) => Promise<boolean>;
+    /**
+     * Helper to process and take action on errors from the bunq API.
+     */
+    processBunqError(ex: Error): Error;
     /**
      * Load user info and its main accounts.
      */

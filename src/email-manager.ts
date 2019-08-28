@@ -1,6 +1,6 @@
 // EmailManager
 
-import EventEmitter = require("eventemitter3")
+import BaseEvents = require("./base-events")
 import EmailAccount = require("./email-account")
 
 const logger = require("anyhow")
@@ -9,7 +9,7 @@ const settings = require("setmeup").settings
 /**
  * Manages email accounts, defined as [[EmailAccount]].
  */
-class EmailManager {
+class EmailManager extends BaseEvents {
     private static _instance: EmailManager
     static get Instance() {
         return this._instance || (this._instance = new this())
@@ -18,44 +18,11 @@ class EmailManager {
     // PROPERTIES
     // --------------------------------------------------------------------------
 
-    /** Event emitter. */
-    events: EventEmitter = new EventEmitter()
-
     /** Email accounts. */
     accounts: EmailAccount[] = []
 
     /** SMTP client created via Nodemailer. */
     smtp: any
-
-    // EVENTS
-    // --------------------------------------------------------------------------
-
-    /**
-     * Bind callback to event. Shortcut to `events.on()`.
-     * @param eventName The name of the event.
-     * @param callback Callback function.
-     */
-    on(eventName: string, callback: EventEmitter.ListenerFn): void {
-        this.events.on(eventName, callback)
-    }
-
-    /**
-     * Bind callback to event that will be triggered only once. Shortcut to `events.once()`.
-     * @param eventName The name of the event.
-     * @param callback Callback function.
-     */
-    once(eventName: string, callback: EventEmitter.ListenerFn): void {
-        this.events.on(eventName, callback)
-    }
-
-    /**
-     * Unbind callback from event. Shortcut to `events.off()`.
-     * @param eventName The name of the event.
-     * @param callback Callback function.
-     */
-    off(eventName: string, callback: EventEmitter.ListenerFn): void {
-        this.events.off(eventName, callback)
-    }
 
     // MAIN METHODS
     // --------------------------------------------------------------------------

@@ -10,23 +10,29 @@ const settings = setmeup.settings
 
 // Load the settings.private.json file.
 const privateSettings = JSON.parse(fs.readFileSync(__dirname + "/settings.private.json", {encoding: settings.general.encoding}))
+const privateSettingsSample = JSON.parse(fs.readFileSync(__dirname + "/settings.private.json.sample", {encoding: settings.general.encoding}))
 
 // Recursive function to replace private values with type strings.
-const settingsReplacer = function(obj) {
-    const keys = Object.keys(obj)
+const settingsReplacer = function(source, target) {
+    const keys = Object.keys(source)
 
     for (let key of keys) {
-        const objType = typeof obj[key]
+        const objType = typeof source[key]
+
+        if (target == null) {
+            target = {}
+        }
+
         if (objType == "object") {
-            settingsReplacer(obj[key])
+            settingsReplacer(source[key], target[key])
+        } else if (target[key] != null && target[key].toString().includes(":")) {
+            source[key] = target[key]
         } else {
-            obj[key] = objType
+            source[key] = objType
         }
     }
 }
-settingsReplacer(privateSettings)
+settingsReplacer(privateSettings, privateSettingsSample)
 
 // Write sample settings.
-let sampleSettings = "// PRIVATE SETTINGS SAMPLE FILE\n// For more info, please check https://github.com/igoramadas/bunq-assistant/wiki/Private-settings\n\n"
-sampleSettings += JSON.stringify(privateSettings, null, 4)
-fs.writeFileSync(__dirname + "/settings.private.json.sample", sampleSettings)
+fs.writeFileSync(__dirname + "/settings.private.json.sample", JSON.stringify(privateSettings, null, 4))

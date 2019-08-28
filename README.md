@@ -7,11 +7,12 @@ The bunq Assistant is a Node.js / TypeScript based service to automate tasks on 
 ## Features
 
 - Amazon.de: transfer order value from the Main account to the Amazon account based on order confirmation emails
-- LBB Amazon: make sure the Amazon account has enough funds to pay the LBB Amazon credit card invoice
+- LBB Amazon: make sure the Amazon account has enough funds to pay the LBB Amazon credit card bills
 - Auto save money for kilometers and elevation ridden on Strava, daily or weekly
 - Transfers can be fully automated, or as draft (with approval needed by the owner)
-- Everything is logged to the console by default, easily customized to log elsewhere
-- File based JSON database
+- Everything logged to the console by default, easily customized to log elsewhere
+- Email notifications of failed actions and payments
+- File based, non-frills JSON database
 
 ## Planned features
 
@@ -68,6 +69,7 @@ And a big **thank you** to all the open-source warriors that are responsible for
 
 Security is a top priority on this project. Hell, we're dealing with money, and no one wants to wake up on a lovely sunny morning to realise his bank accounts have been leaking cash. So what do I do to make sure this won't happen?
 
+- First and foremost: everything is open source, so no black boxes
 - Your actual bunq credentials are not known to the service, as it uses OAuth2
 - No logging of credentials or tokens
 - Regular security scans on the dependencies - mostly via `$ npm audit`

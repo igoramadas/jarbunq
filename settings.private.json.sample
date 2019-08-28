@@ -1,10 +1,7 @@
-// PRIVATE SETTINGS SAMPLE FILE
-// For more info, please check https://github.com/igoramadas/bunq-assistant/wiki/Private-settings
-
 {
     "bunq": {
         "api": {
-            "clientId": "string",
+            "clientId": "string: your OAuth2 client ID",
             "clientSecret": "string",
             "key": "string",
             "cryptoKey": "string",

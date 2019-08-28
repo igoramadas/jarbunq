@@ -1,7 +1,8 @@
+import BaseEvents = require("./base-events");
 /**
  * Manages data stored by the service.
  */
-declare class Database {
+declare class Database extends BaseEvents {
     private static _instance;
     static readonly Instance: Database;
     /** Holds the lowdb instance. */

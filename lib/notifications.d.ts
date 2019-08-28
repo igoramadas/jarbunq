@@ -1,7 +1,8 @@
+import BaseEvents = require("./base-events");
 /**
  * Used to send notifications to users.
  */
-declare class Notifications {
+declare class Notifications extends BaseEvents {
     private static _instance;
     static readonly Instance: Notifications;
     /** SMTP client created via Nodemailer. */
@@ -13,6 +14,7 @@ declare class Notifications {
     /**
      * Sends an email via SMTP.
      * @param options Email sending options with to, subject, body etc.
+     * @event toEmail
      */
     toEmail: (options: EmailOptions) => Promise<void>;
 }

@@ -1,6 +1,6 @@
 // Bunq
 
-import EventEmitter = require("eventemitter3")
+import BaseEvents = require("./base-events")
 import BunqJSClient from "@bunq-community/bunq-js-client"
 
 const _ = require("lodash")
@@ -10,13 +10,13 @@ const logger = require("anyhow")
 const moment = require("moment")
 const notifications = require("./notifications")
 const settings = require("setmeup").settings
-let bunqClient
+let bunqClient, lastAuthWarning
 
 /**
  * This is a wrapper over bunq-js-client, and should have all the business
  * logic to handle notifications and transactions at bunq.
  */
-class Bunq {
+class Bunq extends BaseEvents {
     private static _instance: Bunq
     static get Instance() {
         return this._instance || (this._instance = new this())
@@ -27,7 +27,18 @@ class Bunq {
 
     /** The authentication URL used to start the OAuth2 flow. */
     get authenticated(): boolean {
-        return database.get("accessToken").value() != null
+        const result = database.get("accessToken").value() != null
+
+        if (!result && lastAuthWarning.isBefore(moment().subtract(1, "minutes"))) {
+            lastAuthWarning = moment()
+            console.warn(`
+---------------------------------------------------------
+Please open ${settings.app.url + "login"} on your browser
+---------------------------------------------------------
+`)
+        }
+
+        return result
     }
 
     /** The authentication URL used to start the OAuth2 flow. */
@@ -36,44 +47,11 @@ class Bunq {
         return bunqClient.formatOAuthAuthorizationRequestUrl(settings.bunq.api.clientId, redirect, false, false)
     }
 
-    /** Event emitter. */
-    events: EventEmitter = new EventEmitter()
-
     /** The main user data. */
     user: any
 
     /** List of bank accounts. */
     accounts: any[]
-
-    // EVENTS
-    // --------------------------------------------------------------------------
-
-    /**
-     * Bind callback to event. Shortcut to `events.on()`.
-     * @param eventName The name of the event.
-     * @param callback Callback function.
-     */
-    on(eventName: string, callback: EventEmitter.ListenerFn): void {
-        this.events.on(eventName, callback)
-    }
-
-    /**
-     * Bind callback to event that will be triggered only once. Shortcut to `events.once()`.
-     * @param eventName The name of the event.
-     * @param callback Callback function.
-     */
-    once(eventName: string, callback: EventEmitter.ListenerFn): void {
-        this.events.on(eventName, callback)
-    }
-
-    /**
-     * Unbind callback from event. Shortcut to `events.off()`.
-     * @param eventName The name of the event.
-     * @param callback Callback function.
-     */
-    off(eventName: string, callback: EventEmitter.ListenerFn): void {
-        this.events.off(eventName, callback)
-    }
 
     // SETUP AND AUTH
     // --------------------------------------------------------------------------
@@ -92,6 +70,8 @@ class Bunq {
         if (!settings.bunq.api.clientId || !settings.bunq.api.clientSecret) {
             throw new Error("Missing a valid settings.bunq.api.clientId and settings.bunq.api.clientSecret combination.")
         }
+
+        lastAuthWarning = moment("2000-01-01")
 
         // Create bunq JS client.
         try {
@@ -130,7 +110,7 @@ class Bunq {
         // Check if user authenticated before, and if so, load initial information.
         try {
             if (!this.authenticated) {
-                logger.warn("Bunq.init", "Not authorized yet!", `Please open ${settings.app.url + "login"} on your browser`)
+                logger.warn("Bunq.init", "Not authorized yet")
             } else {
                 await this.refreshUserData()
             }
@@ -158,6 +138,13 @@ class Bunq {
             logger.error("Bunq.getOAuthToken", ex)
             return false
         }
+    }
+
+    /**
+     * Helper to process and take action on errors from the bunq API.
+     */
+    processBunqError(ex: Error) {
+        return ex
     }
 
     // MAIN METHODS
@@ -191,6 +178,7 @@ class Bunq {
 
             logger.info("Bunq.getUser", `ID ${this.user.id}`, this.user.public_nick_name)
         } catch (ex) {
+            this.processBunqError(ex)
             logger.error("Bunq.getUser", ex)
             throw ex
         }
@@ -220,6 +208,7 @@ class Bunq {
 
             logger.info("Bunq.getAccounts", `Got ${accounts.length} accounts`, _.map(this.accounts, "description").join(", "))
         } catch (ex) {
+            this.processBunqError(ex)
             logger.error("Bunq.getAccounts", ex)
             throw ex
         }
@@ -362,11 +351,13 @@ class Bunq {
                 paymentRecord.date = moment().toDate()
                 database.insert("payments", paymentRecord)
 
+                this.events.emit("makePayment", paymentRecord)
                 logger.info("Bunq.makePayment", logDraft, logFromTo, options.description)
             }
 
             return payment
         } catch (ex) {
+            this.processBunqError(ex)
             logger.error("Bunq.makePayment", "Error processing payment", ex)
 
             // Build email notification message.
@@ -377,6 +368,7 @@ class Bunq {
                          <br><br>
                          Error: ${ex.toString()}`
             notifications.toEmail({subject: subject, message: message})
+
             throw ex
         }
     }

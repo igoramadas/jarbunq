@@ -1,7 +1,8 @@
+import BaseEvents = require("./base-events");
 /**
  * Gets rides and activities from Strava.
  */
-declare class Strava {
+declare class Strava extends BaseEvents {
     private static _instance;
     static readonly Instance: Strava;
     /** Timer to trigger the payments (via setTimeout). */
@@ -22,7 +23,7 @@ declare class Strava {
      */
     getActivities: (query: any) => Promise<Activity[]>;
     /**
-     * Get recent activities from Strava.
+     * Get recent activities from Strava (today is always excluded).
      * @param since Since that many days, for example 7 gets all activities for last 7 days excluding today.
      */
     getRecentActivities: (since: number) => Promise<Activity[]>;
