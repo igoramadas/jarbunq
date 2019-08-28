@@ -1,13 +1,13 @@
 # bunq Assistant (ALPHA VERSION)
 
-The bunq Assistant is a Node.js based service to automate tasks on your bunq accounts. It's not ready for prime time yet, but a fully working version is expected soon (first or max second week of September).
+The bunq Assistant is a Node.js based service to automate tasks on your bunq accounts. It's not ready for prime time yet, but a fully working version is expected soon (first week of September).
 
 **This is a personal "weekend-project", and NOT an official bunq software.**
 
 ## Features
 
-- Transfer order value from the Main account to the Amazon Card account based on order confirmation emails
-- Easily create your own set of email parsing rules and actions (like the Amazon auto transfer above)
+- Amazon.de: transfer order value from the Main account to the Amazon account based on order confirmation emails
+- LBB Amazon: make sure the Amazon account has enough funds to pay the LBB Amazon credit card invoice
 - Auto save money for kilometers and elevation ridden on Strava, daily or weekly
 - Transfers can be fully automated, or as draft (with approval needed by the owner)
 - Everything is logged to the console by default, easily customized to log elsewhere
@@ -15,7 +15,8 @@ The bunq Assistant is a Node.js based service to automate tasks on your bunq acc
 
 ## Planned features
 
-- Web frontend to manage and query options and payments
+- Web frontend to configure the settings and view status / logs
+- Make a "generic" email action that can be fully configured via rules / settings
 
 ## Installing
 
