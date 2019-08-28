@@ -272,6 +272,11 @@ class Bunq {
                 options.fromAccount = settings.bunq.accounts.main
             }
 
+            // Get default type of payment (regular or draft) if options.draft was not specified.
+            if (options.draft == null) {
+                options.draft = settings.bunq.draftPayment
+            }
+
             // From account is an alias or an actual ID?
             if (_.isNumber(options.fromAccount)) {
                 accountId = options.fromAccount
