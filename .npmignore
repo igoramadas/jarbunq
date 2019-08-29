@@ -4,6 +4,7 @@
 .git/
 .history/
 .vscode/
+bin/
 coverage/
 node_modules/
 CNAME

@@ -2,10 +2,12 @@ TYPEDOC:= ./node_modules/.bin/typedoc
 
 build:
 	node build.js
+	pkg -o ./bin/bunq-assistant -t linux .
 
 clean:
 	rm -rf ./lib
 	rm -rf ./node_modules
+	rm -rf ./expressvue
 	rm -f package-lock.json
 
 docs:

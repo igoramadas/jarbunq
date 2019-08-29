@@ -1,6 +1,6 @@
 {
     "name": "bunq-assistant",
-    "version": "19.35.421",
+    "version": "19.35.423",
     "description": "Automate your bunq account with email and Strava based actions!",
     "keywords": [
         "bunq",
@@ -12,6 +12,7 @@
     "subdomain": "bunq-assistant",
     "license": "MIT",
     "main": "index",
+    "bin": "index.js",
     "repository": {
         "type": "git",
         "url": "https://github.com/igoramadas/bunq-assistant.git"
@@ -24,7 +25,7 @@
     },
     "dependencies": {
         "@bunq-community/bunq-js-client": "^0.42.1",
-        "anyhow": "^1.2.3",
+        "anyhow": "^1.3.0",
         "eventemitter3": "^4.0.0",
         "expresser": "^4.0.5",
         "express-vue": "^5.13.1",
@@ -51,5 +52,9 @@
         "typescript": "^3.6.2",
         "vue-loader": "^15.7.1",
         "webpack": "^4.39.3"
+    },
+    "pkg": {
+        "scripts": "lib/**/*.js",
+        "assets": "assets/**/*"
     }
 }

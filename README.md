@@ -17,6 +17,7 @@ The bunq Assistant is a Node.js / TypeScript based service to automate tasks on 
 
 ### Planned features
 
+- Create a single app-package using [pkg](https://github.com/zeit/pkg)
 - Support hot-reloading of settings and modules (no need to restart the service)
 - Web frontend to configure the settings and view status / logs
 - Make a "generic" email action that can be fully configured via rules / settings

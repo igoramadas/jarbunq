@@ -2,6 +2,7 @@
 .expressvue/
 .history/
 .vscode/
+bin/
 coverage/
 lib/plugins.js
 node_modules/
