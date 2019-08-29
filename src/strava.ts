@@ -217,10 +217,10 @@ class Strava extends BaseEvents {
             const activities = await this.getRecentActivities(since)
             const distance = _.sumBy(activities, "distance")
             const elevation = _.sumBy(activities, "elevation")
+            const totalKm = distance + elevation / 1000
 
-            // Calculate total amount.
-            let amount = distance * settings.strava.payments.pricePerKm
-            amount += (elevation / 1000) * settings.strava.payments.pricePerKm
+            // Calculate total amount based on distance and elevation.
+            const amount = (totalKm * settings.strava.payments.pricePerKm).toFixed(2)
 
             // Define payment options.
             const paymentOptions = {
@@ -233,7 +233,7 @@ class Strava extends BaseEvents {
             // Dispatch payment.
             await bunq.makePayment(paymentOptions)
 
-            logger.info("Strava.makePayment")
+            logger.info("Strava.makePayment", `Transferred ${amount} for ${totalKm}km`)
         } catch (ex) {
             logger.error("Strava.makePayment", ex)
         }

@@ -27,7 +27,7 @@ class Bunq extends BaseEvents {
 
     /** The authentication URL used to start the OAuth2 flow. */
     get authenticated(): boolean {
-        const result = database.get("accessToken").value() != null
+        const result = database.get("bunqAccessToken").value() != null
 
         if (!result && lastAuthWarning.isBefore(moment().subtract(1, "minutes"))) {
             lastAuthWarning = moment()
@@ -130,7 +130,7 @@ Please open ${settings.app.url + "login"} on your browser
 
         try {
             const token = await bunqClient.exchangeOAuthToken(settings.bunq.api.clientId, settings.bunq.api.clientSecret, redirect, code, false, false, "authorization_code")
-            database.set("accessToken", token).write()
+            database.set("bunqAccessToken", token).write()
 
             logger.info("Bunq.getOAuthToken", "Got a new access token")
             return true

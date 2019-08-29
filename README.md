@@ -1,4 +1,4 @@
-# bunq Assistant (ALPHA VERSION)
+# bunq Assistant
 
 The bunq Assistant is a Node.js / TypeScript based service to automate tasks on your bunq accounts.
 
