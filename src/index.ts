@@ -49,11 +49,19 @@ let startup = async function() {
     const expressVue = require("express-vue")
     await expressVue.use(app.expressApp, vueOptions)
 
-    // Log all requests on base routes.
-    app.expressApp.use((req, _res, next) => {
+    // Catch all route to pre-process requests.
+    app.expressApp.use((req, res, next) => {
         const ext = req.url.substring(req.url.lengrh - 4)
+        const ip = jaul.network.getClientIP(req)
+
+        if (settings.app.allowedIP && settings.app.allowedIP.length > 0 && settings.app.allowedIP.indexOf(ip) < 0) {
+            logger.warn("Route", "Access denied", req.method, req.url, `From ${ip}`)
+            res.redirect("/error?e=Access denied")
+            return
+        }
+
         if (ext.indexOf(".") < 0) {
-            logger.info("Route", req.method, req.url, `From ${jaul.network.getClientIP(req)}`)
+            logger.info("Route", req.method, req.url, `From ${ip}`)
         }
         next()
     })
