@@ -9,7 +9,11 @@ clean:
 	rm -f package-lock.json
 
 docs:
-	$(TYPEDOC)
+	rm -rf ./docs/assets
+	rm -rf ./docs/classes
+	rm -rf ./docs/interfaces
+	rm -rf ./docs/modules
+	$(TYPEDOC) --disableOutputCheck
 	cp CNAME docs/
 	cp .nojekyll docs/
 

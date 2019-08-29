@@ -1,6 +1,6 @@
 {
     "name": "bunq-assistant",
-    "version": "19.35.314",
+    "version": "19.35.411",
     "description": "Automate your bunq account with email and Strava based actions!",
     "keywords": [
         "bunq",
@@ -48,7 +48,7 @@
         "chalk": "^2.4.2",
         "css-loader": "^3.2.0",
         "typedoc": "^0.15.0",
-        "typescript": "^3.5.3",
+        "typescript": "^3.6.2",
         "vue-loader": "^15.7.1",
         "webpack": "^4.39.3"
     }

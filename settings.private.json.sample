@@ -1,44 +1,60 @@
 {
     "bunq": {
         "api": {
-            "clientId": "string: your OAuth2 client ID",
-            "clientSecret": "string",
-            "key": "string",
-            "cryptoKey": "string",
+            "clientId": "string: your bunq OAuth2 client ID",
+            "clientSecret": "string: your bunq OAuth2 client secret",
+            "key": "string: your bunq API key",
+            "cryptoKey": "string: your unique 16 bytes crypto hex key",
             "ips": [
-                "string"
+                "string: array of allowed IPs to use the API key above"
             ]
         },
         "accounts": {
-            "main": "string",
-            "amazon": "string",
-            "strava": "string"
+            "main": "string: the alias of the main account",
+            "amazon": "string: the alias of the Amazon Card account",
+            "strava": "string: the alias of the target account for strava mileage payments"
         },
-        "disablePayments": "boolean"
+        "disablePayments": "boolean: if true, no payments will be ever made (but only logged to the console)"
     },
     "email": {
+        "from": "string: default 'from' email address",
+        "to": "string: default 'to' email address",
+        "smtp": {
+            "host": "string: SMTP server hostname or IP",
+            "port": "number: SMTP server port",
+            "secure": "boolean: true to use SSL, false for unencrypted or TLS",
+            "auth": {
+                "user": "string: SMTP auth username or email",
+                "password": "string: SMTP user password (or sepcific app password if using 2FA)"
+            }
+        },
         "accounts": {
             "devv": {
-                "inboxName": "string",
-                "host": "string",
-                "port": "number",
-                "password": "string",
-                "user": "string",
-                "tls": "boolean",
+                "inboxName": "string: name of the inbox folder",
+                "host": "string: IMAP server hostname or IP",
+                "port": "number: IMAP server port",
+                "user": "string: IMAP username or email",
+                "password": "string: IMAP user password (or sepcific app password if using 2FA)",
+                "tls": "boolean: true to use TLS, false otherwise",
                 "tlsOptions": {
-                    "rejectUnauthorized": "boolean"
+                    "rejectUnauthorized": "boolean: true to validate certificates, or false to skip validation"
                 }
             }
         },
         "rules": [
             {
-                "action": "string",
-                "from": "string",
-                "subject": "string"
+                "action": "string: amazon",
+                "from": "string: bestellbestaetigung@amazon.de",
+                "subject": "string: Amazon.de order"
+            },
+            {
+                "action": "string: lbb",
+                "from": "string: noreply@lbb.de",
+                "subject": "string: Kreditkarten-Abrechnung online"
             }
         ]
     },
     "strava": {
-        "accessToken": "string"
+        "accessToken": "string: your unique Strava access token"
     }
 }

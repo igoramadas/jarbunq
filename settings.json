@@ -14,6 +14,9 @@
     },
     "bunq": {
         "api": {
+            // Default 16 bytes crypto hex key for API communication, it's strongly advised that you update
+            // this value on yout settings.private.json file!
+            "cryptoKey": "13841C2E4529CFB112324B7DE0EDB781",
             // If you wish to make some tests, please set this to "SANDBOX".
             "environment": "PRODUCTION"
         },

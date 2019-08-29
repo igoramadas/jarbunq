@@ -29,10 +29,10 @@ Clone this repo:
 
 The bunq Assistant is using [setmeup](https://github.com/igoramadas/setmeup) to handle its settings, which are defined on the following files:
 
-- **settings.json** General settings shared accross all environments
-- **settings.development.json** Development and test settings only
-- **settings.production.json** Production settings only
-- **settings.private.json** Your private settings - this is where you'll make 99% of your customizations
+- settings.json - General settings shared accross all environments
+- settings.development.json - Development and test settings only
+- settings.production.json - Production settings only
+- **settings.private.json** - Your private settings - this is where you'll make your customisations
 
 Please note that the `settings.private.json` file is NOT synced to GIT. A `settings.private.json.sample` is provided. For a more detailed info on how to define your private settings please check the [wiki](https://github.com/igoramadas/bunq-assistant/wiki/Private-settings).
 
