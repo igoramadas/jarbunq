@@ -5,7 +5,7 @@ import BaseEvents = require("./base-events")
 const lowdb = require("lowdb")
 
 /**
- * Manages data stored by the service.
+ * Manages data stored by the service, data stored on the /database.json file.
  */
 class Database extends BaseEvents {
     private static _instance: Database

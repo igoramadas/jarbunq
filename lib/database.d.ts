@@ -1,6 +1,6 @@
 import BaseEvents = require("./base-events");
 /**
- * Manages data stored by the service.
+ * Manages data stored by the service, data stored on the /database.json file.
  */
 declare class Database extends BaseEvents {
     private static _instance;
