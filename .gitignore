@@ -3,7 +3,9 @@
 .history/
 .vscode/
 coverage/
+lib/plugins.js
 node_modules/
+src/plugins.ts
 database.json
 npm-debug.log
 settings.private.json
