@@ -57,12 +57,20 @@ class Notifications extends BaseEvents {
      */
     toEmail = async (options: EmailOptions) => {
         try {
-            // Set default from and to.
             if (!options.from) {
                 options.from = settings.email.from
             }
             if (!options.to) {
                 options.to = settings.email.to
+            }
+
+            // Warn if SMTP settings are not defined, but only if no toEmail listeners are attached.
+            if (this.smtp == null) {
+                if (this.events.listeners("toEmail").length == 0) {
+                    logger.warn("Notifications.toEmail", "SMTP settings not defined, will NOT send", options.to, options.subject)
+                }
+
+                return
             }
 
             // Keywords to be replaced on the template.
@@ -84,7 +92,6 @@ class Notifications extends BaseEvents {
 
             await this.smtp.sendMail(options)
 
-            this.events.emit("toEmail", options)
             logger.info("Notifications.toEmail", options.to, options.subject)
         } catch (ex) {
             logger.error("Notifications.toEmail", options.to, options.subject, ex)
