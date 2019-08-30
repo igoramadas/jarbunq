@@ -3,6 +3,7 @@
 import BaseEvents = require("./base-events")
 
 const _ = require("lodash")
+const database = require("./database")
 const imap = require("imap")
 const mailparser = require("mailparser")
 const moment = require("moment")
@@ -152,7 +153,7 @@ class EmailAccount extends BaseEvents {
 
     /**
      * Download the specified message and load the related Email Action.
-     * @param msg
+     * @param rawMessage The unprocessed, raw message
      */
     downloadMessage(rawMessage): void {
         let parserCallback = async (err, parsedMessage) => {
@@ -173,7 +174,13 @@ class EmailAccount extends BaseEvents {
         rawMessage.on("body", stream => mailparser.simpleParser(stream, parserCallback))
     }
 
+    /**
+     * Process the specified message against the rules defined on the settings.
+     * @param message The downloaded email message
+     */
     async processMessage(message: any): Promise<void> {
+        let emailActionRecord
+
         for (let rule of settings.email.rules) {
             let valid = message.from.value && message.from.value.length > 0 && message.from.value[0].address
 
@@ -184,23 +191,47 @@ class EmailAccount extends BaseEvents {
 
             let from = message.from.value[0].address.toLowerCase()
 
+            // Check if email comes from the specified sender.
             if (rule.from && rule.from.toLowerCase() != from) {
                 valid = false
             }
 
-            if (message.subject && !rule.subject.toLowerCase().includes(rule.subject.toLowerCase())) {
+            // Check if email subject contains the specified string.
+            if (rule.subject && !message.subject.toLowerCase().includes(rule.subject.toLowerCase())) {
+                valid = false
+            }
+
+            // Check if email body contains the specified string.
+            if (rule.body && !message.text.includes(rule.body)) {
                 valid = false
             }
 
             if (valid) {
-                this.messageIds[message.messageId] = message
+                if (emailActionRecord == null) {
+                    emailActionRecord = {
+                        id: message.messageId,
+                        from: message.from,
+                        subject: message.subject,
+                        timestamp: moment(),
+                        actions: []
+                    }
+                }
 
+                // Add action to cached message.
+                emailActionRecord.actions.push(rule.action)
+
+                // Action!
                 try {
                     require("./email-actions/" + rule.action)(message)
                 } catch (ex) {
-                    logger.error("EmailAccount.processMessage", this.id, `Action ${rule.action}`, message.messageId, message.subject, ex)
+                    logger.error("EmailAccount.processMessage", this.id, `Action ${rule.action}`, message.subject, ex)
                 }
             }
+        }
+
+        // Add to database in case email had any action.
+        if (emailActionRecord != null) {
+            database.insert("emails-actions", emailActionRecord)
         }
     }
 }

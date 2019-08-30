@@ -43,6 +43,7 @@ declare class Bunq extends BaseEvents {
     /**
      * Get the current account balance for the specified alias.
      * @param alias The email, phone or IBAN of the account.
+     * @event makePayment
      */
     getAccountBalance: (alias: string) => Promise<any>;
     /**
@@ -50,6 +51,13 @@ declare class Bunq extends BaseEvents {
      * @param options The payment options.
      */
     makePayment: (options: PaymentOptions) => Promise<any>;
+    /**
+     * Helper private function to handle failed payments.
+     * @param options Options for the payment that failed
+     * @param err The error or exeception object
+     * @param step The payment step (preparing or processing)
+     */
+    private failedPayment;
 }
 /**
  * Defines payment options.

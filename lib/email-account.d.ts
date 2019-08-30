@@ -35,9 +35,13 @@ declare class EmailAccount extends BaseEvents {
     fetchMessages(since?: Date): void;
     /**
      * Download the specified message and load the related Email Action.
-     * @param msg
+     * @param rawMessage The unprocessed, raw message
      */
     downloadMessage(rawMessage: any): void;
+    /**
+     * Process the specified message against the rules defined on the settings.
+     * @param message The downloaded email message
+     */
     processMessage(message: any): Promise<void>;
 }
 export = EmailAccount;

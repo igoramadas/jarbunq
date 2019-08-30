@@ -8,7 +8,7 @@ const nodemailer = require("nodemailer")
 const settings = require("setmeup").settings
 
 /**
- * Used to send notifications to users.
+ * Used to send notifications to users. Right now only email is supported.
  */
 class Notifications extends BaseEvents {
     private static _instance: Notifications
@@ -22,7 +22,7 @@ class Notifications extends BaseEvents {
     /** SMTP client created via Nodemailer. */
     smtp: any
 
-    // METHODS
+    // INIT
     // --------------------------------------------------------------------------
 
     /**
@@ -50,6 +50,25 @@ class Notifications extends BaseEvents {
         })
     }
 
+    // SENDING METHODS
+    // --------------------------------------------------------------------------
+
+    /**
+     * Sends a notification to the user.
+     * @param options Notification options with subject and message.
+     * @event send
+     */
+    send = async (options: NotificationOptions) => {
+        if (this.smtp) {
+            this.toEmail(options as EmailOptions)
+        } else {
+            logger.warn("Notifications.send", "SMTP not registered, will not send", options.subject, options.message)
+        }
+
+        // You can also write your own notification handler by listening to the `send` event.
+        this.events.emit("send", options)
+    }
+
     /**
      * Sends an email via SMTP.
      * @param options Email sending options with to, subject, body etc.
@@ -57,9 +76,12 @@ class Notifications extends BaseEvents {
      */
     toEmail = async (options: EmailOptions) => {
         try {
+            // Set default from.
             if (!options.from) {
                 options.from = settings.email.from
             }
+
+            // Set default to.
             if (!options.to) {
                 options.to = settings.email.to
             }
@@ -77,7 +99,7 @@ class Notifications extends BaseEvents {
             const keywords = {
                 appTitle: settings.app.title,
                 appUrl: settings.app.url,
-                owner: settings.app.owner,
+                owner: settings.app.owner ? settings.app.owner : "fellow bunqer",
                 message: options.message
             }
 
@@ -94,19 +116,30 @@ class Notifications extends BaseEvents {
 
             logger.info("Notifications.toEmail", options.to, options.subject)
         } catch (ex) {
+            // Notifications should never throw / reject, so we just log it here.
             logger.error("Notifications.toEmail", options.to, options.subject, ex)
         }
     }
 }
 
 /**
- * Defines email sending options.
+ * Defines a generic notification.
+ */
+interface NotificationOptions {
+    /** The notification subject. */
+    subject: string
+    /** The actual message to be sent. */
+    message: string
+}
+
+/**
+ * Defines an email notification.
  */
 interface EmailOptions {
     /** The email subject. */
     subject: string
-    /** The actual message to be sent. */
-    message?: string
+    /** The email message. */
+    message: string
     /** The sender email address. If unspecified, will use defaul from settings. */
     from?: string
     /** The target email address. */

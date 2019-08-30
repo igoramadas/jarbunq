@@ -40,7 +40,12 @@ class EmailManager extends BaseEvents {
      */
     start = () => {
         if (this.accounts.length > 0) {
-            return logger.warn("EmailManager.start", `Already started with ${this.accounts.length} accounts. Abort.`)
+            logger.warn("EmailManager.start", `Already started with ${this.accounts.length} accounts. Abort.`)
+            return
+        }
+        if (settings.email.accounts == null) {
+            logger.warn("EmailManager.start", "No accounts defined on the settings. Abort.")
+            return
         }
 
         this.accounts = []

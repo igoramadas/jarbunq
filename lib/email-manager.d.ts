@@ -18,7 +18,7 @@ declare class EmailManager extends BaseEvents {
      * Start parsing relevant messages on the mail server.
      * @event start
      */
-    start: () => any;
+    start: () => void;
     /**
      * Stops parsing messages on the mail server.
      * @event stop

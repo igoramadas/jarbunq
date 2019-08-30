@@ -7,9 +7,6 @@ import bunq = require("../bunq")
 const logger = require("anyhow")
 const settings = require("setmeup").settings
 
-// Add a 0.5% on top of the total value found on the email (for occasional fees).
-const paymentBuffer = 1.002
-
 // Email parsing strings.
 const totalText = "Den aktuellen Rechnungsbetrag von "
 
@@ -37,7 +34,7 @@ export = async (message: any) => {
             description = `Invoice top-up to ${invoiceAmount}`
 
             // How much top-up is needed?
-            const diffAmount = ((invoiceAmount - balance) * paymentBuffer).toFixed(2)
+            const diffAmount = ((invoiceAmount - balance) * settings.amazon.paymentMultiplier).toFixed(2)
 
             const paymentOptions = {
                 amount: diffAmount,

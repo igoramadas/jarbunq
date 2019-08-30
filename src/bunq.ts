@@ -27,9 +27,9 @@ class Bunq extends BaseEvents {
 
     /** The authentication URL used to start the OAuth2 flow. */
     get authenticated(): boolean {
-        const result = database.get("bunqAccessToken").value() != null
+        const result = database.get("bunqTokenDate").value() != null
 
-        if (!result && lastAuthWarning.isBefore(moment().subtract(1, "minutes"))) {
+        if (!result && lastAuthWarning.isBefore(moment().subtract(5, "minutes"))) {
             lastAuthWarning = moment()
             console.warn(`
 ---------------------------------------------------------
@@ -76,9 +76,9 @@ Please open ${settings.app.url + "login"} on your browser
         // Create bunq JS client.
         try {
             const store = {
-                get: (key: string) => database.get(`jsclient.${key}`).value(),
-                set: (key: string, value: any) => database.set(`jsclient.${key}`, value).write(),
-                remove: (key: string) => database.unset(`jsclient.${key}`).write()
+                get: (key: string) => database.get(`jsClient.${key}`).value(),
+                set: (key: string, value: any) => database.set(`jsClient.${key}`, value).write(),
+                remove: (key: string) => database.unset(`jsClient.${key}`).write()
             }
 
             bunqClient = new BunqJSClient(store)
@@ -130,7 +130,14 @@ Please open ${settings.app.url + "login"} on your browser
 
         try {
             const token = await bunqClient.exchangeOAuthToken(settings.bunq.api.clientId, settings.bunq.api.clientSecret, redirect, code, false, false, "authorization_code")
-            database.set("bunqAccessToken", token).write()
+
+            if (!token) {
+                throw new Error("Invalid access token")
+            }
+
+            // Save current date to database.
+            const now = new Date()
+            database.set("bunqTokenDate", now.toString()).write()
 
             logger.info("Bunq.getOAuthToken", "Got a new access token")
             return true
@@ -168,11 +175,15 @@ Please open ${settings.app.url + "login"} on your browser
      */
     getUser = async () => {
         try {
+            if (!this.authenticated) {
+                throw new Error("Not authenticated to bunq")
+            }
+
             const users = await bunqClient.getUsers(true)
             this.user = users[Object.keys(users)[0]]
 
             // Owner setting from public nickname.
-            if (!settings.app.owner) {
+            if (settings.app.owner == null) {
                 settings.app.owner = this.user.public_nick_name
             }
 
@@ -189,6 +200,10 @@ Please open ${settings.app.url + "login"} on your browser
      */
     getAccounts = async () => {
         try {
+            if (!this.authenticated) {
+                throw new Error("Not authenticated to bunq")
+            }
+
             const accounts = await bunqClient.api.monetaryAccount.list(this.user.id)
 
             // Fail if no accounts were returned for the current user.
@@ -217,9 +232,14 @@ Please open ${settings.app.url + "login"} on your browser
     /**
      * Get the current account balance for the specified alias.
      * @param alias The email, phone or IBAN of the account.
+     * @event makePayment
      */
     getAccountBalance = async (alias: string) => {
         try {
+            if (!this.authenticated) {
+                throw new Error("Not authenticated to bunq")
+            }
+
             await this.getAccounts()
 
             const acc = _.find(this.accounts, a => {
@@ -246,6 +266,32 @@ Please open ${settings.app.url + "login"} on your browser
         let accountId, paymentMethod
 
         try {
+            // Currency defaults to EUR.
+            if (options.currency == null) {
+                options.currency = "EUR"
+            }
+
+            // Get default type of payment (regular or draft) if options.draft was not specified.
+            if (options.draft == null) {
+                options.draft = settings.bunq.draftPayment
+            }
+
+            // Use default account ID?
+            if (options.fromAccount == null) {
+                options.fromAccount = settings.bunq.accounts.main
+            }
+
+            // Create a payment reference, if none was specified. Please note
+            // that this is the internal database reference, do not confuse with
+            // the payment description (called reference as well by some banks).
+            if (!options.reference) {
+                options.reference = moment().format("YYYYMMDD") + "-" + options.amount + "-" + options.description
+            }
+
+            if (!this.authenticated) {
+                throw new Error("Not authenticated to bunq")
+            }
+
             // Basic payment validation.
             if (options.amount <= 0) {
                 return new Error("Payments must have an amount greater than 0.")
@@ -256,16 +302,6 @@ Please open ${settings.app.url + "login"} on your browser
                 return new Error(`Payment amount ${options.amount} is over the maximum allowed ${settings.bunq.maxPaymentAmount}.`)
             }
 
-            // Use default account ID?
-            if (!options.fromAccount) {
-                options.fromAccount = settings.bunq.accounts.main
-            }
-
-            // Get default type of payment (regular or draft) if options.draft was not specified.
-            if (options.draft == null) {
-                options.draft = settings.bunq.draftPayment
-            }
-
             // From account is an alias or an actual ID?
             if (_.isNumber(options.fromAccount)) {
                 accountId = options.fromAccount
@@ -273,6 +309,12 @@ Please open ${settings.app.url + "login"} on your browser
                 const acc = _.find(this.accounts, a => {
                     return _.find(a.alias, {value: options.fromAccount}) != null
                 })
+
+                // Account not found?
+                if (acc == null) {
+                    throw new Error(`Account ${options.fromAccount} not found`)
+                }
+
                 accountId = acc.id
             }
 
@@ -292,21 +334,11 @@ Please open ${settings.app.url + "login"} on your browser
                 alias.type = "IBAN"
             }
 
-            // Currency defaults to EUR.
-            if (!options.currency) {
-                options.currency = "EUR"
-            }
-
             // Is it a draft or regular payment?
             if (options.draft) {
                 paymentMethod = bunqClient.api.draftPayment.post
             } else {
                 paymentMethod = bunqClient.api.payment.post
-            }
-
-            // Create a payment reference, if none was specified.
-            if (!options.reference) {
-                options.reference = moment().format("YYYYMMDD") + "-" + options.amount + "-" + options.description
             }
 
             // Make hash from reference.
@@ -319,7 +351,7 @@ Please open ${settings.app.url + "login"} on your browser
                 throw new Error(`Duplicate payment: ${options.reference}`)
             }
         } catch (ex) {
-            logger.error("Bunq.makePayment", "Error preparing payment", ex)
+            this.failedPayment(options, ex, "preparing")
             throw ex
         }
 
@@ -358,19 +390,36 @@ Please open ${settings.app.url + "login"} on your browser
             return payment
         } catch (ex) {
             this.processBunqError(ex)
-            logger.error("Bunq.makePayment", "Error processing payment", ex)
-
-            // Build email notification message.
-            const subject = `Payment ${options.amount} failed to ${options.toAlias}`
-            const message = `Payment of ${options.amount} ${options.currency}
-                         from account ${options.fromAccount} to ${options.toAlias} failed.
-                         Description: ${options.description}
-                         <br><br>
-                         Error: ${ex.toString()}`
-            notifications.toEmail({subject: subject, message: message})
-
+            this.failedPayment(options, ex, "processing")
             throw ex
         }
+    }
+
+    /**
+     * Helper private function to handle failed payments.
+     * @param options Options for the payment that failed
+     * @param err The error or exeception object
+     * @param step The payment step (preparing or processing)
+     */
+    private failedPayment = (options: PaymentOptions, err: Error, step: string) => {
+        logger.error("Bunq.failedPayment", `Error ${step} payment`, err)
+
+        let errorString = err.toString()
+
+        // Make sure we have "Error" on the error string.
+        if (errorString.indexOf("Error") < 0) {
+            errorString = "Error: " + errorString
+        }
+
+        const subject = `Payment ${options.amount} failed to ${options.toAlias}`
+        const message = `Payment of ${options.amount} ${options.currency}
+                         from account ${options.fromAccount} to ${options.toAlias} failed.
+                         <br>
+                         Description: ${options.description}
+                         <br><br>
+                         ${errorString}`
+
+        notifications.send({subject: subject, message: message})
     }
 }
 

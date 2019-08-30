@@ -4,6 +4,11 @@
 // In 99% of the cases, customizations should be set on the settings.private.json file.
 
 {
+    "amazon": {
+        // Add a 0.02% on top of transfers from main account to the amazon account,
+        // as a buffer for occasional fees.
+        "paymentMultiplier": 1.002
+    },
     "app": {
         // List of IPs allowed to access the bunq Assistant pages. Leave blank to allow all.
         "allowedIP": [],
@@ -31,8 +36,8 @@
         "minBalance": 1
     },
     "email": {
-        // When the app starts up, it will initially fetch emails received on the last hour.
-        "fetchHours": 1
+        // When the app starts up, it will initially fetch emails received on the last 2 hours.
+        "fetchHours": 2
     },
     "general": {
         // Use UTF8 as default encoding for files and streams.

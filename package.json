@@ -1,6 +1,6 @@
 {
     "name": "bunq-assistant",
-    "version": "19.35.423",
+    "version": "19.35.600",
     "description": "Automate your bunq account with email and Strava based actions!",
     "keywords": [
         "bunq",
@@ -39,12 +39,12 @@
         "pug": "^2.0.4",
         "request": "^2.88.0",
         "request-promise-native": "^1.0.7",
-        "setmeup": "^1.1.6"
+        "setmeup": "^1.2.0"
     },
     "devDependencies": {
         "@babel/core": "^7.5.5",
         "@types/express": "^4.17.1",
-        "@types/node": "^12.7.2",
+        "@types/node": "^12.7.3",
         "axios-debug-log": "^0.6.2",
         "chalk": "^2.4.2",
         "css-loader": "^3.2.0",

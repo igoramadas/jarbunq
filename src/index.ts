@@ -10,7 +10,7 @@ if (!process.env.NODE_ENV) {
 }
 
 let startup = async function() {
-    // Setup logger to use the console.
+    // Setup logger.
     const logger = require("anyhow")
     logger.setup("console")
     logger.levelOnConsole = true

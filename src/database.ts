@@ -39,7 +39,7 @@ class Database extends BaseEvents {
         this.db = await lowdb(new FileAsync("database.json"))
 
         // Write defaults.
-        this.db.defaults({client: {}, payments: [], emails: []}).write()
+        this.db.defaults({jsClient: {}, payments: [], emails: []}).write()
 
         // Shortcut methods.
         this.get = this.db.get.bind(this.db)

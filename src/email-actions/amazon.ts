@@ -7,9 +7,6 @@ import bunq = require("../bunq")
 const logger = require("anyhow")
 const settings = require("setmeup").settings
 
-// Add a 0.5% on top of the total value found on the email (for occasional fees).
-const paymentBuffer = 1.005
-
 // Email parsing strings.
 const totalText = "Order Total Including VAT"
 const orderNumberText = "Order #"
@@ -41,12 +38,12 @@ export = async (message: any) => {
 
         // Get order number and description.
         orderNumber = partial
-        description = `Order ${orderNumber}, ${amount}`
+        description = `Order ${orderNumber}, ${amount} EUR`
 
         logger.info("EmailAction.Amazon", orderNumber, amount, message.subject)
 
         const paymentOptions = {
-            amount: (parseFloat(amount) * paymentBuffer).toFixed(2),
+            amount: (parseFloat(amount) * settings.amazon.paymentMultiplier).toFixed(2),
             description: description,
             toAlias: settings.bunq.accounts.amazon,
             reference: message.messageId
