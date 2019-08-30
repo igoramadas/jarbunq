@@ -36,8 +36,8 @@
         "minBalance": 1
     },
     "email": {
-        // When the app starts up, it will initially fetch emails received on the last 2 hours.
-        "fetchHours": 2
+        // When the app starts up, it will initially fetch emails received on the last 24 hours.
+        "fetchHours": 24
     },
     "general": {
         // Use UTF8 as default encoding for files and streams.
