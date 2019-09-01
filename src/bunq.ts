@@ -277,8 +277,8 @@ Please open ${settings.app.url + "login"} on your browser
             }
 
             // Use default account ID?
-            if (options.fromAccount == null) {
-                options.fromAccount = settings.bunq.accounts.main
+            if (options.fromAlias == null) {
+                options.fromAlias = settings.bunq.accounts.main
             }
 
             // Create a payment reference, if none was specified. Please note
@@ -303,16 +303,16 @@ Please open ${settings.app.url + "login"} on your browser
             }
 
             // From account is an alias or an actual ID?
-            if (_.isNumber(options.fromAccount)) {
-                accountId = options.fromAccount
+            if (_.isNumber(options.fromAlias)) {
+                accountId = options.fromAlias
             } else {
                 const acc = _.find(this.accounts, a => {
-                    return _.find(a.alias, {value: options.fromAccount}) != null
+                    return _.find(a.alias, {value: options.fromAlias}) != null
                 })
 
                 // Account not found?
                 if (acc == null) {
-                    throw new Error(`Account ${options.fromAccount} not found`)
+                    throw new Error(`Account ${options.fromAlias} not found`)
                 }
 
                 accountId = acc.id
@@ -413,7 +413,7 @@ Please open ${settings.app.url + "login"} on your browser
 
         const subject = `Payment ${options.amount} failed to ${options.toAlias}`
         const message = `Payment of ${options.amount} ${options.currency}
-                         from account ${options.fromAccount} to ${options.toAlias} failed.
+                         from account ${options.fromAlias} to ${options.toAlias} failed.
                          <br>
                          Description: ${options.description}
                          <br><br>
@@ -427,8 +427,8 @@ Please open ${settings.app.url + "login"} on your browser
  * Defines payment options.
  */
 interface PaymentOptions {
-    /** The source account. */
-    fromAccount?: number | string
+    /** The source account alias can be an email or phone. */
+    fromAlias?: number | string
     /** Target account alias can be an email, phone or IBAN. */
     toAlias: string
     /** Payment description, only valid ASCII characters. */

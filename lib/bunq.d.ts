@@ -63,8 +63,8 @@ declare class Bunq extends BaseEvents {
  * Defines payment options.
  */
 interface PaymentOptions {
-    /** The source account. */
-    fromAccount?: number | string;
+    /** The source account alias can be an email or phone. */
+    fromAlias?: number | string;
     /** Target account alias can be an email, phone or IBAN. */
     toAlias: string;
     /** Payment description, only valid ASCII characters. */

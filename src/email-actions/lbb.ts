@@ -1,16 +1,16 @@
-// LBB Amazon Card Email Processor
+// LBB Amazon Card Email Action
 // This will process invoices sent by LBB via email and make sure there
 // are enough funds on the Amazon account for the direct debit.
 
 import bunq = require("../bunq")
-
-const logger = require("anyhow")
+import logger = require("anyhow")
 const settings = require("setmeup").settings
 
 // Email parsing strings.
 const totalText = "Den aktuellen Rechnungsbetrag von "
 
-// Exported function.
+// Exported function. Will return false if Amazon account has enough funds
+// to pay the bills (consider this a good thing!), otherwise true.
 export = async (message: any) => {
     let invoiceAmount, description, partial
 
@@ -26,27 +26,29 @@ export = async (message: any) => {
 
         // Check how much is available at the Amazon account.
         if (balance >= invoiceAmount) {
-            logger.info("EmailAction.Lbb", `Got invoice for ${invoiceAmount}, current account balance is ${balance}`)
-        } else {
-            logger.warn("EmailAction.Lbb", `Invoice ${invoiceAmount} is higher than current account balance ${balance}`)
-
-            // Set payment description.
-            description = `Invoice top-up to ${invoiceAmount}`
-
-            // How much top-up is needed?
-            const diffAmount = ((invoiceAmount - balance) * settings.amazon.paymentMultiplier).toFixed(2)
-
-            const paymentOptions = {
-                amount: diffAmount,
-                description: description,
-                toAlias: settings.bunq.accounts.amazon,
-                reference: message.messageId
-            }
-
-            await bunq.makePayment(paymentOptions)
+            logger.info("EmailAction.Lbb", message.messageId, `Got invoice for ${invoiceAmount}, current account balance is ${balance}, all good`)
+            return false
         }
+
+        logger.warn("EmailAction.Lbb", `Invoice ${invoiceAmount} is higher than current account balance ${balance}`)
+
+        // Set payment description.
+        description = `Invoice top-up to ${invoiceAmount}`
+
+        // How much top-up is needed?
+        const diffAmount = ((invoiceAmount - balance) * settings.amazon.paymentMultiplier).toFixed(2)
+
+        // Set payment options.
+        const paymentOptions = {
+            amount: diffAmount,
+            description: description,
+            toAlias: settings.bunq.accounts.amazon,
+            reference: message.messageId
+        }
+
+        await bunq.makePayment(paymentOptions)
+        return true
     } catch (ex) {
-        let logReference = description || message.subject
-        logger.error("EmailAction.Lbb", logReference, ex)
+        throw ex
     }
 }

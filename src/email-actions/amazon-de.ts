@@ -1,17 +1,16 @@
-// Amazon Email Processor
+// Amazon Email Action
 // This will process orders from Amazon.de and automatically transfer the
-// necessary money to the Amazon Card account, with an added 0.5% buffer.
+// necessary money to the Amazon Card account.
 
 import bunq = require("../bunq")
-
-const logger = require("anyhow")
+import logger = require("anyhow")
 const settings = require("setmeup").settings
 
 // Email parsing strings.
 const totalText = "Order Total Including VAT"
 const orderNumberText = "Order #"
 
-// Exported function.
+// Exported function. Will return false if order amount is not in EUR.
 export = async (message: any) => {
     let amount, description, orderNumber, partial
 
@@ -23,8 +22,8 @@ export = async (message: any) => {
 
         // Only proceed if order was made in euros!
         if (!partial.includes("EUR")) {
-            logger.warn("Email.Amazon", "Order not in EUR, will not process", message.subject)
-            return null
+            logger.warn("Email.Amazon", message.messageId, "Order not in EUR, will not process")
+            return false
         }
 
         // Get actual total amount.
@@ -40,8 +39,7 @@ export = async (message: any) => {
         orderNumber = partial
         description = `Order ${orderNumber}, ${amount} EUR`
 
-        logger.info("EmailAction.Amazon", orderNumber, amount, message.subject)
-
+        // Set payment options.
         const paymentOptions = {
             amount: (parseFloat(amount) * settings.amazon.paymentMultiplier).toFixed(2),
             description: description,
@@ -50,8 +48,8 @@ export = async (message: any) => {
         }
 
         await bunq.makePayment(paymentOptions)
+        return true
     } catch (ex) {
-        let logReference = description || orderNumber || message.subject
-        logger.error("EmailAction.Amazon", logReference, ex)
+        throw ex
     }
 }

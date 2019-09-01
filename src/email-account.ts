@@ -191,8 +191,13 @@ class EmailAccount extends BaseEvents {
 
             let from = message.from.value[0].address.toLowerCase()
 
+            // Make sure rule's from is an array.
+            if (rule.from != null && _.isString(rule.from)) {
+                rule.from = [rule.from]
+            }
+
             // Check if email comes from the specified sender.
-            if (rule.from && rule.from.toLowerCase() != from) {
+            if (rule.from && rule.from.indexOf(from) < 0) {
                 valid = false
             }
 
@@ -217,14 +222,30 @@ class EmailAccount extends BaseEvents {
                     }
                 }
 
+                // Information to be logged about the current rule.
+                let logRule = []
+                for (let [key, value] of Object.entries(rule)) {
+                    if (_.isArray(value)) {
+                        logRule.push(`${key}=${(value as any).join(" ")}`)
+                    } else {
+                        logRule.push(`${key}=${value}`)
+                    }
+                }
+
                 // Add action to cached message.
                 emailActionRecord.actions.push(rule.action)
 
                 // Action!
                 try {
-                    require("./email-actions/" + rule.action)(message)
+                    const result = require("./email-actions/" + rule.action)(message, rule)
+
+                    if (result) {
+                        logger.info("EmailAccount.processMessage", this.id, logRule.join(", "), message.messageId, "Processed")
+                    } else {
+                        logger.warn("EmailAccount.processMessage", this.id, logRule.join(", "), message.messageId, "Skipped")
+                    }
                 } catch (ex) {
-                    logger.error("EmailAccount.processMessage", this.id, `Action ${rule.action}`, message.subject, ex)
+                    logger.error("EmailAccount.processMessage", this.id, logRule.join(", "), message.messageId, ex)
                 }
             }
         }

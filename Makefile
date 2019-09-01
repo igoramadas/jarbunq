@@ -1,8 +1,7 @@
 TYPEDOC:= ./node_modules/.bin/typedoc
 
-build:
-	node build.js
-	pkg -o ./bin/bunq-assistant -t linux .
+build-settings-sample:
+	./bacli.js build-settings-sample
 
 clean:
 	rm -rf ./lib
@@ -18,6 +17,15 @@ docs:
 	$(TYPEDOC) --disableOutputCheck
 	cp CNAME docs/
 	cp .nojekyll docs/
+
+decrypt:
+	./bacli.js decrypt
+
+encrypt:
+	./bacli.js encrypt
+
+package:
+	pkg -o ./bin/bunq-assistant -t linux .
 
 publish:
 	tsc --removeComments
@@ -35,4 +43,4 @@ update:
 	npm install
 	tsc
 
-.PHONY: build docs
+.PHONY: docs package
