@@ -11,7 +11,7 @@ const totalText = "Order Total Including VAT"
 const orderNumberText = "Order #"
 
 // Exported function. Will return false if order amount is not in EUR.
-export = async (message: any) => {
+const EmailAction = async (message: any) => {
     let amount, description, orderNumber, partial
 
     try {
@@ -22,7 +22,7 @@ export = async (message: any) => {
 
         // Only proceed if order was made in euros!
         if (!partial.includes("EUR")) {
-            logger.warn("Email.Amazon", message.messageId, "Order not in EUR, will not process")
+            logger.warn("EmailAction.Amazon", message.messageId, "Order not in EUR, will not process")
             return false
         }
 
@@ -53,3 +53,12 @@ export = async (message: any) => {
         throw ex
     }
 }
+
+// Default rule for amazon-de action.
+EmailAction.defaultRule = {
+    from: "bestellbestaetigung@amazon.de",
+    subject: "Amazon.de order"
+}
+
+// Exports...
+export = EmailAction

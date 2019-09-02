@@ -11,7 +11,7 @@ const totalText = "Den aktuellen Rechnungsbetrag von "
 
 // Exported function. Will return false if Amazon account has enough funds
 // to pay the bills (consider this a good thing!), otherwise true.
-export = async (message: any) => {
+const EmailAction = async (message: any) => {
     let invoiceAmount, description, partial
 
     try {
@@ -52,3 +52,12 @@ export = async (message: any) => {
         throw ex
     }
 }
+
+// Default rule for lbb action.
+EmailAction.defaultRule = {
+    from: "noreply@lbb.de",
+    subject: "Kreditkarten-Abrechnung online"
+}
+
+// Exports...
+export = EmailAction

@@ -105,10 +105,8 @@ class EmailAccount extends BaseEvents {
                     logger.info("EmailAccount.openBox", this.id, "Inbox ready")
 
                     // Start fetching unseen messages immediately.
-                    const since = moment()
-                        .subtract(settings.email.fetchHours, "hours")
-                        .toDate()
-                    this.fetchMessages(since)
+                    const since = moment().subtract(settings.email.fetchHours, "hours")
+                    this.fetchMessages(since.toDate())
                     this.client.on("mail", () => this.fetchMessages())
                 }
             })
@@ -182,14 +180,28 @@ class EmailAccount extends BaseEvents {
         let emailActionRecord
 
         for (let rule of settings.email.rules) {
-            let valid = message.from.value && message.from.value.length > 0 && message.from.value[0].address
+            let actionModule, from
 
-            if (!valid) {
-                logger.warn("EmailAccount.processMessage", this.id, "No valid 'from' address.")
-                return
+            try {
+                actionModule = require("./email-actions/" + rule.action)
+                from = message.from.value[0].address.toLowerCase()
+
+                // Get default rule from action.
+                if (actionModule.defaultRule != null) {
+                    rule = _.defaultsDeep(rule, actionModule.defaultRule)
+                }
+            } catch (ex) {
+                logger.error("EmailAccount.processMessage", this.id, `Action ${rule.action}`, message.messageId, ex)
+                continue
             }
 
-            let from = message.from.value[0].address.toLowerCase()
+            // At least one property must be defined on the rule.
+            let valid = message.from || message.subject || message.body
+
+            if (!valid) {
+                logger.error("EmailAccount.processMessage", this.id, `Action ${rule.action}`, message.messageId, "Rule must have at least a from, subject or body specified")
+                continue
+            }
 
             // Make sure rule's from is an array.
             if (rule.from != null && _.isString(rule.from)) {
@@ -237,7 +249,7 @@ class EmailAccount extends BaseEvents {
 
                 // Action!
                 try {
-                    const result = require("./email-actions/" + rule.action)(message, rule)
+                    const result = await actionModule(message, rule)
 
                     if (result) {
                         logger.info("EmailAccount.processMessage", this.id, logRule.join(", "), message.messageId, "Processed")

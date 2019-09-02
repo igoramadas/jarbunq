@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>&quot;email-actions/amazon&quot; | bunq Assistant</title>
+	<title>&quot;email-actions/amazon-de&quot; | bunq Assistant</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -54,10 +54,10 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="_email_actions_amazon_.html">&quot;email-actions/amazon&quot;</a>
+					<a href="_email_actions_amazon_de_.html">&quot;email-actions/amazon-de&quot;</a>
 				</li>
 			</ul>
-			<h1>External module &quot;email-actions/amazon&quot;</h1>
+			<h1>External module &quot;email-actions/amazon-de&quot;</h1>
 		</div>
 	</div>
 </header>
@@ -71,10 +71,15 @@
 						<section class="tsd-index-section tsd-is-not-exported">
 							<h3>Variables</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported"><a href="_email_actions_amazon_.html#logger" class="tsd-kind-icon">logger</a></li>
-								<li class="tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported"><a href="_email_actions_amazon_.html#ordernumbertext" class="tsd-kind-icon">order<wbr>Number<wbr>Text</a></li>
-								<li class="tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported"><a href="_email_actions_amazon_.html#settings" class="tsd-kind-icon">settings</a></li>
-								<li class="tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported"><a href="_email_actions_amazon_.html#totaltext" class="tsd-kind-icon">total<wbr>Text</a></li>
+								<li class="tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported"><a href="_email_actions_amazon_de_.html#ordernumbertext" class="tsd-kind-icon">order<wbr>Number<wbr>Text</a></li>
+								<li class="tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported"><a href="_email_actions_amazon_de_.html#settings" class="tsd-kind-icon">settings</a></li>
+								<li class="tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported"><a href="_email_actions_amazon_de_.html#totaltext" class="tsd-kind-icon">total<wbr>Text</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Functions</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-function tsd-parent-kind-external-module"><a href="_email_actions_amazon_de_.html#emailaction" class="tsd-kind-icon">Email<wbr>Action</a></li>
 							</ul>
 						</section>
 					</div>
@@ -83,22 +88,12 @@
 			<section class="tsd-panel-group tsd-member-group tsd-is-not-exported">
 				<h2>Variables</h2>
 				<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
-					<a name="logger" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagConst">Const</span> logger</h3>
-					<div class="tsd-signature tsd-kind-icon">logger<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol"> =&nbsp;require(&quot;anyhow&quot;)</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/igoramadas/bunq-assistant/blob/cb2f7eb/src/email-actions/amazon.ts#L7">email-actions/amazon.ts:7</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
 					<a name="ordernumbertext" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagConst">Const</span> order<wbr>Number<wbr>Text</h3>
 					<div class="tsd-signature tsd-kind-icon">order<wbr>Number<wbr>Text<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">"Order #"</span><span class="tsd-signature-symbol"> =&nbsp;&quot;Order #&quot;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/igoramadas/bunq-assistant/blob/cb2f7eb/src/email-actions/amazon.ts#L12">email-actions/amazon.ts:12</a></li>
+							<li>Defined in <a href="https://github.com/igoramadas/bunq-assistant/blob/6ec0574/src/email-actions/amazon-de.ts#L11">email-actions/amazon-de.ts:11</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -108,7 +103,7 @@
 					<div class="tsd-signature tsd-kind-icon">settings<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol"> =&nbsp;require(&quot;setmeup&quot;).settings</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/igoramadas/bunq-assistant/blob/cb2f7eb/src/email-actions/amazon.ts#L8">email-actions/amazon.ts:8</a></li>
+							<li>Defined in <a href="https://github.com/igoramadas/bunq-assistant/blob/6ec0574/src/email-actions/amazon-de.ts#L7">email-actions/amazon-de.ts:7</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -118,9 +113,35 @@
 					<div class="tsd-signature tsd-kind-icon">total<wbr>Text<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">"Order Total Including VAT"</span><span class="tsd-signature-symbol"> =&nbsp;&quot;Order Total Including VAT&quot;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/igoramadas/bunq-assistant/blob/cb2f7eb/src/email-actions/amazon.ts#L11">email-actions/amazon.ts:11</a></li>
+							<li>Defined in <a href="https://github.com/igoramadas/bunq-assistant/blob/6ec0574/src/email-actions/amazon-de.ts#L10">email-actions/amazon-de.ts:10</a></li>
 						</ul>
 					</aside>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Functions</h2>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-external-module">
+					<a name="emailaction" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagConst">Const</span> <span class="tsd-flag ts-flagExport assignment">Export assignment</span> Email<wbr>Action</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module">
+						<li class="tsd-signature tsd-kind-icon">Email<wbr>Action<span class="tsd-signature-symbol">(</span>message<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/igoramadas/bunq-assistant/blob/6ec0574/src/email-actions/amazon-de.ts#L14">email-actions/amazon-de.ts:14</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>message: <span class="tsd-signature-type">any</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
 				</section>
 			</section>
 		</div>
@@ -143,7 +164,10 @@
 						<a href="_email_account_.html">"email-<wbr>account"</a>
 					</li>
 					<li class="current tsd-kind-external-module">
-						<a href="_email_actions_amazon_.html">"email-<wbr>actions/amazon"</a>
+						<a href="_email_actions_amazon_de_.html">"email-<wbr>actions/amazon-<wbr>de"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="_email_actions_generic_.html">"email-<wbr>actions/generic"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="_email_actions_lbb_.html">"email-<wbr>actions/lbb"</a>
@@ -168,16 +192,16 @@
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
 					<li class=" tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
-						<a href="_email_actions_amazon_.html#logger" class="tsd-kind-icon">logger</a>
+						<a href="_email_actions_amazon_de_.html#ordernumbertext" class="tsd-kind-icon">order<wbr>Number<wbr>Text</a>
 					</li>
 					<li class=" tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
-						<a href="_email_actions_amazon_.html#ordernumbertext" class="tsd-kind-icon">order<wbr>Number<wbr>Text</a>
+						<a href="_email_actions_amazon_de_.html#settings" class="tsd-kind-icon">settings</a>
 					</li>
 					<li class=" tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
-						<a href="_email_actions_amazon_.html#settings" class="tsd-kind-icon">settings</a>
+						<a href="_email_actions_amazon_de_.html#totaltext" class="tsd-kind-icon">total<wbr>Text</a>
 					</li>
-					<li class=" tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
-						<a href="_email_actions_amazon_.html#totaltext" class="tsd-kind-icon">total<wbr>Text</a>
+					<li class=" tsd-kind-function tsd-parent-kind-external-module">
+						<a href="_email_actions_amazon_de_.html#emailaction" class="tsd-kind-icon">Email<wbr>Action</a>
 					</li>
 				</ul>
 			</nav>

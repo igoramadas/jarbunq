@@ -402,7 +402,7 @@ Please open ${settings.app.url + "login"} on your browser
      * @param step The payment step (preparing or processing)
      */
     private failedPayment = (options: PaymentOptions, err: Error, step: string) => {
-        logger.error("Bunq.failedPayment", `Error ${step} payment`, err)
+        logger.error("Bunq.failedPayment", `${step} payment`, `${options.amount} ${options.currency} to ${options.toAlias}`, err)
 
         let errorString = err.toString()
 
@@ -412,13 +412,14 @@ Please open ${settings.app.url + "login"} on your browser
         }
 
         const subject = `Payment ${options.amount} failed to ${options.toAlias}`
-        const message = `Payment of ${options.amount} ${options.currency}
+        const message = `Payment of ${(options.amount as number).toFixed(2)} ${options.currency}
                          from account ${options.fromAlias} to ${options.toAlias} failed.
                          <br>
                          Description: ${options.description}
                          <br><br>
                          ${errorString}`
 
+        // Send notification of failed payment.
         notifications.send({subject: subject, message: message})
     }
 }

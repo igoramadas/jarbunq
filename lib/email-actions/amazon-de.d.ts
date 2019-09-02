@@ -1,2 +1,8 @@
-declare const _default: (message: any) => Promise<boolean>;
-export = _default;
+declare const EmailAction: {
+    (message: any): Promise<boolean>;
+    defaultRule: {
+        from: string;
+        subject: string;
+    };
+};
+export = EmailAction;
