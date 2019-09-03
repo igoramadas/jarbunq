@@ -37,7 +37,7 @@ export = async (message: any, rule: any) => {
             amount: rule.amount,
             description: descriptions.join(", "),
             toAlias: rule.toAlias,
-            reference: message.messageId
+            reference: `generic-${message.messageId}`
         }
 
         await bunq.makePayment(paymentOptions)

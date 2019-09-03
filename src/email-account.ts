@@ -160,6 +160,10 @@ class EmailAccount extends BaseEvents {
             }
 
             try {
+                // We don't need the brackets on the message ID.
+                parsedMessage.messageId = parsedMessage.messageId.replace(/\</g, "").replace(/\>/g, "")
+
+                // Only process message if we haven't done it before (in case message goes back to inbox).
                 if (!this.messageIds[parsedMessage.messageId] && parsedMessage) {
                     await this.processMessage(parsedMessage)
                 }

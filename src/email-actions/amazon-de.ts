@@ -44,7 +44,7 @@ const EmailAction = async (message: any) => {
             amount: (parseFloat(amount) * settings.amazon.paymentMultiplier).toFixed(2),
             description: description,
             toAlias: settings.bunq.accounts.amazon,
-            reference: message.messageId
+            reference: `amazon-de-${message.messageId}`
         }
 
         await bunq.makePayment(paymentOptions)
