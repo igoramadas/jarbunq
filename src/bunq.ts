@@ -32,9 +32,9 @@ class Bunq extends BaseEvents {
         if (!result && lastAuthWarning.isBefore(moment().subtract(5, "minutes"))) {
             lastAuthWarning = moment()
             console.warn(`
----------------------------------------------------------
+---------------------------------------------------------------
 Please open ${settings.app.url + "login"} on your browser
----------------------------------------------------------
+---------------------------------------------------------------
 `)
         }
 
