@@ -44,8 +44,11 @@ class Strava extends BaseEvents {
         await this.refreshToken()
         await this.getAthlete()
 
-        const paymentInterval = settings.strava.payments.interval
+        // Milliseconds in a day and in 4 hours.
         const msDay = 1000 * 60 * 60 * 24
+        const ms4Hours = 1000 * 60 * 60 * 4
+
+        const paymentInterval = settings.strava.payments.interval
         const now = moment()
         const day = now.day()
         const target = moment(now.format("YYYY-MM-DD") + " " + settings.strava.payments.time)
@@ -69,6 +72,14 @@ class Strava extends BaseEvents {
         // If we're past the execution time, add 24 hours and subtract the difference.
         // The diff is already negative in this case, hence we do a + instead of - here.
         if (now.isAfter(target)) {
+            // Maybe we just missed the payment? Check the database, if we're less than 4 hours
+            // close to the execution time and no payment was recorded today, then do it now.
+            if (diff > ms4Hours * -1 && database.get("payments").find({reference: `strava-${now.format("YYYY-MM-DD")}`}) == null) {
+                logger.info("Strava.init", `Missed payment at ${settings.strava.payments.time}, will execute it now`)
+                this.payForActivities()
+            }
+
+            // Add 1 day to the interval.
             diff = msDay + diff
         }
 
@@ -316,7 +327,7 @@ class Strava extends BaseEvents {
                 amount: amount,
                 description: `Strava, ${distance}km ${paymentInterval}`,
                 toAlias: settings.bunq.accounts.strava,
-                reference: `strava-${moment().unix()}`
+                reference: `strava-${moment().format("YYYY-MM-DD")}`
             }
 
             // Dispatch payment.
