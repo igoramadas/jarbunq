@@ -12,11 +12,19 @@ declare class Strava extends BaseEvents {
      */
     init(): Promise<any>;
     /**
+     * Refresh OAuth2 tokens from Strava.
+     */
+    refreshToken: () => Promise<void>;
+    /**
      * Internal implementation to make a request to the Strava API.
      * @param path The API path.
      * @param params Additional parameters to be passed.
      */
     makeRequest: (path: string, params?: any) => Promise<any>;
+    /**
+     * Get general info for the logged user.
+     */
+    getAthlete: () => Promise<any>;
     /**
      * Get list of activities from Strava.
      * @param query Query options, currently only supports "since".
@@ -30,7 +38,7 @@ declare class Strava extends BaseEvents {
     /**
      * Make a payment regarding the mileage of recent activities.
      */
-    payForActivities: () => Promise<void>;
+    payForActivities: () => Promise<any>;
 }
 /**
  * Defines an activity.

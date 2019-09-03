@@ -4,10 +4,15 @@ import BaseEvents = require("./base-events")
 
 const _ = require("lodash")
 const bunq = require("./bunq")
+const database = require("./database")
 const logger = require("anyhow")
 const moment = require("moment")
 const request = require("request-promise-native")
 const settings = require("setmeup").settings
+
+// Strava API URL.
+const apiUrl = "https://www.strava.com/api/v3"
+const tokenUrl = "https://www.strava.com/oauth/token"
 
 /**
  * Gets rides and activities from Strava.
@@ -31,9 +36,13 @@ class Strava extends BaseEvents {
      * Init the Strava module by setting up the payment timer.
      */
     async init() {
-        if (!settings.strava.accessToken) {
-            return logger.warn("Strava.init", "Missing settings.strava.accessToken, the Strava features won't be enabled.")
+        if (!settings.strava.clientId || !settings.strava.clientSecret || !settings.strava.refreshToken) {
+            return logger.warn("Strava.init", "Missing strava clientId, clientSecret or refreshToken", "Strava features won't be enabled!")
         }
+
+        // Get access token and user info.
+        await this.refreshToken()
+        await this.getAthlete()
 
         const paymentInterval = settings.strava.payments.interval
         const msDay = 1000 * 60 * 60 * 24
@@ -67,11 +76,71 @@ class Strava extends BaseEvents {
 
         // Log successful init.
         const timeToNext = moment.duration(diff).humanize(true)
-        logger.info("Strava.init", paymentInterval, `${settings.strava.payments.pricePerKm} EUR / km`, `Next: ${timeToNext}`)
+        logger.info("Strava.init", paymentInterval, `${settings.strava.payments.pricePerKm} EUR / km`, `Next payment ${timeToNext}`)
     }
 
     // API METHODS
     // --------------------------------------------------------------------------
+
+    /**
+     * Refresh OAuth2 tokens from Strava.
+     */
+    refreshToken = async () => {
+        try {
+            const qs: any = {
+                grant_type: "refresh_token",
+                client_id: settings.strava.clientId,
+                client_secret: settings.strava.clientSecret
+            }
+
+            // Check if a refresh token is available on the database.
+            // If not, use the one specified initially on the settings.
+            let stravaData = database.get("strava").value()
+            if (stravaData != null) {
+                qs.refresh_token = stravaData.refreshToken
+            } else {
+                qs.refresh_token = settings.strava.refreshToken
+            }
+
+            let options = {
+                method: "POST",
+                uri: tokenUrl,
+                qs: qs,
+                json: true,
+                resolveWithFullResponse: true
+            }
+
+            // Post to the token endpoint.
+            let res = await request(options)
+
+            if (!res) {
+                throw new Error("Invalid or empty token response.")
+            }
+            if (res.statusCode >= 400 && res.statusCode <= 599) {
+                throw new Error("HTTP error " + res.statusCode)
+            }
+            if (res.body && res.body.errors) {
+                throw new Error("API Error " + res.statusCode)
+            }
+
+            // Save new tokens to database.
+            stravaData = {
+                accessToken: res.body.access_token,
+                refreshToken: res.body.refresh_token
+            }
+            database.set("strava", stravaData).write()
+
+            // Schedule next refresh based on the expiry date, 10 minutes before.
+            const interval = moment.unix(res.body.expires_at).diff(moment()) - 600000
+            setTimeout(this.refreshToken, interval)
+
+            const nextRefresh = moment.duration(interval).humanize(true)
+            logger.info("Strava.refreshTokens", `Next refresh ${nextRefresh}`)
+        } catch (ex) {
+            logger.error("Strava.refreshToken", ex)
+            throw ex
+        }
+    }
 
     /**
      * Internal implementation to make a request to the Strava API.
@@ -84,11 +153,17 @@ class Strava extends BaseEvents {
                 params = {}
             }
 
-            // Pass access token.
-            params.access_token = settings.strava.accessToken
+            // Check if an access token is available on the database.
+            // If not, use the one specified initially on the settings.
+            const stravaData = database.get("strava").value()
+            if (stravaData != null) {
+                params.access_token = stravaData.accessToken
+            } else {
+                params.access_token = settings.strava.accessToken
+            }
 
             let options = {
-                uri: settings.strava.api.url + path,
+                uri: apiUrl + path,
                 qs: params,
                 json: true,
                 resolveWithFullResponse: true
@@ -109,6 +184,20 @@ class Strava extends BaseEvents {
             return res.body
         } catch (ex) {
             logger.error("Strava.makeRequest", path, ex)
+            throw ex
+        }
+    }
+
+    /**
+     * Get general info for the logged user.
+     */
+    getAthlete = async () => {
+        try {
+            let result = await this.makeRequest("/athlete")
+            logger.info("Strava.getAthlete", `ID ${result.id}`, result.username)
+            return result
+        } catch (ex) {
+            logger.error("Strava.getAthlete", ex)
             throw ex
         }
     }
@@ -233,7 +322,20 @@ class Strava extends BaseEvents {
             // Dispatch payment.
             await bunq.makePayment(paymentOptions)
 
-            logger.info("Strava.makePayment", `Transferred ${amount} for ${totalKm}km`)
+            // Get interval to next payment.
+            let interval
+            if (settings.strava.payments.interval == "weekly") {
+                interval = 604800000
+            } else if (settings.strava.payments.interval == "daily") {
+                interval = 86400000
+            } else {
+                return logger.warn("Strava.makePayment", "Invalid payment interval", settings.strava.payments.interval)
+            }
+
+            // Scheduled next payment.
+            this.timerPay = setTimeout(this.payForActivities, interval)
+
+            logger.info("Strava.makePayment", `Transferred ${amount} for ${totalKm}km`, `Next payment`)
         } catch (ex) {
             logger.error("Strava.makePayment", ex)
         }

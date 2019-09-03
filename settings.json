@@ -44,10 +44,6 @@
         "encoding": "utf8"
     },
     "strava": {
-        "api": {
-            // Use the latest version of the Strava API.
-            "url": "https://www.strava.com/api/v3"
-        },
         "payments": {
             // How much should be paid per kilometer ridden?
             "pricePerKm": 0.02,
