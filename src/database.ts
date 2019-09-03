@@ -88,6 +88,9 @@ class Database extends BaseEvents {
                 },
                 deserialize: data => {
                     try {
+                        if (data === null || data === "") {
+                            return {}
+                        }
                         return JSON.parse(decrypt(data))
                     } catch (ex) {
                         logger.error("Database.deserialize", ex)
