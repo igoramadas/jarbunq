@@ -31,10 +31,11 @@ Follow the [wiki](https://github.com/igoramadas/bunq-assistant/wiki/) to get det
 
     $ git clone git@github.com:igoramadas/bunq-assistant.git
     $ make clean update
-    $ vim ./settings.private.json
+    $ cat settings.private.json.sample
+    $ vim settings.private.json
     $ make run
 
-Or follow the [detailed instructions](https://github.com/igoramadas/bunq-assistant/wiki/Downloading-the-code).
+Need help? Sure you do. Then follow these [detailed instructions](https://github.com/igoramadas/bunq-assistant/wiki/Downloading-the-code)...
 
 ## Why use bunq Assistant?
 
