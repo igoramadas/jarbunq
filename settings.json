@@ -35,6 +35,13 @@
         // Safeguard to avoid low balances on accounts, by default keep at least 1 EUR.
         "minBalance": 1
     },
+    "database": {
+        "crypto": {
+            "cipher": "aes-256-ctr",
+            "key": "bunq-DB-cryp7o-k3y-plssss-CHANGE",
+            "enabled": true
+        }
+    },
     "email": {
         // When the app starts up, it will initially fetch emails received on the last 24 hours.
         "fetchHours": 24
