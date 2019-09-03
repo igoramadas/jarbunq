@@ -4,8 +4,8 @@
 .vscode/
 bin/
 coverage/
-lib/plugins.js
 node_modules/
+lib/plugins.js
 src/plugins.ts
 database.json
 npm-debug.log
