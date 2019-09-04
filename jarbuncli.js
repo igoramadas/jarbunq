@@ -9,9 +9,9 @@ logger.setup("console")
 // Action help: outputs the help to the console.
 const help = () => {
     console.log("")
-    console.log("Jarbunq CLI")
+    console.log("The Jarbunq CLI")
     console.log("------------------------------------------------------------------")
-    console.log("Usage: bacli.js [action]")
+    console.log("Usage: jarbuncli.js [action]")
     console.log("------------------------------------------------------------------")
     console.log("Actions:")
     console.log("")

@@ -1,7 +1,7 @@
 TYPEDOC:= ./node_modules/.bin/typedoc
 
 build-settings-sample:
-	./bacli.js build-settings-sample
+	./jarbuncli.js build-settings-sample
 
 clean:
 	rm -rf ./lib
@@ -19,10 +19,10 @@ docs:
 	cp .nojekyll docs/
 
 decrypt:
-	./bacli.js decrypt
+	./jarbuncli.js decrypt
 
 encrypt:
-	./bacli.js encrypt
+	./jarbuncli.js encrypt
 
 package:
 	pkg -o ./bin/jarbunq -t linux .
