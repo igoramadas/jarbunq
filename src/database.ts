@@ -42,51 +42,60 @@ class Database extends BaseEvents {
      */
     async init() {
         const FileAsync = require("lowdb/adapters/FileAsync")
+        const dbPath = path.join(__dirname, "../", "bunq-assistant.db")
+        const cryptoCipher = env["SETMEUP_CRYPTO_CIPHER"] || settings.database.crypto.cipher
+        const cryptoKey = env["SETMEUP_CRYPTO_KEY"] || settings.database.crypto.key
+        const cryptPrefix = "!enc::"
+        const IV_LENGTH = 16
+        const NONCE_LENGTH = 5
+
+        // Pre-load the current database (if any).
+        const currentData = fs.readFileSync(dbPath, {encoding: settings.general.encoding})
+
+        // Helper to encrypt the database.
+        const encrypt = data => {
+            const nonce = crypto.randomBytes(NONCE_LENGTH)
+            const iv = Buffer.alloc(IV_LENGTH)
+            nonce.copy(iv)
+
+            const cipher = crypto.createCipheriv(cryptoCipher, cryptoKey, iv)
+            const encrypted = cipher.update(data.toString())
+            return cryptPrefix + Buffer.concat([nonce, encrypted, cipher.final()]).toString("base64")
+        }
+
+        // Helper to decrypt the database. Returns the data itself if failed to decrypt.
+        const decrypt = data => {
+            try {
+                data = data.substring(cryptPrefix.length)
+                const message = Buffer.from(data, "base64")
+                const iv = Buffer.alloc(IV_LENGTH)
+                message.copy(iv, 0, 0, NONCE_LENGTH)
+
+                const encryptedText = message.slice(NONCE_LENGTH)
+                const decipher = crypto.createDecipheriv(cryptoCipher, cryptoKey, iv)
+                let decrypted = decipher.update(encryptedText)
+                return Buffer.concat([decrypted, decipher.final()]).toString()
+            } catch (ex) {
+                logger.error("Database.decrypt", ex)
+                return data
+            }
+        }
 
         // Database should be encrypted?
         if (settings.database.crypto.enabled) {
-            const cryptoCipher = env["SETMEUP_CRYPTO_CIPHER"] || settings.database.crypto.cipher
-            const cryptoKey = env["SETMEUP_CRYPTO_KEY"] || settings.database.crypto.key
-            const IV_LENGTH = 16
-            const NONCE_LENGTH = 5
-
-            // Helper to encrypt the database.
-            const encrypt = data => {
-                const nonce = crypto.randomBytes(NONCE_LENGTH)
-                const iv = Buffer.alloc(IV_LENGTH)
-                nonce.copy(iv)
-
-                const cipher = crypto.createCipheriv(cryptoCipher, cryptoKey, iv)
-                const encrypted = cipher.update(data.toString())
-                return Buffer.concat([nonce, encrypted, cipher.final()]).toString("base64")
+            if (currentData.substring(0, cryptPrefix.length) != cryptPrefix) {
+                logger.warn("Database.init", "database.crypto.enabled = true", "File in plain text, force encrypting it now")
+                fs.writeFileSync(dbPath, encrypt(currentData))
             }
 
-            // Helper to decrypt the database. Returns the data itself if failed to decrypt.
-            const decrypt = data => {
-                try {
-                    const message = Buffer.from(data, "base64")
-                    const iv = Buffer.alloc(IV_LENGTH)
-                    message.copy(iv, 0, 0, NONCE_LENGTH)
-
-                    const encryptedText = message.slice(NONCE_LENGTH)
-                    const decipher = crypto.createDecipheriv(cryptoCipher, cryptoKey, iv)
-                    let decrypted = decipher.update(encryptedText)
-                    return Buffer.concat([decrypted, decipher.final()]).toString()
-                } catch (ex) {
-                    logger.error("Database.decrypt", ex)
-                    return data
-                }
-            }
-
-            // Serializing options passed to the FileAsync adapter
-            // to encrypt / decrypt the JSON data.
+            // Serialization options to encrypt and decrypt the database.
             const serialization = {
                 serialize: data => {
                     try {
                         return encrypt(JSON.stringify(data, null, 0))
                     } catch (ex) {
-                        logger.error("Database.serialize", ex)
-                        return data
+                        logger.error("Database.serialize", "CRITICAL!", ex)
+                        process.exit()
                     }
                 },
                 deserialize: data => {
@@ -96,14 +105,19 @@ class Database extends BaseEvents {
                         }
                         return JSON.parse(decrypt(data))
                     } catch (ex) {
-                        logger.error("Database.deserialize", ex)
-                        return JSON.parse(data)
+                        logger.error("Database.deserialize", "CRITICAL!", ex)
+                        process.exit()
                     }
                 }
             }
 
             this.db = await lowdb(new FileAsync("bunq-assistant.db", serialization))
         } else {
+            if (currentData.substring(0, cryptPrefix.length) == cryptPrefix) {
+                logger.warn("Database.init", "database.crypto.enabled = false", "File is encrypted, force decrypting it now")
+                fs.writeFileSync(dbPath, decrypt(currentData))
+            }
+
             this.db = await lowdb(new FileAsync("bunq-assistant.db"))
         }
 
