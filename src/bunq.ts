@@ -116,7 +116,7 @@ Please open ${settings.app.url + "login"} on your browser
                 logger.warn("Bunq.init", "Not authorized yet")
             } else {
                 await this.refreshUserData()
-                this.timerRefresh = setInterval(this.refreshUserData, settings.bunq.refreshMinutes)
+                this.timerRefresh = setInterval(this.refreshUserData, settings.bunq.refreshMinutes * 1000 * 60)
             }
         } catch (ex) {
             logger.error("Bunq.init", "Can't load initial data", ex)
