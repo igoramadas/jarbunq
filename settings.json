@@ -33,7 +33,9 @@
         // Safeguard to avoid automatic payments of large amounts, default is 500 EUR.
         "maxPaymentAmount": 500,
         // Safeguard to avoid low balances on accounts, by default keep at least 1 EUR.
-        "minBalance": 1
+        "minBalance": 1,
+        // Auto refresh user data automatically once per hour by default, value in minutes.
+        "refreshMinutes": 60
     },
     "database": {
         "crypto": {

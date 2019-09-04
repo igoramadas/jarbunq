@@ -14,6 +14,8 @@ declare class Bunq extends BaseEvents {
     user: any;
     /** List of bank accounts. */
     accounts: any[];
+    /** Timer to auto refresh user data and accounts. */
+    timerRefresh: any;
     /**
      * Create the bunq-js-client and load initial data.
      */

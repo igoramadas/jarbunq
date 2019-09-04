@@ -53,6 +53,9 @@ Please open ${settings.app.url + "login"} on your browser
     /** List of bank accounts. */
     accounts: any[]
 
+    /** Timer to auto refresh user data and accounts. */
+    timerRefresh: any
+
     // SETUP AND AUTH
     // --------------------------------------------------------------------------
 
@@ -113,6 +116,7 @@ Please open ${settings.app.url + "login"} on your browser
                 logger.warn("Bunq.init", "Not authorized yet")
             } else {
                 await this.refreshUserData()
+                this.timerRefresh = setInterval(this.refreshUserData, settings.bunq.refreshMinutes)
             }
         } catch (ex) {
             logger.error("Bunq.init", "Can't load initial data", ex)
@@ -263,13 +267,14 @@ Please open ${settings.app.url + "login"} on your browser
      */
     makePayment = async (options: PaymentOptions) => {
         const alias: any = {value: options.toAlias}
-        let accountId, paymentMethod
+        let accountId, niceAmount
 
         try {
-            // Force amount as number.
             if (_.isString(options.amount)) {
                 options.amount = parseFloat(options.amount as string)
             }
+
+            niceAmount = (options.amount as number).toFixed(2)
 
             // Currency defaults to EUR.
             if (options.currency == null) {
@@ -289,7 +294,7 @@ Please open ${settings.app.url + "login"} on your browser
             // that this is the internal database reference, do not confuse with
             // the payment description (called reference as well by some banks).
             if (!options.reference) {
-                options.reference = moment().format("YYYYMMDD") + "-" + options.amount + "-" + options.description
+                options.reference = moment().format("YYYYMMDD") + "-" + niceAmount + "-" + options.description
             }
 
             if (!this.authenticated) {
@@ -303,7 +308,7 @@ Please open ${settings.app.url + "login"} on your browser
 
             // Check if amount is under the maximum allowed.
             if (options.amount > settings.bunq.maxPaymentAmount) {
-                return new Error(`Payment amount ${options.amount} is over the maximum allowed ${settings.bunq.maxPaymentAmount}.`)
+                return new Error(`Payment amount ${niceAmount} is over the maximum allowed ${settings.bunq.maxPaymentAmount}.`)
             }
 
             // From account is an alias or an actual ID?
@@ -355,7 +360,7 @@ Please open ${settings.app.url + "login"} on your browser
         try {
             const logDraft = options.draft ? "Draft payment" : "Regular payment"
             const logAccount = _.find(this.accounts, {id: accountId}).description
-            const logFromTo = `${options.amount} ${options.currency} from ${logAccount} to ${options.toAlias}`
+            const logFromTo = `${niceAmount} ${options.currency} from ${logAccount} to ${options.toAlias}`
             let payment
 
             // Check if payments are disable. If so, log instead, otherwise proceed.
@@ -370,7 +375,7 @@ Please open ${settings.app.url + "login"} on your browser
                         accountId,
                         options.description,
                         {
-                            value: options.amount.toString(),
+                            value: niceAmount,
                             currency: options.currency
                         },
                         alias
