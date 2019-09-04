@@ -1,6 +1,6 @@
 {
     "name": "bunq-assistant",
-    "version": "19.36.315",
+    "version": "19.36.319",
     "description": "Automate your bunq account with email and Strava based actions!",
     "keywords": ["bunq", "assistant", "bank"],
     "author": "Igor Ramadas <igor@devv.com>",
