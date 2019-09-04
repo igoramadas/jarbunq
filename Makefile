@@ -25,7 +25,7 @@ encrypt:
 	./bacli.js encrypt
 
 package:
-	pkg -o ./bin/bunq-assistant -t linux .
+	pkg -o ./bin/jarbunq -t linux .
 
 publish:
 	tsc --removeComments

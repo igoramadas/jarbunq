@@ -1,6 +1,6 @@
-# bunq Assistant
+# Jarbunq
 
-The bunq Assistant is a Node.js / TypeScript based service to automate tasks on your bunq account(s).
+Jarbunq is a Node.js / TypeScript based service to automate tasks on your bunq account(s).
 
 **This is a personal "weekend-project", and NOT an official bunq software.**
 
@@ -25,15 +25,15 @@ The bunq Assistant is a Node.js / TypeScript based service to automate tasks on 
 
 ## Super quick start guide
 
-    $ git clone git@github.com:igoramadas/bunq-assistant.git
+    $ git clone git@github.com:igoramadas/jarbunq.git
     $ make clean update
     $ cat settings.private.json.sample
     $ vim settings.private.json
     $ make run
 
-Need help? Sure you do. Then follow these [detailed instructions](https://github.com/igoramadas/bunq-assistant/wiki/Downloading-the-code)...
+Need help? Sure you do. Then follow these [detailed instructions](https://github.com/igoramadas/jarbunq/wiki/Downloading-the-code)...
 
-## Why use bunq Assistant?
+## What for?
 
 The idea came up once I decided to automate some of my bike related savings. I usually spare some money every month for the eventual replacement of chains, cassette, cables and other wear-prone parts. But it would be much cooler if I could do this automatically and based on my actual mileage, insead of a fixed monthly amount :-)
 
@@ -43,6 +43,10 @@ Please note that although this project is open-source and relatively simple to c
 
 And a big **thank you** to all the open-source warriors that are responsible for the libraries used by this project.
 
+## Why Jarbunq?
+
+Total lack of creativity. Jarvis + bunq.
+
 ## Bugs or suggestions?
 
-Post it on the [issue tracker](https://github.com/igoramadas/bunq-assistant/issues).
+Post it on the [issue tracker](https://github.com/igoramadas/jarbunq/issues).

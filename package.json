@@ -1,17 +1,21 @@
 {
-    "name": "bunq-assistant",
-    "version": "19.36.319",
+    "name": "jarbunq",
+    "version": "19.36.320",
     "description": "Automate your bunq account with email and Strava based actions!",
-    "keywords": ["bunq", "assistant", "bank"],
+    "keywords": [
+        "bunq",
+        "assistant",
+        "bank"
+    ],
     "author": "Igor Ramadas <igor@devv.com>",
-    "homepage": "https://bunq-assistant.devv.com",
-    "subdomain": "bunq-assistant",
+    "homepage": "https://jarbunq.devv.com",
+    "subdomain": "jarbunq",
     "license": "MIT",
     "main": "index",
     "bin": "index.js",
     "repository": {
         "type": "git",
-        "url": "https://github.com/igoramadas/bunq-assistant.git"
+        "url": "https://github.com/igoramadas/jarbunq.git"
     },
     "engines": {
         "node": ">= 10.0.0"

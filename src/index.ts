@@ -93,7 +93,7 @@ let startup = async function() {
     const strava = require("./strava")
     await strava.init()
 
-    // Users can extend the bunq Assistant by creating a plugins file
+    // Users can extend Jarbunq by creating a plugins file
     // that will be loaded here.
     const pluginsFile = path.join(__dirname, "plugins.js")
     if (fs.existsSync(pluginsFile)) {

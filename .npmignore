@@ -7,7 +7,7 @@ coverage/
 node_modules/
 lib/plugins.js
 src/plugins.ts
-bunq-assistant.db
+jarbunq.db
 npm-debug.log
 settings.private.json
 .nojekyll

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-// bunq Assistant CLI
+// Jarbunq CLI
 
 const fs = require("fs")
 const logger = require("anyhow")
@@ -9,7 +9,7 @@ logger.setup("console")
 // Action help: outputs the help to the console.
 const help = () => {
     console.log("")
-    console.log("bunq Assistant CLI")
+    console.log("Jarbunq CLI")
     console.log("------------------------------------------------------------------")
     console.log("Usage: bacli.js [action]")
     console.log("------------------------------------------------------------------")
@@ -27,9 +27,9 @@ const encrypt = () => {
 
     try {
         setmeup.encrypt("settings.private.json")
-        logger.info("bunq Assistant CLI", "Encrypted values on settings.private.json")
+        logger.info("Jarbunq CLI", "Encrypted values on settings.private.json")
     } catch (ex) {
-        logger.error("bunq Assistant CLI", "encrypt", ex)
+        logger.error("Jarbunq CLI", "encrypt", ex)
     }
 }
 
@@ -40,9 +40,9 @@ const decrypt = () => {
 
     try {
         setmeup.decrypt("settings.private.json")
-        logger.info("bunq Assistant CLI", "Decrypted values on settings.private.json")
+        logger.info("Jarbunq CLI", "Decrypted values on settings.private.json")
     } catch (ex) {
-        logger.error("bunq Assistant CLI", "decrypt", ex)
+        logger.error("Jarbunq CLI", "decrypt", ex)
     }
 }
 
@@ -77,7 +77,7 @@ const buildSettingsSample = () => {
     // Write sample settings.
     fs.writeFileSync(__dirname + "/settings.private.json.sample", JSON.stringify(privateSettings, null, 4))
 
-    logger.info("bunq Assistant CLI", "Generated / updated the settings.private.json.sample file")
+    logger.info("Jarbunq CLI", "Generated / updated the settings.private.json.sample file")
 }
 
 // Parse CLI arguments...

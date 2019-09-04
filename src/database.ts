@@ -42,7 +42,7 @@ class Database extends BaseEvents {
      */
     async init() {
         const FileAsync = require("lowdb/adapters/FileAsync")
-        const dbPath = path.join(__dirname, "../", "bunq-assistant.db")
+        const dbPath = path.join(__dirname, "../", "jarbunq.db")
         const cryptoCipher = env["SETMEUP_CRYPTO_CIPHER"] || settings.database.crypto.cipher
         const cryptoKey = env["SETMEUP_CRYPTO_KEY"] || settings.database.crypto.key
         const cryptPrefix = "!enc::"
@@ -114,14 +114,14 @@ class Database extends BaseEvents {
                 }
             }
 
-            this.db = await lowdb(new FileAsync("bunq-assistant.db", serialization))
+            this.db = await lowdb(new FileAsync("jarbunq.db", serialization))
         } else {
             if (currentData && currentData.substring(0, cryptPrefix.length) == cryptPrefix) {
                 logger.warn("Database.init", "database.crypto.enabled = false", "File is encrypted, force decrypting it now")
                 fs.writeFileSync(dbPath, decrypt(currentData))
             }
 
-            this.db = await lowdb(new FileAsync("bunq-assistant.db"))
+            this.db = await lowdb(new FileAsync("jarbunq.db"))
         }
 
         // Write defaults.

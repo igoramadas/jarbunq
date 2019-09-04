@@ -2,7 +2,7 @@
     <div>
         <section class="section">
             <p>
-                The bunq Assistant is running!
+                Jarbunq is running!
             </p>
         </section>
     </div>
