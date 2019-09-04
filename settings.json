@@ -5,9 +5,9 @@
 
 {
     "amazon": {
-        // Add a 0.02% on top of transfers from main account to the amazon account,
+        // Add a 0.5% on top of transfers from main account to the amazon account,
         // as a buffer for occasional fees.
-        "paymentMultiplier": 1.002
+        "paymentMultiplier": 1.005
     },
     "app": {
         // List of IPs allowed to access the bunq Assistant pages. Leave blank to allow all.
