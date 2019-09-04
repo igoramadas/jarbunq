@@ -7,7 +7,7 @@ import logger = require("anyhow")
 const settings = require("setmeup").settings
 
 // Email parsing strings.
-const totalText = "Den aktuellen Rechnungsbetrag von "
+const totalText = "Den aktuellen Rechnungsbetrag von"
 
 // Exported function. Will return false if Amazon account has enough funds
 // to pay the bills (consider this a good thing!), otherwise true.
@@ -19,6 +19,7 @@ const EmailAction = async (message: any) => {
         let totalIndex = message.text.indexOf(totalText)
         partial = message.text.substring(totalIndex + totalText.length + 1)
         partial = partial.substring(0, partial.indexOf(" "))
+        partial = partial.replace(".", "")
         partial = partial.replace(",", ".")
         invoiceAmount = partial.trim()
 
@@ -27,7 +28,7 @@ const EmailAction = async (message: any) => {
         // Check how much is available at the Amazon account.
         if (balance >= invoiceAmount) {
             logger.info("EmailAction.Lbb", message.messageId, `Got invoice for ${invoiceAmount}, current account balance is ${balance}, all good`)
-            return false
+            return true
         }
 
         logger.warn("EmailAction.Lbb", `Invoice ${invoiceAmount} is higher than current account balance ${balance}`)
