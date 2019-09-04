@@ -266,11 +266,15 @@ Please open ${settings.app.url + "login"} on your browser
         let accountId, paymentMethod
 
         try {
+            // Force amount as number.
+            if (_.isString(options.amount)) {
+                options.amount = parseFloat(options.amount as string)
+            }
+
             // Currency defaults to EUR.
             if (options.currency == null) {
                 options.currency = "EUR"
             }
-
             // Get default type of payment (regular or draft) if options.draft was not specified.
             if (options.draft == null) {
                 options.draft = settings.bunq.draftPayment
@@ -402,17 +406,18 @@ Please open ${settings.app.url + "login"} on your browser
      * @param step The payment step (preparing or processing)
      */
     private failedPayment = (options: PaymentOptions, err: Error, step: string) => {
-        logger.error("Bunq.failedPayment", `${step} payment`, `${options.amount} ${options.currency} to ${options.toAlias}`, err)
-
+        let amount = (options.amount as number).toFixed(2)
         let errorString = err.toString()
+
+        logger.error("Bunq.failedPayment", `${step} payment`, `${amount} ${options.currency} to ${options.toAlias}`, err)
 
         // Make sure we have "Error" on the error string.
         if (errorString.indexOf("Error") < 0) {
             errorString = "Error: " + errorString
         }
 
-        const subject = `Payment ${options.amount} failed to ${options.toAlias}`
-        const message = `Payment of ${(options.amount as number).toFixed(2)} ${options.currency}
+        const subject = `Payment ${amount} failed to ${options.toAlias}`
+        const message = `Payment of ${amount} ${options.currency}
                          from account ${options.fromAlias} to ${options.toAlias} failed.
                          <br>
                          Description: ${options.description}
