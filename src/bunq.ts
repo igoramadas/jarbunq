@@ -250,7 +250,7 @@ Please open ${settings.app.url + "login"} on your browser
                 throw new Error(`Account ${alias} not found.`)
             }
 
-            return acc.balance.value
+            return parseFloat(acc.balance.value)
         } catch (ex) {
             logger.error("Bunq.getAccountBalance", alias, ex)
             throw ex
