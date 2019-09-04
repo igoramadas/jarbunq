@@ -21,7 +21,7 @@ const EmailAction = async (message: any) => {
         partial = partial.substring(0, partial.indexOf(" "))
         partial = partial.replace(".", "")
         partial = partial.replace(",", ".")
-        invoiceAmount = partial.trim()
+        invoiceAmount = parseFloat(partial.trim())
 
         let balance = await bunq.getAccountBalance(settings.bunq.accounts.amazon)
 
