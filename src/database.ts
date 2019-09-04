@@ -49,8 +49,11 @@ class Database extends BaseEvents {
         const IV_LENGTH = 16
         const NONCE_LENGTH = 5
 
-        // Pre-load the current database (if any).
-        const currentData = fs.readFileSync(dbPath, {encoding: settings.general.encoding})
+        // Pre-load the current database (if it exists).
+        let currentData
+        if (fs.existsSync(dbPath)) {
+            currentData = fs.readFileSync(dbPath, {encoding: settings.general.encoding})
+        }
 
         // Helper to encrypt the database.
         const encrypt = data => {
@@ -83,7 +86,7 @@ class Database extends BaseEvents {
 
         // Database should be encrypted?
         if (settings.database.crypto.enabled) {
-            if (currentData.substring(0, cryptPrefix.length) != cryptPrefix) {
+            if (currentData && currentData.substring(0, cryptPrefix.length) != cryptPrefix) {
                 logger.warn("Database.init", "database.crypto.enabled = true", "File in plain text, force encrypting it now")
                 fs.writeFileSync(dbPath, encrypt(currentData))
             }
@@ -113,7 +116,7 @@ class Database extends BaseEvents {
 
             this.db = await lowdb(new FileAsync("bunq-assistant.db", serialization))
         } else {
-            if (currentData.substring(0, cryptPrefix.length) == cryptPrefix) {
+            if (currentData && currentData.substring(0, cryptPrefix.length) == cryptPrefix) {
                 logger.warn("Database.init", "database.crypto.enabled = false", "File is encrypted, force decrypting it now")
                 fs.writeFileSync(dbPath, decrypt(currentData))
             }
