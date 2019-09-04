@@ -82,6 +82,9 @@ let startup = async function() {
     const notifications = require("./notifications")
     await notifications.init()
 
+    // Bunq client wrapper.
+    const bunq = require("./bunq")
+
     // Start the email manager.
     const emailManager = require("./email-manager")
     await emailManager.init()
@@ -89,9 +92,6 @@ let startup = async function() {
     // Start the Strava wrapper.
     const strava = require("./strava")
     await strava.init()
-
-    // Finally require the bunq wrapper.
-    const bunq = require("./bunq")
 
     // Users can extend the bunq Assistant by creating a plugins file
     // that will be loaded here.
