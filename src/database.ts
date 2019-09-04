@@ -3,9 +3,11 @@
 import BaseEvents = require("./base-events")
 
 const env = process.env
+const fs = require("fs")
 const lowdb = require("lowdb")
 const crypto = require("crypto")
 const logger = require("anyhow")
+const path = require("path")
 const settings = require("setmeup").settings
 
 /**
@@ -76,8 +78,9 @@ class Database extends BaseEvents {
                 }
             }
 
-            // Encryptor options passed to the FileAsync adapter.
-            const encryptor = {
+            // Serializing options passed to the FileAsync adapter
+            // to encrypt / decrypt the JSON data.
+            const serialization = {
                 serialize: data => {
                     try {
                         return encrypt(JSON.stringify(data, null, 0))
@@ -99,9 +102,9 @@ class Database extends BaseEvents {
                 }
             }
 
-            this.db = await lowdb(new FileAsync("database.json.enc", encryptor))
+            this.db = await lowdb(new FileAsync("bunq-assistant.db", serialization))
         } else {
-            this.db = await lowdb(new FileAsync("database.json"))
+            this.db = await lowdb(new FileAsync("bunq-assistant.db"))
         }
 
         // Write defaults.
