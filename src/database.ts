@@ -11,7 +11,7 @@ const path = require("path")
 const settings = require("setmeup").settings
 
 /**
- * Manages data stored by the service, data stored on the /database.json file.
+ * Manages data stored by the service on the jarbunq.db file.
  */
 class Database extends BaseEvents {
     private static _instance: Database
@@ -38,7 +38,7 @@ class Database extends BaseEvents {
     // --------------------------------------------------------------------------
 
     /**
-     * Load from database.json store.
+     * Init and load data from jarbunq.db.
      */
     async init() {
         const FileAsync = require("lowdb/adapters/FileAsync")

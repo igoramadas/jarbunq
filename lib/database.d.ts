@@ -1,6 +1,6 @@
 import BaseEvents = require("./base-events");
 /**
- * Manages data stored by the service, data stored on the /database.json file.
+ * Manages data stored by the service on the jarbunq.db file.
  */
 declare class Database extends BaseEvents {
     private static _instance;
@@ -14,7 +14,7 @@ declare class Database extends BaseEvents {
     /** Shortcut to db.unset(). */
     unset: Function;
     /**
-     * Load from database.json store.
+     * Init and load data from jarbunq.db.
      */
     init(): Promise<void>;
     /**
