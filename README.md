@@ -23,10 +23,6 @@ The bunq Assistant is a Node.js / TypeScript based service to automate tasks on 
 - Support hot-reloading of settings and modules (no need to restart the service)
 - Web frontend to configure the settings and view status / logs
 
-## Interested?
-
-Follow the [wiki](https://github.com/igoramadas/bunq-assistant/wiki/) to get detailed instructions on how to download, setup and run the bunq Assistant on your machine / cloud environment. Found a bug? Then [open an issue](https://github.com/igoramadas/bunq-assistant/issues/new).
-
 ## Super quick start guide
 
     $ git clone git@github.com:igoramadas/bunq-assistant.git

@@ -1,12 +1,8 @@
 {
     "name": "bunq-assistant",
-    "version": "19.36.313",
+    "version": "19.36.314",
     "description": "Automate your bunq account with email and Strava based actions!",
-    "keywords": [
-        "bunq",
-        "assistant",
-        "bank"
-    ],
+    "keywords": ["bunq", "assistant", "bank"],
     "author": "Igor Ramadas <igor@devv.com>",
     "homepage": "https://bunq-assistant.devv.com",
     "subdomain": "bunq-assistant",
@@ -21,7 +17,8 @@
         "node": ">= 10.0.0"
     },
     "scripts": {
-        "docs": "make docs"
+        "docs": "make docs",
+        "start": "node index.js"
     },
     "dependencies": {
         "@bunq-community/bunq-js-client": "^0.42.1",

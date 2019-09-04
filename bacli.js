@@ -10,19 +10,19 @@ logger.setup("console")
 const help = () => {
     console.log("")
     console.log("bunq Assistant CLI")
-    console.log("------------------------------------------------------")
+    console.log("------------------------------------------------------------------")
     console.log("Usage: bacli.js [action]")
-    console.log("------------------------------------------------------")
+    console.log("------------------------------------------------------------------")
     console.log("Actions:")
     console.log("")
-    console.log("  encrypt   : encrypts the settings.private.json file")
-    console.log("  decrypt   : decrypts the settings.private.json file")
+    console.log("  encrypt   : encrypt database and settings.private.json files")
+    console.log("  decrypt   : decrypt database and settings.private.json files")
     console.log("")
-    console.log("------------------------------------------------------")
+    console.log("------------------------------------------------------------------")
 }
 
 // Action encrypt: encrypts the settings.private.json file.
-const encryptSettings = () => {
+const encrypt = () => {
     const setmeup = require("setmeup")
 
     try {
@@ -34,7 +34,7 @@ const encryptSettings = () => {
 }
 
 // Action decrypt: decrypts the settings.private.json file.
-const decryptSettings = () => {
+const decrypt = () => {
     const setmeup = require("setmeup")
     logger.setup()
 
@@ -85,9 +85,9 @@ for (let arg of process.argv) {
     if (arg == "help") {
         return help()
     } else if (arg == "encrypt") {
-        return encryptSettings()
+        return encrypt()
     } else if (arg == "decrypt") {
-        return decryptSettings()
+        return decrypt()
     } else if (arg == "build-settings-sample") {
         return buildSettingsSample()
     }
