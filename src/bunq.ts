@@ -338,13 +338,6 @@ Please open ${settings.app.url + "login"} on your browser
                 alias.type = "IBAN"
             }
 
-            // Is it a draft or regular payment?
-            if (options.draft) {
-                paymentMethod = bunqClient.api.draftPayment.post
-            } else {
-                paymentMethod = bunqClient.api.payment.post
-            }
-
             // Make hash from reference.
             const hash = crypto.createHash("sha1")
             options.hash = hash.update(options.reference).digest("hex")
@@ -370,16 +363,30 @@ Please open ${settings.app.url + "login"} on your browser
                 payment = {disabled: true}
                 logger.warn("Bunq.makePayment", `${logDraft} ! DISABLED !`, logFromTo, options.description)
             } else {
-                payment = await paymentMethod(
-                    this.user.id,
-                    accountId,
-                    options.description,
-                    {
-                        value: options.amount.toString(),
-                        currency: options.currency
-                    },
-                    alias
-                )
+                // Is it a draft or regular payment?
+                if (options.draft) {
+                    payment = await bunqClient.api.draftPayment.post(
+                        this.user.id,
+                        accountId,
+                        options.description,
+                        {
+                            value: options.amount.toString(),
+                            currency: options.currency
+                        },
+                        alias
+                    )
+                } else {
+                    payment = await bunqClient.api.payment.post(
+                        this.user.id,
+                        accountId,
+                        options.description,
+                        {
+                            value: options.amount.toString(),
+                            currency: options.currency
+                        },
+                        alias
+                    )
+                }
 
                 // Save payment record to database, which is a copy of
                 // the payment options but with a date added.
