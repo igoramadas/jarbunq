@@ -40,6 +40,18 @@ const EmailAction = async (message: any) => {
         partial = partial.replace(".", "").replace(",", ".")
         amount = partial.trim()
 
+        // Parsing failed?
+        if (isNaN(amount)) {
+            logger.warn("EmailAction.Amazon", message.messageId, "Could not find correct order amount, will not process")
+            return false
+        }
+
+        // Order has no amount (downloads for example)?
+        if (parseFloat(amount) < 0.01) {
+            logger.warn("EmailAction.Amazon", message.messageId, "Free order or download, will not process")
+            return false
+        }
+
         // Set transaction description based on products.
         let orderIndex = message.text.indexOf(orderNumberText)
         partial = message.text.substring(orderIndex + orderNumberText.length)
