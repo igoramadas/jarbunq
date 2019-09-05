@@ -85,21 +85,6 @@ let startup = async function() {
     // Bunq client wrapper.
     const bunq = require("./bunq")
 
-    // Start the email manager.
-    const emailManager = require("./email-manager")
-    await emailManager.init()
-
-    // Start the Strava wrapper.
-    const strava = require("./strava")
-    await strava.init()
-
-    // Users can extend Jarbunq by creating a plugins file
-    // that will be loaded here.
-    const pluginsFile = path.join(__dirname, "plugins.js")
-    if (fs.existsSync(pluginsFile)) {
-        require("./plugins.js")
-    }
-
     // Debug enabled? Log axios calls and bunq client requests.
     if (settings.general.debug) {
         require("axios-debug-log")({
@@ -117,6 +102,21 @@ let startup = async function() {
 
     // Start the bunq wrapper.
     await bunq.init()
+
+    // Start the email manager.
+    const emailManager = require("./email-manager")
+    await emailManager.init()
+
+    // Start the Strava wrapper.
+    const strava = require("./strava")
+    await strava.init()
+
+    // Users can extend Jarbunq by creating a plugins file
+    // that will be loaded here.
+    const pluginsFile = path.join(__dirname, "plugins.js")
+    if (fs.existsSync(pluginsFile)) {
+        require("./plugins.js")
+    }
 
     // Gracefully shutdown.
     process.on("SIGTERM", () => {
