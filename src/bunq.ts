@@ -425,7 +425,7 @@ Please open ${settings.app.url + "login"} on your browser
 
         // Make sure we have "Error" on the error string.
         if (errorString.indexOf("Error") < 0) {
-            errorString = "Error: " + errorString
+            errorString = "Error - " + errorString
         }
 
         const subject = `Payment ${amount} failed to ${options.toAlias}`

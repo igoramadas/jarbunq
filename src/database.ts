@@ -138,7 +138,7 @@ class Database extends BaseEvents {
      * @param table The table name.
      * @param value The object to be added.
      */
-    insert(table: string, value: any) {
+    insert = (table: string, value: any) => {
         this.db
             .get(table)
             .push(value)

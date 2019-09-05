@@ -22,7 +22,7 @@ declare class Database extends BaseEvents {
      * @param table The table name.
      * @param value The object to be added.
      */
-    insert(table: string, value: any): void;
+    insert: (table: string, value: any) => void;
 }
 declare const _default: Database;
 export = _default;
