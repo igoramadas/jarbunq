@@ -329,8 +329,13 @@ and copy the Refresh Token to settings.strava.refreshToken
             const elevation = _.sumBy(activities, "elevation")
             const totalKm = distance + elevation / 1000
 
+            // Not enough mileage for this period?
+            if (distance < 1) {
+                return logger.warn("Strava.payForActivities", "Not enough mileage, payment skipped")
+            }
+
             // Calculate total amount based on distance and elevation.
-            const amount = (totalKm * settings.strava.payments.pricePerKm).toFixed(2)
+            const amount = totalKm * settings.strava.payments.pricePerKm
 
             // Define payment options.
             const paymentOptions = {
@@ -350,15 +355,15 @@ and copy the Refresh Token to settings.strava.refreshToken
             } else if (settings.strava.payments.interval == "daily") {
                 interval = 86400000
             } else {
-                return logger.warn("Strava.makePayment", "Invalid payment interval", settings.strava.payments.interval)
+                return logger.warn("Strava.payForActivities", "Invalid payment interval", settings.strava.payments.interval)
             }
 
             // Scheduled next payment.
             this.timerPay = setTimeout(this.payForActivities, interval)
 
-            logger.info("Strava.makePayment", `Transferred ${amount} for ${totalKm}km`, `Next payment`)
+            logger.info("Strava.payForActivities", `Transferred ${amount.toFixed(2)} for ${totalKm}km`, `Next payment`)
         } catch (ex) {
-            logger.error("Strava.makePayment", ex)
+            logger.error("Strava.payForActivities", ex)
         }
     }
 }
