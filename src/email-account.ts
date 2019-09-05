@@ -258,7 +258,7 @@ class EmailAccount extends BaseEvents {
                     if (result) {
                         logger.info("EmailAccount.processMessage", this.id, logRule.join(", "), message.messageId, "Processed")
                     } else {
-                        logger.warn("EmailAccount.processMessage", this.id, logRule.join(", "), message.messageId, "Skipped")
+                        logger.warn("EmailAccount.processMessage", this.id, logRule.join(", "), message.messageId, message.subject, "Skipped")
                     }
                 } catch (ex) {
                     logger.error("EmailAccount.processMessage", this.id, logRule.join(", "), message.messageId, ex)
