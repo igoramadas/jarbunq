@@ -46,7 +46,9 @@
     },
     "email": {
         // When the app starts up, it will initially fetch emails received on the last 24 hours.
-        "fetchHours": 24
+        "fetchHours": 24,
+        // When failed to open the email inbox, retry after 10 seconds by default, value in milliseconds.
+        "retryInterval": 10000
     },
     "general": {
         // Use UTF8 as default encoding for files and streams.
