@@ -145,7 +145,7 @@ class EmailAccount extends BaseEvents {
             fetcher.on("message", msg => this.downloadMessage(msg))
             fetcher.once("error", err => logger.error("EmailAccount.fetchMessages.onError", this.id, err))
 
-            logger.info("EmailAccount.fetchMessages", this.id, `${results.length} messages`)
+            logger.info("EmailAccount.fetchMessages", this.id, `${results.length} new message(s)`)
         })
     }
 

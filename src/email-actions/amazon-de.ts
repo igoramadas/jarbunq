@@ -8,6 +8,7 @@ const settings = require("setmeup").settings
 
 // Email parsing strings.
 const totalText = "Order Total Including VAT"
+const totalTextNoVat = "Order Total:"
 const orderNumberText = "Order #"
 
 // Exported function. Will return false if order amount is not in EUR.
@@ -17,7 +18,15 @@ const EmailAction = async (message: any) => {
     try {
         // Find where the total order is defined on the email plain text.
         let totalIndex = message.text.indexOf(totalText)
-        partial = message.text.substring(totalIndex + totalText.length + 1)
+
+        // Not found? Try option 2 (no VAT specified).
+        if (totalIndex < 0) {
+            totalIndex = message.text.indexOf(totalTextNoVat)
+            partial = message.text.substring(totalIndex + totalTextNoVat.length)
+        } else {
+            partial = message.text.substring(totalIndex + totalText.length)
+        }
+
         partial = partial.substring(0, partial.indexOf("\n"))
 
         // Only proceed if order was made in euros!
@@ -27,7 +36,8 @@ const EmailAction = async (message: any) => {
         }
 
         // Get actual total amount.
-        partial = partial.replace("EUR", "").replace(",", ".")
+        partial = partial.replace("EUR", "").replace(":", "")
+        partial = partial.replace(".", "").replace(",", ".")
         amount = partial.trim()
 
         // Set transaction description based on products.
