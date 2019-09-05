@@ -48,6 +48,10 @@ And a big **thank you** to all the open-source warriors that are responsible for
 
 Total lack of creativity. Jarvis + bunq.
 
+## How stable is this?
+
+I have it running myself since 1st of September 2019. No issues so far, and a bunch of payments processed successfully :-)
+
 ## Bugs or suggestions?
 
 Post it on the [issue tracker](https://github.com/igoramadas/jarbunq/issues).
