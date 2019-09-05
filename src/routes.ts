@@ -55,6 +55,12 @@ let Routes = {
         }
     },
 
+    /** History route. */
+    "get/history": async function(req, res) {
+        req.vueOptions.head.title = "History"
+        res.renderVue("history.vue", {}, req.vueOptions)
+    },
+
     /** Global error page, expects actual error message on the query "e". */
     "get/error": async function(req, res) {
         req.vueOptions.head.title = "Error"
