@@ -4,8 +4,8 @@
 .vscode/
 bin/
 coverage/
+lib/
 node_modules/
-lib/plugins.js
 src/plugins.ts
 jarbunq.db
 npm-debug.log

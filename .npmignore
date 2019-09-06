@@ -4,9 +4,9 @@
 .vscode/
 bin/
 coverage/
+
 node_modules/
-lib/plugins.js
-src/plugins.ts
+src/
 jarbunq.db
 npm-debug.log
 settings.private.json

@@ -1,6 +1,6 @@
 # Jarbunq
 
-FROM node:12.9.1-alpine
+FROM node:12.10.0-alpine
 ENV NODE_ENV production
 ENV NPM_CONFIG_LOGLEVEL warn
 
