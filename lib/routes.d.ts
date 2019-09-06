@@ -14,8 +14,6 @@ declare let Routes: {
     "get/auth": (_req: any, res: any) => Promise<void>;
     /** OAuth2 redirect to process the code and get an access token. */
     "get/auth/callback": (req: any, res: any) => Promise<any>;
-    /** History route. */
-    "get/history": (req: any, res: any) => Promise<void>;
     /** Global error page, expects actual error message on the query "e". */
     "get/error": (req: any, res: any) => Promise<void>;
 };

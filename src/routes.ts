@@ -1,6 +1,6 @@
 // Routes
 
-const bunq = require("./bunq")
+import bunq = require("./bunq")
 
 /**
  * Routes are defined using the format "method/route". So for instance
@@ -53,12 +53,6 @@ let Routes = {
         } else {
             res.redirect("/error?e=OAuth2 flow failed")
         }
-    },
-
-    /** History route. */
-    "get/history": async function(req, res) {
-        req.vueOptions.head.title = "History"
-        res.renderVue("history.vue", {}, req.vueOptions)
     },
 
     /** Global error page, expects actual error message on the query "e". */
