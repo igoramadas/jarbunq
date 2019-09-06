@@ -33,7 +33,7 @@ publish:
 	tsc
 
 run:
-rm -rf ./expressvue
+	rm -rf ./expressvue
 	tsc
 	DEBUG=axios node index.js
 
