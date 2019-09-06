@@ -401,6 +401,17 @@ Please open ${settings.app.url + "login"} on your browser
 
                 this.events.emit("makePayment", paymentRecord)
                 logger.info("Bunq.makePayment", logDraft, logFromTo, options.description)
+
+                // Send notification of successful payment?
+                if (settings.notification.events.paymentSuccess) {
+                    const subject = `Payment ${niceAmount} to ${options.toAlias}`
+                    const message = `Payment of ${niceAmount} ${options.currency}
+                                    from account ${options.fromAlias} to ${options.toAlias} successful.
+                                    \n
+                                    Description: ${options.description}`
+
+                    notifications.send({subject: subject, message: message})
+                }
             }
 
             return payment
@@ -423,21 +434,24 @@ Please open ${settings.app.url + "login"} on your browser
 
         logger.error("Bunq.failedPayment", `${step} payment`, `${amount} ${options.currency} to ${options.toAlias}`, err)
 
-        // Make sure we have "Error" on the error string.
-        if (errorString.indexOf("Error") < 0) {
-            errorString = "Error - " + errorString
+        // Send notification of payment failures?
+        if (settings.notification.events.paymentError) {
+            // Make sure we have "Error" on the error string.
+            if (errorString.indexOf("Error") < 0) {
+                errorString = "Error - " + errorString
+            }
+
+            const subject = `Payment ${amount} failed to ${options.toAlias}`
+            const message = `Payment of ${amount} ${options.currency}
+                            from account ${options.fromAlias} to ${options.toAlias} failed.
+                            \n
+                            Description: ${options.description}
+                            \n\n
+                            ${errorString}`
+
+            // Send notification of failed payment.
+            notifications.send({subject: subject, message: message})
         }
-
-        const subject = `Payment ${amount} failed to ${options.toAlias}`
-        const message = `Payment of ${amount} ${options.currency}
-                         from account ${options.fromAlias} to ${options.toAlias} failed.
-                         <br>
-                         Description: ${options.description}
-                         <br><br>
-                         ${errorString}`
-
-        // Send notification of failed payment.
-        notifications.send({subject: subject, message: message})
     }
 }
 

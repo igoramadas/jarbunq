@@ -100,7 +100,7 @@ class Notifications extends BaseEvents {
                 appTitle: settings.app.title,
                 appUrl: settings.app.url,
                 owner: settings.app.owner ? settings.app.owner : "fellow bunqer",
-                message: options.message
+                message: options.message.replace(/\\n/gi, "<br>")
             }
 
             // Load template and replace keywords.

@@ -54,6 +54,14 @@
         // Use UTF8 as default encoding for files and streams.
         "encoding": "utf8"
     },
+    "notification": {
+        "events": {
+            // Do not notify successful payments by default.
+            "paymentOk": false,
+            // Notify payment failures.
+            "paymentError": true
+        }
+    },
     "strava": {
         "payments": {
             // How much should be paid per kilometer ridden?
