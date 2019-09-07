@@ -228,6 +228,8 @@ and copy the Refresh Token to settings.strava.refreshToken
      * @param query Query options, currently only supports "since".
      */
     getActivities = async (query: any) => {
+        logger.debug("Strava.getRecentActivities", query)
+
         const arrLogQuery = Object.entries(query).map(p => p[0] + "=" + p[1])
         const logQuery = arrLogQuery.join(", ")
 
@@ -288,6 +290,8 @@ and copy the Refresh Token to settings.strava.refreshToken
      * @param since Since that many days, for example 7 gets all activities for last 7 days excluding today.
      */
     getRecentActivities = async (since: number) => {
+        logger.debug("Strava.getRecentActivities", since)
+
         try {
             let after = moment().subtract(since, "days")
             let before = moment().subtract(1, "days")
@@ -328,6 +332,8 @@ and copy the Refresh Token to settings.strava.refreshToken
             const distance = _.sumBy(activities, "distance")
             const elevation = _.sumBy(activities, "elevation")
             const totalKm = distance + elevation / 1000
+
+            logger.debug("Strava.payForActivities", paymentInterval, `Distance ${distance}`, `Elevation ${elevation}`, `Total ${totalKm}`)
 
             // Not enough mileage for this period?
             if (distance < 1) {

@@ -12,6 +12,8 @@ const totalText = "Den aktuellen Rechnungsbetrag von"
 // Exported function. Will return false if Amazon account has enough funds
 // to pay the bills (consider this a good thing!), otherwise true.
 const EmailAction = async (message: any) => {
+    logger.debug("EmailAction.Lbb", message.messageId, message.from, message.subject, `To ${message.to}`)
+
     let invoiceAmount, description, partial
 
     try {

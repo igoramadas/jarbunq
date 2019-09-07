@@ -239,6 +239,8 @@ Please open ${settings.app.url + "login"} on your browser
      * @event makePayment
      */
     getAccountBalance = async (alias: string) => {
+        logger.debug("Bunq.getAccountBalance", alias)
+
         try {
             if (!this.authenticated) {
                 throw new Error("Not authenticated to bunq")
@@ -266,6 +268,8 @@ Please open ${settings.app.url + "login"} on your browser
      * @param options The payment options.
      */
     makePayment = async (options: PaymentOptions) => {
+        logger.debug("Bunq.makePayment", options)
+
         const alias: any = {value: options.toAlias}
         let accountId, niceAmount
 
@@ -368,6 +372,8 @@ Please open ${settings.app.url + "login"} on your browser
             const logFromTo = `${niceAmount} ${options.currency} from ${logAccount} to ${options.toAlias}`
             let payment
 
+            logger.debug("Bunq.makePayment", "Will trigger now", `From account ${accountId}`, options)
+
             // Check if payments are disable. If so, log instead, otherwise proceed.
             if (settings.bunq.disablePayments) {
                 payment = {disabled: true}
@@ -405,7 +411,7 @@ Please open ${settings.app.url + "login"} on your browser
                 database.insert("payments", paymentRecord)
 
                 this.events.emit("makePayment", paymentRecord)
-                logger.info("Bunq.makePayment", logDraft, logFromTo, options.description)
+                logger.info("Bunq.makePayment", logDraft, `ID ${payment.id}`, logFromTo, options.description)
 
                 // Send notification of successful payment?
                 if (settings.notification.events.paymentSuccess) {

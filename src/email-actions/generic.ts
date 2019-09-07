@@ -8,6 +8,8 @@ const settings = require("setmeup").settings
 
 // Exported function. Always returns true (or rejects).
 export = async (message: any, rule: any) => {
+    logger.debug("EmailAction.Generic", message.messageId, message.from, message.subject, `To ${message.to}`)
+
     let descriptions = ["Email rule", `from ${rule.from.join(", ")}`]
 
     try {

@@ -163,6 +163,8 @@ class EmailAccount extends BaseEvents {
                 // We don't need the brackets on the message ID.
                 parsedMessage.messageId = parsedMessage.messageId.replace(/\</g, "").replace(/\>/g, "")
 
+                logger.debug("EmailAccount.downloadMessage", parsedMessage.messageId, parsedMessage.from, parsedMessage.subject, `To ${parsedMessage.to}`)
+
                 // Only process message if we haven't done it before (in case message goes back to inbox).
                 if (!this.messageIds[parsedMessage.messageId] && parsedMessage) {
                     await this.processMessage(parsedMessage)
@@ -181,6 +183,8 @@ class EmailAccount extends BaseEvents {
      * @param message The downloaded email message
      */
     async processMessage(message: any): Promise<void> {
+        logger.debug("EmailAccount.processMessage", message.messageId, message.from, message.subject, `To ${message.to}`)
+
         let emailActionRecord = null
 
         // Iterate rules.

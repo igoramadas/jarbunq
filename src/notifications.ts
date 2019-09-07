@@ -59,6 +59,8 @@ class Notifications extends BaseEvents {
      * @event send
      */
     send = async (options: NotificationOptions) => {
+        logger.debug("Notifications.send", options)
+
         if (this.smtp) {
             this.toEmail(options as EmailOptions)
         } else {

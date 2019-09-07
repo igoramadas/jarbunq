@@ -3,6 +3,7 @@
 // necessary money to the Amazon Card account.
 
 import bunq = require("../bunq")
+import logger = require("anyhow")
 const settings = require("setmeup").settings
 
 // Email parsing strings.
@@ -11,6 +12,8 @@ const arrOrderNumberText = ["Order #", "Order  #:"]
 
 // Exported function. Will return false if order amount is not in EUR.
 const EmailAction = async (message: any) => {
+    logger.debug("EmailAction.AmazonDe", message.messageId, message.from, message.subject, `To ${message.to}`)
+
     let amount, description, orderNumber, partial
 
     try {
