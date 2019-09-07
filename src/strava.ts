@@ -297,14 +297,12 @@ and copy the Refresh Token to settings.strava.refreshToken
             let before = moment().subtract(1, "days")
 
             // Set after and before midnight.
-            after
-                .hours(0)
-                .minutes(0)
-                .seconds(0)
-            before
-                .hours(23)
-                .minutes(59)
-                .seconds(59)
+            after.hours(0)
+            after.minutes(0)
+            after.seconds(0)
+            before.hours(23)
+            before.minutes(59)
+            before.seconds(59)
 
             let query = {
                 after: after.unix(),
