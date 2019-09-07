@@ -14,11 +14,11 @@ Jarbunq is a Node.js / TypeScript based service to automate tasks on your bunq a
 - Transfers can be fully automated, or as draft (with approval needed by the owner)
 - Everything logged to the console by default, easily customized to log elsewhere
 - Email notifications of failed transactions
-- Easily add your own features via a plugins file
+- Webhooks to integrate with other systems (ie. Home Assistant server, Philips Hue, etc)
+- Easily add your own features via we a plugins file
 
 ### Planned features
 
-- Support webhooks
 - Support push or SMS notifications
 - Support sending events to Philips Hue
 - Support hot-reloading of settings and modules (no need to restart the service)

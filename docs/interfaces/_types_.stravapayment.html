@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>BaseEvents | Jarbunq</title>
+	<title>StravaPayment | Jarbunq</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -54,13 +54,13 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="../modules/_base_events_.html">&quot;base-events&quot;</a>
+					<a href="../modules/_types_.html">&quot;types&quot;</a>
 				</li>
 				<li>
-					<a href="_base_events_.baseevents.html">BaseEvents</a>
+					<a href="_types_.stravapayment.html">StravaPayment</a>
 				</li>
 			</ul>
-			<h1>Class BaseEvents</h1>
+			<h1>Interface StravaPayment</h1>
 		</div>
 	</div>
 </header>
@@ -70,7 +70,7 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>Base class with events.</p>
+						<p>Defines a payment made for activity mileage.</p>
 					</div>
 				</div>
 			</section>
@@ -78,27 +78,7 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">BaseEvents</span>
-						<ul class="tsd-hierarchy">
-							<li>
-								<a href="_bunq_.bunq.html" class="tsd-signature-type">Bunq</a>
-							</li>
-							<li>
-								<a href="_database_.database.html" class="tsd-signature-type">Database</a>
-							</li>
-							<li>
-								<a href="_email_account_.emailaccount.html" class="tsd-signature-type">EmailAccount</a>
-							</li>
-							<li>
-								<a href="_email_manager_.emailmanager.html" class="tsd-signature-type">EmailManager</a>
-							</li>
-							<li>
-								<a href="_notifications_.notifications.html" class="tsd-signature-type">Notifications</a>
-							</li>
-							<li>
-								<a href="_strava_.strava.html" class="tsd-signature-type">Strava</a>
-							</li>
-						</ul>
+						<span class="target">StravaPayment</span>
 					</li>
 				</ul>
 			</section>
@@ -109,15 +89,10 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_base_events_.baseevents.html#events" class="tsd-kind-icon">events</a></li>
-							</ul>
-						</section>
-						<section class="tsd-index-section ">
-							<h3>Methods</h3>
-							<ul class="tsd-index-list">
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_base_events_.baseevents.html#off" class="tsd-kind-icon">off</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_base_events_.baseevents.html#on" class="tsd-kind-icon">on</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_base_events_.baseevents.html#once" class="tsd-kind-icon">once</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_types_.stravapayment.html#activitycount" class="tsd-kind-icon">activity<wbr>Count</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_types_.stravapayment.html#date" class="tsd-kind-icon">date</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_types_.stravapayment.html#payment" class="tsd-kind-icon">payment</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_types_.stravapayment.html#totalkm" class="tsd-kind-icon">total<wbr>Km</a></li>
 							</ul>
 						</section>
 					</div>
@@ -125,134 +100,81 @@
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="events" class="tsd-anchor"></a>
-					<h3>events</h3>
-					<div class="tsd-signature tsd-kind-icon">events<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">EventEmitter</span><span class="tsd-signature-symbol"> =&nbsp;new EventEmitter()</span></div>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="activitycount" class="tsd-anchor"></a>
+					<h3>activity<wbr>Count</h3>
+					<div class="tsd-signature tsd-kind-icon">activity<wbr>Count<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/033da26/src/base-events.ts#L10">base-events.ts:10</a></li>
+							<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/033da26/src/types.ts#L94">types.ts:94</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Event emitter.</p>
+							<p>How many activities.</p>
 						</div>
 					</div>
 				</section>
-			</section>
-			<section class="tsd-panel-group tsd-member-group ">
-				<h2>Methods</h2>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="off" class="tsd-anchor"></a>
-					<h3>off</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">off<span class="tsd-signature-symbol">(</span>eventName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, callback<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">ListenerFn</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/033da26/src/base-events.ts#L35">base-events.ts:35</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Unbind callback from event. Shortcut to <code>events.off()</code>.</p>
-								</div>
-							</div>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>eventName: <span class="tsd-signature-type">string</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>The name of the event.</p>
-									</div>
-								</li>
-								<li>
-									<h5>callback: <span class="tsd-signature-type">ListenerFn</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>Callback function.</p>
-									</div>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-						</li>
-					</ul>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="date" class="tsd-anchor"></a>
+					<h3>date</h3>
+					<div class="tsd-signature tsd-kind-icon">date<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Date</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/033da26/src/types.ts#L90">types.ts:90</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Date and time of payment.</p>
+						</div>
+					</div>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="on" class="tsd-anchor"></a>
-					<h3>on</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">on<span class="tsd-signature-symbol">(</span>eventName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, callback<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">ListenerFn</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/033da26/src/base-events.ts#L17">base-events.ts:17</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Bind callback to event. Shortcut to <code>events.on()</code>.</p>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="payment" class="tsd-anchor"></a>
+					<h3>payment</h3>
+					<div class="tsd-signature tsd-kind-icon">payment<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/033da26/src/types.ts#L83">types.ts:83</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter">
+								<h5>amount<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<div class="lead">
+										<p>Total amount of payment.</p>
+									</div>
 								</div>
-							</div>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>eventName: <span class="tsd-signature-type">string</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>The name of the event.</p>
+							</li>
+							<li class="tsd-parameter">
+								<h5>id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<div class="lead">
+										<p>ID of the payment.</p>
 									</div>
-								</li>
-								<li>
-									<h5>callback: <span class="tsd-signature-type">ListenerFn</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>Callback function.</p>
-									</div>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-						</li>
-					</ul>
+								</div>
+							</li>
+						</ul>
+					</div>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="once" class="tsd-anchor"></a>
-					<h3>once</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">once<span class="tsd-signature-symbol">(</span>eventName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, callback<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">ListenerFn</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/033da26/src/base-events.ts#L26">base-events.ts:26</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Bind callback to event that will be triggered only once. Shortcut to <code>events.once()</code>.</p>
-								</div>
-							</div>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>eventName: <span class="tsd-signature-type">string</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>The name of the event.</p>
-									</div>
-								</li>
-								<li>
-									<h5>callback: <span class="tsd-signature-type">ListenerFn</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>Callback function.</p>
-									</div>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-						</li>
-					</ul>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="totalkm" class="tsd-anchor"></a>
+					<h3>total<wbr>Km</h3>
+					<div class="tsd-signature tsd-kind-icon">total<wbr>Km<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/033da26/src/types.ts#L92">types.ts:92</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Total distance in kilometers.</p>
+						</div>
+					</div>
 				</section>
 			</section>
 		</div>
@@ -262,7 +184,7 @@
 					<li class="globals  ">
 						<a href="../globals.html"><em>Globals</em></a>
 					</li>
-					<li class="current tsd-kind-external-module">
+					<li class=" tsd-kind-external-module">
 						<a href="../modules/_base_events_.html">"base-<wbr>events"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
@@ -298,7 +220,7 @@
 					<li class=" tsd-kind-external-module">
 						<a href="../modules/_strava_.html">"strava"</a>
 					</li>
-					<li class=" tsd-kind-external-module">
+					<li class="current tsd-kind-external-module">
 						<a href="../modules/_types_.html">"types"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
@@ -308,22 +230,37 @@
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="_types_.activity.html" class="tsd-kind-icon">Activity</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="_types_.emailactionrule.html" class="tsd-kind-icon">Email<wbr>Action<wbr>Rule</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="_types_.payment.html" class="tsd-kind-icon">Payment</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="_types_.paymentoptions.html" class="tsd-kind-icon">Payment<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="_types_.processedemail.html" class="tsd-kind-icon">Processed<wbr>Email</a>
+					</li>
 				</ul>
 				<ul class="current">
-					<li class="current tsd-kind-class tsd-parent-kind-external-module">
-						<a href="_base_events_.baseevents.html" class="tsd-kind-icon">Base<wbr>Events</a>
+					<li class="current tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="_types_.stravapayment.html" class="tsd-kind-icon">Strava<wbr>Payment</a>
 						<ul>
-							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="_base_events_.baseevents.html#events" class="tsd-kind-icon">events</a>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="_types_.stravapayment.html#activitycount" class="tsd-kind-icon">activity<wbr>Count</a>
 							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="_base_events_.baseevents.html#off" class="tsd-kind-icon">off</a>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="_types_.stravapayment.html#date" class="tsd-kind-icon">date</a>
 							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="_base_events_.baseevents.html#on" class="tsd-kind-icon">on</a>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="_types_.stravapayment.html#payment" class="tsd-kind-icon">payment</a>
 							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="_base_events_.baseevents.html#once" class="tsd-kind-icon">once</a>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="_types_.stravapayment.html#totalkm" class="tsd-kind-icon">total<wbr>Km</a>
 							</li>
 						</ul>
 					</li>
