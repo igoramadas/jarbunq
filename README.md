@@ -19,10 +19,12 @@ Jarbunq is a Node.js / TypeScript based service to automate tasks on your bunq a
 ### Planned features
 
 - Access control
+- Support webhooks
 - Support push or SMS notifications
-- Create a single app-package using [pkg](https://github.com/zeit/pkg)
+- Support sending events to Philips Hue
 - Support hot-reloading of settings and modules (no need to restart the service)
 - Web frontend to configure the settings and view status / logs
+- Create a single app-package using [pkg](https://github.com/zeit/pkg)
 
 ## Super quick start guide
 
