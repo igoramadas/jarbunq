@@ -56,8 +56,7 @@ let startup = async function() {
 
         if (req.path.substring(0, 6) != "/error" && settings.app.allowedIP && settings.app.allowedIP.length > 0 && settings.app.allowedIP.indexOf(ip) < 0) {
             logger.warn("Route", "Access denied", req.method, req.url, `From ${ip}`)
-            res.redirect("/error?e=Access denied")
-            return
+            return res.redirect("/error?e=Access denied")
         }
 
         if (ext.indexOf(".") < 0) {

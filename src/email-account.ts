@@ -300,6 +300,7 @@ class EmailAccount extends BaseEvents {
                 // Action!
                 try {
                     const resultError = await actionModule(message, rule)
+                    this.events.emit("processMessage", message, rule)
 
                     if (resultError) {
                         logger.warn("EmailAccount.processMessage", this.id, logRule.join(", "), message.messageId, message.subject, resultError)

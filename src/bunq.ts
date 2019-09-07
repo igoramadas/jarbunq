@@ -407,6 +407,7 @@ Please open ${settings.app.url + "login"} on your browser
                 // Save payment record to database, which is a copy of
                 // the payment options but with a date added.
                 const paymentRecord = _.cloneDeep(options)
+                paymentRecord.id = payment.id
                 paymentRecord.date = moment().toDate()
                 database.insert("payments", paymentRecord)
 

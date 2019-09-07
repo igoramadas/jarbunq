@@ -11,7 +11,7 @@
     },
     "app": {
         // List of IPs allowed to access Jarbunq pages. Leave blank to allow all.
-        "allowedIP": ["11.1.1.1"],
+        "allowedIP": [],
         // Port in which the server should run.
         "port": 8833,
         // Name of this service, will also be used as the device name when connecting to bunq.
