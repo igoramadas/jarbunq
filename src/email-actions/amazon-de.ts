@@ -3,7 +3,6 @@
 // necessary money to the Amazon Card account.
 
 import bunq = require("../bunq")
-import logger = require("anyhow")
 const settings = require("setmeup").settings
 
 // Email parsing strings.
@@ -24,6 +23,7 @@ const EmailAction = async (message: any) => {
             }
             if (totalIndex >= 0) {
                 partial = message.text.substring(totalIndex + totalText.length)
+                break
             }
         }
 
