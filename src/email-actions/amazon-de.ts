@@ -7,7 +7,7 @@ const settings = require("setmeup").settings
 
 // Email parsing strings.
 const arrTotalText = ["Order Total Including VAT", "Order Grand Total:", "Order Total:"]
-const orderNumberText = "Order #"
+const arrOrderNumberText = ["Order #", "Order  #:"]
 
 // Exported function. Will return false if order amount is not in EUR.
 const EmailAction = async (message: any) => {
@@ -15,15 +15,17 @@ const EmailAction = async (message: any) => {
 
     try {
         let totalIndex = -1
+        let orderIndex = -1
 
         // Find where the total order is defined on the email plain text.
         for (let totalText of arrTotalText) {
             if (totalIndex < 0) {
                 totalIndex = message.text.indexOf(totalText)
-            }
-            if (totalIndex >= 0) {
-                partial = message.text.substring(totalIndex + totalText.length)
-                break
+
+                if (totalIndex >= 0) {
+                    partial = message.text.substring(totalIndex + totalText.length)
+                    break
+                }
             }
         }
 
@@ -54,13 +56,26 @@ const EmailAction = async (message: any) => {
             return "Free order or download, no payment needed"
         }
 
-        // Set transaction description based on products.
-        let orderIndex = message.text.indexOf(orderNumberText)
-        partial = message.text.substring(orderIndex + orderNumberText.length)
-        partial = partial.substring(0, partial.indexOf("\n")).trim()
+        // Set transaction description based on order details.
+        for (let orderNumberText of arrOrderNumberText) {
+            if (orderIndex < 0) {
+                orderIndex = message.text.indexOf(orderNumberText)
+
+                if (orderIndex >= 0) {
+                    partial = message.text.substring(orderIndex + orderNumberText.length)
+                    partial = partial.substring(0, partial.indexOf("\n")).replace(":", "")
+                    break
+                }
+            }
+        }
+
+        if (orderIndex < 0) {
+            orderNumber = " with unkown reference"
+        } else {
+            orderNumber = partial.trim()
+        }
 
         // Get order number and description.
-        orderNumber = partial
         description = `Order ${orderNumber}, ${amount} EUR`
 
         // Set payment options.
@@ -68,7 +83,8 @@ const EmailAction = async (message: any) => {
             amount: (parseFloat(amount) * settings.amazon.paymentMultiplier).toFixed(2),
             description: description,
             toAlias: settings.bunq.accounts.amazon,
-            reference: `amazon-de-${message.messageId}`
+            reference: `amazon-de-${message.messageId}`,
+            notes: "Email action: amazon-de"
         }
 
         await bunq.makePayment(paymentOptions)

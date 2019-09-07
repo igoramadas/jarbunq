@@ -181,7 +181,7 @@ class EmailAccount extends BaseEvents {
      * @param message The downloaded email message
      */
     async processMessage(message: any): Promise<void> {
-        let emailActionRecord
+        let emailActionRecord = null
 
         // Iterate rules.
         for (let rule of settings.email.rules) {

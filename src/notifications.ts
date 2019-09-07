@@ -29,7 +29,7 @@ class Notifications extends BaseEvents {
      * Init the notifications module.
      */
     async init() {
-        if (!settings.email.smtp || !settings.email.smtp.auth) {
+        if (!settings.email.smtp || !settings.email.smtp.host || !settings.email.smtp.auth) {
             logger.warn("Notifications.init", "Missing SMTP settings on settings.email.smtp, so emails will NOT be sent.")
             return
         }

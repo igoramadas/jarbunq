@@ -290,6 +290,11 @@ Please open ${settings.app.url + "login"} on your browser
                 options.fromAlias = settings.bunq.accounts.main
             }
 
+            // Notes must be handled as array.
+            if (options.notes != null && _.isString(options.notes)) {
+                options.notes = [options.notes as string]
+            }
+
             // Create a payment reference, if none was specified. Please note
             // that this is the internal database reference, do not confuse with
             // the payment description (called reference as well by some banks).
@@ -414,11 +419,43 @@ Please open ${settings.app.url + "login"} on your browser
                 }
             }
 
+            // Add notes to payment?
+            if (payment) {
+                if (options.notes != null && options.notes.length > 0) {
+                    await this.addPaymentNotes(accountId, payment.id, options.notes as string[])
+                }
+
+                // Add default notes to payment?
+                if (settings.bunq.addPaymentNotes) {
+                    await this.addPaymentNotes(accountId, payment.id, [`Triggered by ${settings.app.title}`])
+                }
+            }
+
             return payment
         } catch (ex) {
             this.processBunqError(ex)
             this.failedPayment(options, ex, "processing")
             throw ex
+        }
+    }
+
+    /**
+     * Add notes to the specified payment.
+     * @param accountId The ID of the monetary account.
+     * @param paymentId The ID of the payment that was made previously.
+     * @param notes Array of strings to be added as notes.
+     */
+    addPaymentNotes = async (accountId: number, paymentId: number, notes: string[]) => {
+        try {
+            let eventType = settings.bunq.draftPayment ? "draft-paynent" : "payment"
+
+            for (let note of notes) {
+                await bunqClient.api.noteText.post(eventType, this.user.id, accountId, paymentId, note)
+            }
+
+            logger.info("Bunq.addPaymentNotes", `Payment ${paymentId} from account ${accountId}`, notes.join(", "))
+        } catch (ex) {
+            logger.error("Bunq.addPaymentNotes", `Payment ${paymentId} from account ${accountId}`, ex)
         }
     }
 
@@ -473,6 +510,8 @@ interface PaymentOptions {
     draft?: boolean
     /** A unique reference to the payment, to avoid duplicates. */
     reference?: string
+    /** Extra notes to be added to the payment. */
+    notes?: string | string[]
     /** The hash generated based on reference or payment data. */
     hash?: string
 }
