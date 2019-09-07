@@ -20,7 +20,7 @@
         "from": "string: default 'from' email address",
         "to": "string: default 'to' email address",
         "smtp": {
-            "host": "string: SMTP server hostname or IP",
+            "host": null,
             "port": "number: SMTP server port",
             "secure": "boolean: true to use SSL, false for unencrypted or TLS",
             "auth": {
@@ -43,18 +43,24 @@
         },
         "rules": [
             {
-                "action": "string: amazon",
-                "from": "string: bestellbestaetigung@amazon.de",
-                "subject": "string: Amazon.de order"
+                "action": "string: amazon"
             },
             {
-                "action": "string: lbb",
-                "from": "string: noreply@lbb.de",
-                "subject": "string: Kreditkarten-Abrechnung online"
+                "action": "string: lbb"
+            },
+            {
+                "action": "string: name of the email action string / file, for example 'generic'",
+                "from": "string[]: single or array of email addresses, can also be a partial address",
+                "subject": "string[]: single or array of texts that should be in the subject",
+                "toAlias": "string[]: alias of the target account",
+                "amount": "number: how much should be transferred"
             }
         ]
     },
     "strava": {
-        "accessToken": "string: your unique Strava access token"
-    }
+        "clientId": "string: client ID from your Strava OAuth2 app",
+        "clientSecret": "string: client secret from your Strava OAuth2 app",
+        "refreshToken": "string: initial refresh token from your Strava OAuth2 app"
+    },
+    "webhooks": {}
 }

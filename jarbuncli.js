@@ -48,27 +48,29 @@ const decrypt = () => {
 
 // Action build-settings-sample: generates a sample of the current settings.private.json file.
 const buildSettingsSample = () => {
-    const settings = setmeup.settings
-    const privateSettings = JSON.parse(fs.readFileSync(__dirname + "/settings.private.json", {encoding: settings.general.encoding}))
-    const privateSettingsSample = JSON.parse(fs.readFileSync(__dirname + "/settings.private.json.sample", {encoding: settings.general.encoding}))
+    const setmeup = require("setmeup")
+    const privateSettings = JSON.parse(fs.readFileSync(__dirname + "/settings.private.json", {encoding: "utf8"}))
+    const privateSettingsSample = JSON.parse(fs.readFileSync(__dirname + "/settings.private.json.sample", {encoding: "utf8"}))
 
     // Recursive function to replace private values with type strings.
     const settingsReplacer = function(source, target) {
-        const keys = Object.keys(source)
+        if (source != null) {
+            const keys = Object.keys(source)
 
-        for (let key of keys) {
-            const objType = typeof source[key]
+            for (let key of keys) {
+                const objType = typeof source[key]
 
-            if (target == null) {
-                target = {}
-            }
+                if (target == null) {
+                    target = {}
+                }
 
-            if (objType == "object") {
-                settingsReplacer(source[key], target[key])
-            } else if (target[key] != null && target[key].toString().includes(":")) {
-                source[key] = target[key]
-            } else {
-                source[key] = objType
+                if (objType == "object") {
+                    settingsReplacer(source[key], target[key])
+                } else if (target[key] != null && target[key].toString().includes(":")) {
+                    source[key] = target[key]
+                } else {
+                    source[key] = objType
+                }
             }
         }
     }
