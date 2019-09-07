@@ -28,7 +28,7 @@ const EmailAction = async (message: any) => {
         // Check how much is available at the Amazon account.
         if (balance >= invoiceAmount) {
             logger.info("EmailAction.Lbb", message.messageId, `Got invoice for ${invoiceAmount}, current account balance is ${balance}, all good`)
-            return true
+            return null
         }
 
         logger.warn("EmailAction.Lbb", `Invoice ${invoiceAmount} is higher than current account balance ${balance}`)
@@ -48,7 +48,7 @@ const EmailAction = async (message: any) => {
         }
 
         await bunq.makePayment(paymentOptions)
-        return true
+        return null
     } catch (ex) {
         throw ex
     }

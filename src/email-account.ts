@@ -295,12 +295,12 @@ class EmailAccount extends BaseEvents {
 
                 // Action!
                 try {
-                    const result = await actionModule(message, rule)
+                    const resultError = await actionModule(message, rule)
 
-                    if (result) {
-                        logger.info("EmailAccount.processMessage", this.id, logRule.join(", "), message.messageId, "Processed")
+                    if (resultError) {
+                        logger.warn("EmailAccount.processMessage", this.id, logRule.join(", "), message.messageId, message.subject, resultError)
                     } else {
-                        logger.warn("EmailAccount.processMessage", this.id, logRule.join(", "), message.messageId, message.subject, "Skipped")
+                        logger.info("EmailAccount.processMessage", this.id, logRule.join(", "), message.messageId, message.subject, "Processed")
                     }
                 } catch (ex) {
                     logger.error("EmailAccount.processMessage", this.id, logRule.join(", "), message.messageId, ex)
