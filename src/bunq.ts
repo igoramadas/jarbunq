@@ -2,6 +2,7 @@
 
 import BaseEvents = require("./base-events")
 import BunqJSClient from "@bunq-community/bunq-js-client"
+import {PaymentOptions, Payment} from "./types"
 
 const _ = require("lodash")
 const crypto = require("crypto")
@@ -367,6 +368,7 @@ Please open ${settings.app.url + "login"} on your browser
         }
 
         try {
+            const now = moment()
             const logDraft = options.draft ? "Draft payment" : "Regular payment"
             const logAccount = _.find(this.accounts, {id: accountId}).description
             const logFromTo = `${niceAmount} ${options.currency} from ${logAccount} to ${options.toAlias}`
@@ -406,12 +408,13 @@ Please open ${settings.app.url + "login"} on your browser
 
                 // Save payment record to database, which is a copy of
                 // the payment options but with a date added.
-                const paymentRecord = _.cloneDeep(options)
+                const paymentRecord: Payment = _.cloneDeep(options)
                 paymentRecord.id = payment.id
-                paymentRecord.date = moment().toDate()
-                database.insert("payments", paymentRecord)
+                paymentRecord.date = now.toDate()
 
+                database.insert("payments", paymentRecord)
                 this.events.emit("makePayment", paymentRecord)
+
                 logger.info("Bunq.makePayment", logDraft, `ID ${payment.id}`, logFromTo, options.description)
 
                 // Send notification of successful payment?
@@ -497,30 +500,6 @@ Please open ${settings.app.url + "login"} on your browser
             notifications.send({subject: subject, message: message})
         }
     }
-}
-
-/**
- * Defines payment options.
- */
-interface PaymentOptions {
-    /** The source account alias can be an email or phone. */
-    fromAlias?: number | string
-    /** Target account alias can be an email, phone or IBAN. */
-    toAlias: string
-    /** Payment description, only valid ASCII characters. */
-    description: string
-    /** Payment amount. */
-    amount: number | string
-    /** Payment currency, default is EUR. */
-    currency?: string
-    /** Set to true to make a draft payment (request) instead of regular (automatic). */
-    draft?: boolean
-    /** A unique reference to the payment, to avoid duplicates. */
-    reference?: string
-    /** Extra notes to be added to the payment. */
-    notes?: string | string[]
-    /** The hash generated based on reference or payment data. */
-    hash?: string
 }
 
 // Exports...

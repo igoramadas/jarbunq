@@ -1,6 +1,7 @@
 // Strava
 
 import BaseEvents = require("./base-events")
+import {Activity, StravaPayment} from "./types"
 
 const _ = require("lodash")
 const bunq = require("./bunq")
@@ -330,6 +331,7 @@ and copy the Refresh Token to settings.strava.refreshToken
             const distance = _.sumBy(activities, "distance")
             const elevation = _.sumBy(activities, "elevation")
             const totalKm = distance + elevation / 1000
+            const now = moment()
 
             logger.debug("Strava.payForActivities", paymentInterval, `Distance ${distance}`, `Elevation ${elevation}`, `Total ${totalKm}`)
 
@@ -346,11 +348,25 @@ and copy the Refresh Token to settings.strava.refreshToken
                 amount: amount,
                 description: `Strava, ${distance}km ${paymentInterval}`,
                 toAlias: settings.bunq.accounts.strava,
-                reference: `strava-${moment().format("YYYY-MM-DD")}`
+                reference: `strava-${now.format("YYYY-MM-DD")}`
             }
 
             // Dispatch payment.
-            await bunq.makePayment(paymentOptions)
+            const payment = await bunq.makePayment(paymentOptions)
+
+            const stravaPayment: StravaPayment = {
+                date: now.toDate(),
+                totalKm: totalKm,
+                activityCount: activities.length,
+                payment: {
+                    id: payment.id,
+                    amount: amount
+                }
+            }
+
+            // Save to database and emit to listeners.
+            database.insert("stravaPayments", stravaPayment)
+            this.events.emit("payForActivities", stravaPayment)
 
             // Get interval to next payment.
             let interval
@@ -358,8 +374,6 @@ and copy the Refresh Token to settings.strava.refreshToken
                 interval = 604800000
             } else if (settings.strava.payments.interval == "daily") {
                 interval = 86400000
-            } else {
-                return logger.warn("Strava.payForActivities", "Invalid payment interval", settings.strava.payments.interval)
             }
 
             // Scheduled next payment.
@@ -370,26 +384,6 @@ and copy the Refresh Token to settings.strava.refreshToken
             logger.error("Strava.payForActivities", ex)
         }
     }
-}
-
-/**
- * Defines an activity.
- */
-interface Activity {
-    /** Name of the strava activity. */
-    name: string
-    /** Date and time when it started. */
-    date: Date
-    /** Total distance in kilometers. */
-    distance: number
-    /** Total elevation in kilometers. */
-    elevation: number
-    /** Moving time in the format hh:mm:ss. */
-    movingTime: string
-    /** Total elapsed time in the format hh:mm:ss. */
-    elapsedTime: string
-    /** Activity starting location (country). */
-    location: string
 }
 
 // Exports...

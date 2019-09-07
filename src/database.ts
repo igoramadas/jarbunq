@@ -125,7 +125,7 @@ class Database extends BaseEvents {
         }
 
         // Write defaults.
-        this.db.defaults({jsClient: {}, payments: [], emails: []}).write()
+        this.db.defaults({jsClient: {}, payments: [], processedEmails: [], stravaPayments: []}).write()
 
         // Shortcut methods.
         this.get = this.db.get.bind(this.db)

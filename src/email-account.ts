@@ -1,6 +1,7 @@
 // EmailAccount
 
 import BaseEvents = require("./base-events")
+import {EmailActionRule, ProcessedEmail} from "./types"
 
 const _ = require("lodash")
 const database = require("./database")
@@ -167,7 +168,7 @@ class EmailAccount extends BaseEvents {
 
                 // Only process message if we haven't done it before (in case message goes back to inbox).
                 if (!this.messageIds[parsedMessage.messageId] && parsedMessage) {
-                    await this.processMessage(parsedMessage)
+                    await this.processEmail(parsedMessage)
                 }
             } catch (ex) {
                 return logger.error("EmailAccount.downloadMessage", ex.message, ex.stack)
@@ -182,13 +183,14 @@ class EmailAccount extends BaseEvents {
      * Process the specified message against the rules defined on the settings.
      * @param message The downloaded email message
      */
-    async processMessage(message: any): Promise<void> {
-        logger.debug("EmailAccount.processMessage", message.messageId, message.from, message.subject, `To ${message.to}`)
+    async processEmail(message: any): Promise<void> {
+        logger.debug("EmailAccount.processEmail", message.messageId, message.from, message.subject, `To ${message.to}`)
 
-        let emailActionRecord = null
+        let processedEmail: ProcessedEmail = null
 
         // Iterate rules.
-        for (let rule of settings.email.rules) {
+        for (let r of settings.email.rules) {
+            let rule = r as EmailActionRule
             let actionModule, from
 
             try {
@@ -200,7 +202,7 @@ class EmailAccount extends BaseEvents {
                     rule = _.defaultsDeep(rule, actionModule.defaultRule)
                 }
             } catch (ex) {
-                logger.error("EmailAccount.processMessage", this.id, `Action ${rule.action}`, message.messageId, ex)
+                logger.error("EmailAccount.processEmail", this.id, `Action ${rule.action}`, message.messageId, ex)
                 continue
             }
 
@@ -208,39 +210,69 @@ class EmailAccount extends BaseEvents {
             let valid = message.from || message.subject || message.body
 
             if (!valid) {
-                logger.error("EmailAccount.processMessage", this.id, `Action ${rule.action}`, message.messageId, "Rule must have at least a from, subject or body specified")
+                logger.error("EmailAccount.processEmail", this.id, `Action ${rule.action}`, message.messageId, "Rule must have at least a from, subject or body specified")
                 continue
             }
 
-            // Make sure rule's from is an array.
-            if (rule.from != null && _.isString(rule.from)) {
-                rule.from = [rule.from]
+            // Make sure rule definitions are arrays.
+            for (const field of ["from", "subject", "body"]) {
+                if (rule[field] != null && _.isString(rule[field])) {
+                    rule[field] = [rule[field]]
+                }
             }
 
-            // Check if email comes from the specified sender.
-            if (rule.from && rule.from.indexOf(from) < 0) {
+            // Check if email comes from one of the specified senders.
+            if (rule.from) {
                 valid = false
+
+                for (const value of rule.from) {
+                    if (from.indexOf(value) >= 0) {
+                        valid = true
+                    }
+                }
+                if (!valid) {
+                    continue
+                }
             }
 
-            // Check if email subject contains the specified string.
-            if (rule.subject && !message.subject.toLowerCase().includes(rule.subject.toLowerCase())) {
+            // Check if email subject contains a specified string.
+            if (rule.subject) {
                 valid = false
+
+                for (const value of rule.subject) {
+                    if (message.subject.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
+                        valid = true
+                    }
+                }
+                if (!valid) {
+                    continue
+                }
             }
 
-            // Check if email body contains the specified string.
-            if (rule.body && !message.text.includes(rule.body)) {
+            // Check if email body contains a specified string.
+            if (rule.body) {
                 valid = false
+
+                for (const value of rule.subject) {
+                    if (message.text.indexOf(value) >= 0) {
+                        valid = true
+                    }
+                }
+                if (!valid) {
+                    continue
+                }
             }
 
             // Extra validation on incoming messages. Must have
             // at least 3 out of 7 possible security features.
-            if (valid && settings.email.checkSecurity) {
+            if (settings.email.checkSecurity) {
                 let securityCount = 0
 
                 if (message.headers.has("received-spf") && message.headers.get("received-spf").includes("pass")) {
                     securityCount++
                 }
 
+                // Check for authentication results header, or via ARC.
                 if (message.headers.has("authentication-results")) {
                     const authResults = message.headers.get("authentication-results")
                     if (authResults.includes("spf=pass")) {
@@ -259,10 +291,12 @@ class EmailAccount extends BaseEvents {
                     }
                 }
 
+                // Check for ARC seal.
                 if (message.headers.has("arc-seal")) {
                     securityCount++
                 }
 
+                // Check for security scan.
                 if (message.headers.has("x-cloud-security-sender") && rule.from.indexOf(message.headers.get("x-cloud-security-sender")) > 0) {
                     securityCount++
                 }
@@ -273,49 +307,46 @@ class EmailAccount extends BaseEvents {
                 }
             }
 
-            if (valid) {
-                if (emailActionRecord == null) {
-                    emailActionRecord = {
-                        id: message.messageId,
-                        from: message.from,
-                        subject: message.subject,
-                        timestamp: moment(),
-                        actions: []
-                    }
+            if (processedEmail == null) {
+                processedEmail = {
+                    messageId: message.messageId,
+                    from: message.from,
+                    subject: message.subject,
+                    date: moment().toDate(),
+                    actions: []
                 }
+            }
 
-                // Information to be logged about the current rule.
-                let logRule = []
-                for (let [key, value] of Object.entries(rule)) {
-                    if (_.isArray(value)) {
-                        logRule.push(`${key}=${(value as any).join(" ")}`)
-                    } else {
-                        logRule.push(`${key}=${value}`)
-                    }
+            // Information to be logged about the current rule.
+            let logRule = []
+            for (let [key, value] of Object.entries(rule)) {
+                if (_.isArray(value)) {
+                    logRule.push(`${key}=${(value as any).join(" ")}`)
+                } else {
+                    logRule.push(`${key}=${value}`)
                 }
+            }
 
-                // Add action to cached message.
-                emailActionRecord.actions.push(rule.action)
+            // Action!
+            try {
+                const resultError = await actionModule(message, rule)
 
-                // Action!
-                try {
-                    const resultError = await actionModule(message, rule)
-                    this.events.emit("processMessage", message, rule)
-
-                    if (resultError) {
-                        logger.warn("EmailAccount.processMessage", this.id, logRule.join(", "), message.messageId, message.subject, resultError)
-                    } else {
-                        logger.info("EmailAccount.processMessage", this.id, logRule.join(", "), message.messageId, message.subject, "Processed")
-                    }
-                } catch (ex) {
-                    logger.error("EmailAccount.processMessage", this.id, logRule.join(", "), message.messageId, ex)
+                if (resultError != null && resultError != false) {
+                    processedEmail.actions[rule.action] = resultError
+                    logger.warn("EmailAccount.processEmail", this.id, logRule.join(", "), message.messageId, message.subject, resultError)
+                } else {
+                    processedEmail.actions[rule.action] = true
+                    logger.info("EmailAccount.processEmail", this.id, logRule.join(", "), message.messageId, message.subject, "Processed")
                 }
+            } catch (ex) {
+                logger.error("EmailAccount.processEmail", this.id, logRule.join(", "), message.messageId, ex)
             }
         }
 
         // Add to database in case email had any action.
-        if (emailActionRecord != null) {
-            database.insert("emails-actions", emailActionRecord)
+        if (processedEmail != null) {
+            database.insert("processedEmails", processedEmail)
+            this.events.emit("processEmail", processedEmail)
         }
     }
 }
