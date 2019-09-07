@@ -183,6 +183,7 @@ class EmailAccount extends BaseEvents {
     async processMessage(message: any): Promise<void> {
         let emailActionRecord
 
+        // Iterate rules.
         for (let rule of settings.email.rules) {
             let actionModule, from
 
@@ -225,6 +226,47 @@ class EmailAccount extends BaseEvents {
             // Check if email body contains the specified string.
             if (rule.body && !message.text.includes(rule.body)) {
                 valid = false
+            }
+
+            // Extra validation on incoming messages. Must have
+            // at least 3 out of 7 possible security features.
+            if (valid && settings.email.checkSecurity) {
+                let securityCount = 0
+
+                if (message.headers.has("received-spf") && message.headers.get("received-spf").includes("pass")) {
+                    securityCount++
+                }
+
+                if (message.headers.has("authentication-results")) {
+                    const authResults = message.headers.get("authentication-results")
+                    if (authResults.includes("spf=pass")) {
+                        securityCount++
+                    }
+                    if (authResults.includes("dkim=pass")) {
+                        securityCount++
+                    }
+                } else if (message.headers.has("arc-authentication-results")) {
+                    const arcAuthResults = message.headers.get("arc-authentication-results")
+                    if (arcAuthResults.includes("spf=pass")) {
+                        securityCount++
+                    }
+                    if (arcAuthResults.includes("dkim=pass")) {
+                        securityCount++
+                    }
+                }
+
+                if (message.headers.has("arc-seal")) {
+                    securityCount++
+                }
+
+                if (message.headers.has("x-cloud-security-sender") && rule.from.indexOf(message.headers.get("x-cloud-security-sender")) > 0) {
+                    securityCount++
+                }
+
+                // Less than 3 security features? Quit processing here.
+                if (securityCount < 3) {
+                    return logger.error("EmailAccount", this.id, message.messageId, message.subject, "Message did not pass the security checks")
+                }
             }
 
             if (valid) {
