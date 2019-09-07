@@ -54,14 +54,14 @@ let startup = async function() {
         const ext = req.url.substring(req.url.lengrh - 4)
         const ip = jaul.network.getClientIP(req)
 
-        if (settings.app.allowedIP && settings.app.allowedIP.length > 0 && settings.app.allowedIP.indexOf(ip) < 0) {
+        if (req.path.substring(0, 6) != "/error" && settings.app.allowedIP && settings.app.allowedIP.length > 0 && settings.app.allowedIP.indexOf(ip) < 0) {
             logger.warn("Route", "Access denied", req.method, req.url, `From ${ip}`)
             res.redirect("/error?e=Access denied")
             return
         }
 
         if (ext.indexOf(".") < 0) {
-            logger.info("Route", req.method, req.url, `From ${ip}`)
+            logger.info("Route", req.method, req.path, `From ${ip}`)
         }
         next()
     })
