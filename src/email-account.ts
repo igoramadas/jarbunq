@@ -253,7 +253,7 @@ class EmailAccount extends BaseEvents {
             if (rule.body) {
                 valid = false
 
-                for (const value of rule.subject) {
+                for (const value of rule.body) {
                     if (message.text.indexOf(value) >= 0) {
                         valid = true
                     }
