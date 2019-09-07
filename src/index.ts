@@ -81,6 +81,10 @@ let startup = async function() {
     const notifications = require("./notifications")
     await notifications.init()
 
+    // Init webhooks.
+    const webhooks = require("./webhooks")
+    await webhooks.init()
+
     // Bunq client wrapper.
     const bunq = require("./bunq")
 

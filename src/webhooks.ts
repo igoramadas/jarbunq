@@ -27,7 +27,7 @@ class Webhooks {
      * Init the webhooks handler by loading them from settings.
      */
     async init() {
-        this.listeners = []
+        this.load()
     }
 
     // WEBHOOKS
@@ -60,37 +60,36 @@ class Webhooks {
 
                 for (let evt of eventNames) {
                     for (let webhook of moduleEvents[evt]) {
-                        logger.info("Webhooks.load", id, evt, `Registered ${webhook}`)
+                        logger.info("Webhooks.load", id, evt, `Registered ${webhook.url}`)
 
                         let callback = async function() {
-                            logger.info("Webhooks", id, evt, webhook.method, webhook.url)
+                            let options: any = {
+                                uri: webhook.url,
+                                method: webhook.method ? webhook.method : "POST",
+                                json: true,
+                                resolveWithFullResponse: true
+                            }
 
                             try {
-                                let options: any = {
-                                    uri: webhook.url,
-                                    method: webhook.method ? webhook.method : "POST",
-                                    json: true,
-                                    resolveWithFullResponse: true
-                                }
-
-                                // If post, pass the data emmited with the event.
                                 if (options.method == "POST") {
-                                    options.body = {
-                                        data: Array.from(arguments)
-                                    }
+                                    options.body = Array.from(arguments)
                                 }
 
+                                // Request and log response.
                                 let response = await request(options)
-                                return response
+                                logger.info("Webhooks", id, evt, options.method, webhook.url, response.body)
                             } catch (ex) {
-                                logger.error("Webhooks", id, evt, webhook.method, webhook.url, ex)
+                                logger.error("Webhooks", id, evt, options.method, webhook.url, ex)
                             }
                         }
 
                         obj.on(evt, callback)
+                        this.listeners.push(callback)
                     }
                 }
-            } catch (ex) {}
+            } catch (ex) {
+                logger.error("Webhooks.load", id, ex)
+            }
         }
 
         logger.info("Webhooks.load", `Loaded ${this.listeners.length} webhooks`)
