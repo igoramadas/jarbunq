@@ -52,7 +52,7 @@ Total lack of creativity. Jarvis + bunq.
 
 ## How stable is this?
 
-I have it running myself since 1st of September 2019. No issues so far, and a bunch of payments processed successfully :-)
+I have it running myself on my own server since 1st of September 2019. No issues so far, and a bunch of Amazon and Strava related payments processed successfully :-)
 
 ## Bugs or suggestions?
 
