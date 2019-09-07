@@ -140,6 +140,7 @@ class Strava extends BaseEvents {
                 refreshToken: res.body.refresh_token
             }
             database.set("strava", stravaData).write()
+            this.events.emit("refreshTokens")
 
             // Schedule next refresh based on the expiry date, 10 minutes before.
             const interval = moment.unix(res.body.expires_at).diff(moment()) - 600000
