@@ -134,7 +134,7 @@ class Database extends BaseEvents {
     }
 
     /**
-     * Gets the database dump.
+     * Gets the full database as a JSON.
      * @param safe Set to true to exlude tokens and credentials, default is false.
      */
     dump = (safe: boolean) => {
