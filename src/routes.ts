@@ -1,6 +1,7 @@
 // Routes
 
 import bunq = require("./bunq")
+import database = require("./database")
 
 /**
  * Routes are defined using the format "method/route". So for instance
@@ -53,6 +54,12 @@ let Routes = {
         } else {
             res.redirect("/error?e=OAuth2 flow failed")
         }
+    },
+
+    /** Database view page. */
+    "get/database": async function(req, res) {
+        req.vueOptions.head.title = "Database"
+        res.renderVue("database.vue", {jsonData: JSON.stringify(database.dump(true), null, 4)}, req.vueOptions)
     },
 
     /** Global error page, expects actual error message on the query "e". */

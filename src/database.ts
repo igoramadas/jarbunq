@@ -134,6 +134,25 @@ class Database extends BaseEvents {
     }
 
     /**
+     * Gets the database dump.
+     * @param safe Set to true to exlude tokens and credentials, default is false.
+     */
+    dump = (safe: boolean) => {
+        const state = this.db.getState()
+
+        if (safe) {
+            delete state.jsClient
+
+            if (state.strava) {
+                delete state.strava.accessToken
+                delete state.strava.refreshToken
+            }
+        }
+
+        return state
+    }
+
+    /**
      * Shortcut to add a new object to the specified table.
      * @param table The table name.
      * @param value The object to be added.
