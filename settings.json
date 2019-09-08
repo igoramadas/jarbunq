@@ -70,8 +70,8 @@
     },
     "strava": {
         "payments": {
-            // How much should be paid per kilometer ridden?
-            "pricePerKm": 0.02,
+            // How much should be paid per kilometer ridden? Default 3 cents.
+            "pricePerKm": 0.03,
             // Process activities and payment daily or weekly.
             // If daily weekly payments will happen on Mondays.
             "interval": "weekly",
