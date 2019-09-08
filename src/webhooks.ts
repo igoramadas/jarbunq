@@ -77,9 +77,9 @@ class Webhooks {
 
                                 // Request and log response.
                                 let response = await request(options)
-                                logger.info("Webhooks", id, evt, options.method, webhook.url, response.body)
+                                logger.info("Webhooks", id, evt, options.method, webhook.url, `Status ${response.statusCode}`)
                             } catch (ex) {
-                                logger.error("Webhooks", id, evt, options.method, webhook.url, ex)
+                                logger.error("Webhooks", id, evt, options.method, webhook.url, ex.toString())
                             }
                         }
 
