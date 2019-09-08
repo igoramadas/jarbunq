@@ -30,13 +30,8 @@ class Bunq extends BaseEvents {
     get authenticated(): boolean {
         const result = database.get("bunqTokenDate").value() != null
 
-        if (!result && lastAuthWarning.isBefore(moment().subtract(5, "minutes"))) {
-            lastAuthWarning = moment()
-            console.warn(`
----------------------------------------------------------------
-Please open ${settings.app.url + "login"} on your browser
----------------------------------------------------------------
-`)
+        if (!result) {
+            this.authNeeded()
         }
 
         return result
@@ -152,13 +147,6 @@ Please open ${settings.app.url + "login"} on your browser
         }
     }
 
-    /**
-     * Helper to process and take action on errors from the bunq API.
-     */
-    processBunqError(ex: Error) {
-        return ex
-    }
-
     // MAIN METHODS
     // --------------------------------------------------------------------------
 
@@ -170,8 +158,8 @@ Please open ${settings.app.url + "login"} on your browser
             await this.getUser()
             await this.getAccounts()
         } catch (ex) {
+            // Only log error, do not throw as this is mainly called on a scheduled basis.
             logger.error("Bunq.refreshUserData", ex)
-            throw ex
         }
     }
 
@@ -469,6 +457,20 @@ Please open ${settings.app.url + "login"} on your browser
         }
     }
 
+    // HELPERS
+    // --------------------------------------------------------------------------
+
+    /**
+     * Helper to process and take action on errors from the bunq API.
+     */
+    private processBunqError = (ex: any) => {
+        const statusCode = ex.response && ex.response.statusCode ? ex.response.statusCode : ex.statusCode || 500
+
+        if (statusCode == 401 || statusCode == 403) {
+            this.authNeeded()
+        }
+    }
+
     /**
      * Helper private function to handle failed payments.
      * @param options Options for the payment that failed
@@ -497,6 +499,27 @@ Please open ${settings.app.url + "login"} on your browser
                             ${errorString}`
 
             // Send notification of failed payment.
+            notifications.send({subject: subject, message: message})
+        }
+    }
+
+    /**
+     * Helper private function to alert when user needs to authenticate again.
+     * Limits warnings to 1 every 8 hours.
+     */
+    private authNeeded = () => {
+        if (lastAuthWarning.isBefore(moment().subtract(8, "hours"))) {
+            lastAuthWarning = moment()
+            console.warn(`
+---------------------------------------------------------------
+Please open ${settings.app.url + "login"} on your browser
+---------------------------------------------------------------
+`)
+
+            // Build and send reauth notification.
+            const subject = "Reauthentication needed"
+            const message = `${settings.app.title} got an access error connecting to the bunq API.\
+                            You might need to authenticate again at the URL ${settings.app.url}auth`
             notifications.send({subject: subject, message: message})
         }
     }
