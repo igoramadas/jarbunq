@@ -1,5 +1,9 @@
 TYPEDOC:= ./node_modules/.bin/typedoc
 
+build:
+	rm -rf ./expressvue
+	tsc
+
 build-settings-sample:
 	./jarbuncli.js build-settings-sample
 
