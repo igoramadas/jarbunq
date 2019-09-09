@@ -393,7 +393,7 @@ and copy the Refresh Token to settings.strava.refreshToken
             const activities = await this.getRecentActivities(since)
             const distance = _.sumBy(activities, "distance")
             const elevation = _.sumBy(activities, "elevation")
-            const totalKm = distance + elevation / 1000
+            const totalKm = Math.round(distance + elevation / 1000)
             const now = moment()
 
             logger.debug("Strava.payForActivities", paymentInterval, `Distance ${distance}`, `Elevation ${elevation}`, `Total ${totalKm}`)
