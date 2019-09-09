@@ -56,30 +56,27 @@ class Strava extends BaseEvents {
 
         const paymentInterval = settings.strava.payments.interval
         const now = moment()
-        const day = now.day()
+        const day = now.isoWeekday()
         const target = moment(now.format("YYYY-MM-DD") + " " + settings.strava.payments.time)
         let diff
 
         // If we're past the execution time, add 24 hours and subtract the difference.
         // The diff is already negative in this case, hence we do a + instead of - here.
-        if (now.isAfter(target) && now.diff(target) <= ms4Hours) {
+        if (now.isAfter(target)) {
             // Maybe we just missed the payment? Check the database, if we're less than 4 hours
             // close to the execution time and no payment was recorded today, then do it now.
-            if (database.get("payments").find({reference: `strava-${now.format("YYYY-MM-DD")}`}) == null) {
-                logger.info("Strava.init", `Missed payment at ${settings.strava.payments.time}, will execute it now`)
+            if (now.diff(target) <= ms4Hours && database.get("payments").find({reference: `strava-${now.format("YYYY-MM-DD")}`}) == null) {
+                logger.info("Strava.init", `Missed today's payment at ${settings.strava.payments.time}, will execute it now`)
                 this.payForActivities()
             }
 
-            // Add 1 day to the interval.
-            diff = msDay + diff
+            target.add(1, "days")
         }
 
         // Calculate how many days till next paymentm, if weekly.
         if (paymentInterval == "weekly") {
-            if (day == 0) {
-                target.add(1, "days")
-            } else if (day > 1) {
-                target.add(8 - day, "days")
+            if (day < 7) {
+                target.add(7 - day, "days")
             }
 
             diff = target.diff(now)
@@ -108,7 +105,7 @@ class Strava extends BaseEvents {
                 grant_type: "refresh_token",
                 client_id: settings.strava.clientId,
                 client_secret: settings.strava.clientSecret,
-                scope: "read_all"
+                scope: "activity:read_all,profile:read_all"
             }
 
             // Check if a refresh token is available on the database.
