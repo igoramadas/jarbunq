@@ -11,10 +11,6 @@ const moment = require("moment")
 const request = require("request-promise-native")
 const settings = require("setmeup").settings
 
-// Strava API URL.
-const apiUrl = "https://www.strava.com/api/v3"
-const tokenUrl = "https://www.strava.com/oauth/token"
-
 /**
  * Gets rides and activities from Strava.
  */
@@ -26,6 +22,11 @@ class Strava extends BaseEvents {
 
     // PROPERTIES
     // --------------------------------------------------------------------------
+
+    /** The authentication URL used to start the OAuth2 flow with Strava. */
+    get authUrl(): string {
+        return `${settings.strava.api.authUrl}?client_id=${settings.strava.clientId}&redirect_uri=${settings.app.url}strava/auth/callback&response_type=code&scope=${settings.strava.api.scope}`
+    }
 
     /** Timer to trigger the payments (via setTimeout). */
     timerPay: any
@@ -50,8 +51,8 @@ class Strava extends BaseEvents {
             return
         }
 
-        // Milliseconds in a day and in 4 hours.
-        const ms4Hours = 1000 * 60 * 60 * 4
+        // Milliseconds in a day and in 8 hours.
+        const ms8Hours = 1000 * 60 * 60 * 8
 
         // Intervals and diffs.
         const paymentInterval = settings.strava.payments.interval
@@ -63,9 +64,9 @@ class Strava extends BaseEvents {
         // If we're past the execution time, add 24 hours and subtract the difference.
         // The diff is already negative in this case, hence we do a + instead of - here.
         if (now.isAfter(target)) {
-            // Maybe we just missed the payment? Check the database, if we're less than 4 hours
-            // close to the execution time and no payment was recorded today, then do it now.
-            if (now.diff(target) <= ms4Hours && database.get("payments").find({reference: `strava-${now.format("YYYY-MM-DD")}`}) == null) {
+            // Maybe we just missed the payment? Check the database, if we're less than 8 hours
+            // from the execution time at same day, and no payment was recorded yet, then do it now.
+            if (now.diff(target) <= ms8Hours && now.format("HH:mm") > settings.strava.payments.time && database.get("payments").find({reference: `strava-${now.format("YYYY-MM-DD")}`}) == null) {
                 logger.info("Strava.init", `Missed today's payment at ${settings.strava.payments.time}, will execute it now`)
                 this.payForActivities()
             }
@@ -93,8 +94,57 @@ class Strava extends BaseEvents {
         logger.info("Strava.init", paymentInterval, `${settings.strava.payments.pricePerKm} EUR / km`, `Next payment ${timeToNext}`)
     }
 
-    // API METHODS
+    // AUTH METHODS
     // --------------------------------------------------------------------------
+
+    /**
+     * Get the OAuth2 access token based on the provided authorization code.
+     * This method will return null when it fails to get the token.
+     * @param code The authorization code provided via the /strava/auth/callback URL.
+     */
+    getOAuthToken = async (code: string) => {
+        try {
+            let qs = {
+                grant_type: "authorization_code",
+                client_id: settings.strava.clientId,
+                client_secret: settings.strava.clientSecret,
+                redirect_uri: `${settings.app.url}strava/auth/callback`,
+                code: code
+            }
+
+            let options = {
+                method: "POST",
+                uri: settings.strava.api.tokenUrl,
+                qs: qs,
+                json: true,
+                resolveWithFullResponse: true
+            }
+
+            // Post to the token endpoint.
+            let res = await request(options)
+
+            if (!res) {
+                throw new Error("Invalid access token")
+            }
+
+            // Save new tokens to database.
+            const stravaData = {
+                accessToken: res.body.access_token,
+                refreshToken: res.body.refresh_token
+            }
+            database.set("strava", stravaData).write()
+
+            // Schedule next refresh based on the expiry date, 10 minutes before.
+            const interval = moment.unix(res.body.expires_at).diff(moment()) - 600000
+            setTimeout(this.refreshToken, interval)
+
+            logger.info("Strava.getOAuthToken", "Got a new set of access + refresh tokens")
+            return true
+        } catch (ex) {
+            logger.error("Strava.getOAuthToken", ex)
+            return false
+        }
+    }
 
     /**
      * Refresh OAuth2 tokens from Strava.
@@ -118,7 +168,7 @@ class Strava extends BaseEvents {
 
             let options = {
                 method: "POST",
-                uri: tokenUrl,
+                uri: settings.strava.api.tokenUrl,
                 qs: qs,
                 json: true,
                 resolveWithFullResponse: true
@@ -168,6 +218,9 @@ and copy the Refresh Token to settings.strava.refreshToken
         }
     }
 
+    // API METHODS
+    // --------------------------------------------------------------------------
+
     /**
      * Internal implementation to make a request to the Strava API.
      * @param path The API path.
@@ -189,7 +242,7 @@ and copy the Refresh Token to settings.strava.refreshToken
             }
 
             let options = {
-                uri: apiUrl + path,
+                uri: settings.strava.api.baseUrl + path,
                 qs: params,
                 json: true,
                 resolveWithFullResponse: true

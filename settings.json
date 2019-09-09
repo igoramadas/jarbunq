@@ -69,6 +69,13 @@
         }
     },
     "strava": {
+        // API endpoints from Strava.
+        "api": {
+            "baseUrl": "https://www.strava.com/api/v3",
+            "authUrl": "https://www.strava.com/oauth/authorize",
+            "tokenUrl": "https://www.strava.com/oauth/token",
+            "scope": "activity:read_all,profile:read_all"
+        },
         "payments": {
             // How much should be paid per kilometer ridden? Default 3 cents.
             "pricePerKm": 0.03,

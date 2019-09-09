@@ -2,6 +2,7 @@
 
 import bunq = require("./bunq")
 import database = require("./database")
+import strava = require("./strava")
 
 /**
  * Routes are defined using the format "method/route". So for instance
@@ -35,19 +36,41 @@ let Routes = {
     },
 
     /** Authentication route, used to start the OAuth2 auth flow. */
-    "get/auth": async function(_req, res) {
+    "get/bunq/auth": async function(_req, res) {
         res.redirect(bunq.authUrl)
     },
 
     /** OAuth2 redirect to process the code and get an access token. */
-    "get/auth/callback": async function(req, res) {
+    "get/bunq/auth/callback": async function(req, res) {
         const code = req.query.code
 
         if (!code) {
-            return res.redirect("/error?e=Missing authorization code")
+            return res.redirect("/error?e=Missing authorization code from bunq")
         }
 
         const ok = await bunq.getOAuthToken(code)
+
+        if (ok) {
+            res.redirect("/home")
+        } else {
+            res.redirect("/error?e=OAuth2 flow failed")
+        }
+    },
+
+    /** Authentication route, used to start the OAuth2 auth flow with Strava. */
+    "get/strava/auth": async function(_req, res) {
+        res.redirect(strava.authUrl)
+    },
+
+    /** OAuth2 redirect to process the code and get an access token from Strava. */
+    "get/strava/auth/callback": async function(req, res) {
+        const code = req.query.code
+
+        if (!code) {
+            return res.redirect("/error?e=Missing authorization code from Strava")
+        }
+
+        const ok = await strava.getOAuthToken(code)
 
         if (ok) {
             res.redirect("/home")
