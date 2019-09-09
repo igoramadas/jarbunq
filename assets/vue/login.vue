@@ -9,7 +9,7 @@
             </p>
             <p>
                 <br />
-                <a class="button is-primary" href="/auth" title="Authorize Jarbunq">Connect to bunq</a>
+                <a class="button is-primary" href="/bunq/auth" title="Authorize Jarbunq">Connect to bunq</a>
             </p>
         </section>
     </div>

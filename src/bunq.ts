@@ -39,7 +39,7 @@ class Bunq extends BaseEvents {
 
     /** The authentication URL used to start the OAuth2 flow. */
     get authUrl(): string {
-        const redirect = settings.app.url + "auth/callback"
+        const redirect = settings.app.url + "bunq/auth/callback"
         return bunqClient.formatOAuthAuthorizationRequestUrl(settings.bunq.api.clientId, redirect, false, false)
     }
 
@@ -123,10 +123,10 @@ class Bunq extends BaseEvents {
     /**
      * Get the OAuth2 access token based on the provided authorization code.
      * This method will return null when it fails to get the token.
-     * @param code The authorization code provided via the /auth URL.
+     * @param code The authorization code provided via the /bunq/auth/callback URL.
      */
     getOAuthToken = async (code: string) => {
-        const redirect = settings.app.url + "auth/callback"
+        const redirect = settings.app.url + "bunq/auth/callback"
 
         try {
             const token = await bunqClient.exchangeOAuthToken(settings.bunq.api.clientId, settings.bunq.api.clientSecret, redirect, code, false, false, "authorization_code")
@@ -519,7 +519,7 @@ Please open ${settings.app.url + "login"} on your browser
             // Build and send reauth notification.
             const subject = "Reauthentication needed"
             const message = `${settings.app.title} got an access error connecting to the bunq API.\
-                            You might need to authenticate again at the URL ${settings.app.url}auth`
+                            You might need to authenticate again at the URL ${settings.app.url}bunq/auth`
             notifications.send({subject: subject, message: message})
         }
     }
