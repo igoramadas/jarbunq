@@ -14,12 +14,17 @@ let startup = async function() {
     const logger = require("anyhow")
     logger.setup("console")
     logger.levelOnConsole = true
+    logger.uncaughtExceptions = true
+    logger.unhandledRejections = true
 
     // Load settings.
     const setmeup = require("setmeup")
     setmeup.load()
     setmeup.load("settings.private.json")
     const settings = setmeup.settings
+
+    // Replicate app name on the Logger.
+    logger.appName = settings.app.title
 
     // Load and start Expresser.
     const expresser = require("expresser")
@@ -123,10 +128,11 @@ let startup = async function() {
 
     // Gracefully shutdown.
     process.on("SIGTERM", () => {
-        logger.warn("Shutdown", `The ${settings.app.title} will shutdown now...`)
+        logger.warn(settings.app.title, "shutdown", "The server will shutdown now...")
+
+        expresser.app.kill()
         emailManager.stop()
         strava.stop()
-        expresser.app.kill()
     })
 }
 
