@@ -104,8 +104,7 @@ class Strava extends BaseEvents {
             const qs: any = {
                 grant_type: "refresh_token",
                 client_id: settings.strava.clientId,
-                client_secret: settings.strava.clientSecret,
-                scope: "activity:read_all,profile:read_all"
+                client_secret: settings.strava.clientSecret
             }
 
             // Check if a refresh token is available on the database.
