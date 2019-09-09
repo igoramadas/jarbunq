@@ -420,12 +420,12 @@ class Bunq extends BaseEvents {
             // Add notes to payment?
             if (payment) {
                 if (options.notes != null && options.notes.length > 0) {
-                    await this.addPaymentNotes(accountId, payment.id, options.notes as string[])
+                    await this.addPaymentNotes(accountId, payment.id, options.notes as string[], options.draft)
                 }
 
                 // Add default notes to payment?
                 if (settings.bunq.addPaymentNotes) {
-                    await this.addPaymentNotes(accountId, payment.id, [`Triggered by ${settings.app.title}`])
+                    await this.addPaymentNotes(accountId, payment.id, [`Triggered by ${settings.app.title}`], options.draft)
                 }
             }
 
@@ -443,9 +443,9 @@ class Bunq extends BaseEvents {
      * @param paymentId The ID of the payment that was made previously.
      * @param notes Array of strings to be added as notes.
      */
-    addPaymentNotes = async (accountId: number, paymentId: number, notes: string[]) => {
+    addPaymentNotes = async (accountId: number, paymentId: number, notes: string[], draft?: boolean) => {
         try {
-            let eventType = settings.bunq.draftPayment ? "draft-paynent" : "payment"
+            let eventType = draft ? "draft-paynent" : "payment"
 
             for (let note of notes) {
                 await bunqClient.api.noteText.post(eventType, this.user.id, accountId, paymentId, note)
