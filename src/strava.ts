@@ -51,9 +51,9 @@ class Strava extends BaseEvents {
         }
 
         // Milliseconds in a day and in 4 hours.
-        const msDay = 1000 * 60 * 60 * 24
         const ms4Hours = 1000 * 60 * 60 * 4
 
+        // Intervals and diffs.
         const paymentInterval = settings.strava.payments.interval
         const now = moment()
         const day = now.isoWeekday()
