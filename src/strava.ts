@@ -66,9 +66,20 @@ class Strava extends BaseEvents {
         if (now.isAfter(target)) {
             // Maybe we just missed the payment? Check the database, if we're less than 8 hours
             // from the execution time at same day, and no payment was recorded yet, then do it now.
-            if (now.diff(target) <= ms8Hours && now.format("HH:mm") > settings.strava.payments.time && database.get("payments").find({reference: `strava-${now.format("YYYY-MM-DD")}`}) == null) {
-                logger.info("Strava.init", `Missed today's payment at ${settings.strava.payments.time}, will execute it now`)
-                this.payForActivities()
+            if (now.diff(target) <= ms8Hours && now.format("HH:mm") > settings.strava.payments.time) {
+                const existingPayment = database
+                    .get("stravaPayments")
+                    .find(p => {
+                        return moment(p.date).dayOfYear() == now.dayOfYear()
+                    })
+                    .value()
+
+                if (existingPayment == null) {
+                    logger.info("Strava.init", `Missed today's payment at ${settings.strava.payments.time}, will execute it now`)
+                    this.payForActivities()
+                } else {
+                    logger.info("Strava.init", `Today's payment was already processed, ID ${existingPayment.payment.ID}`)
+                }
             }
 
             target.add(1, "days")
