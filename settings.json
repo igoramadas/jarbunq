@@ -83,7 +83,7 @@
             // If daily weekly payments will happen on Mondays.
             "interval": "weekly",
             // Time of the day in which payments are processed (24h, HH:MM format, local time).
-            "time": "15:00"
+            "time": "16:00"
         }
     },
     // Webhooks should be defined on the settings.private.json file.
