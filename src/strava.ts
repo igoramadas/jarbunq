@@ -415,14 +415,14 @@ and copy the Refresh Token to settings.strava.refreshToken
             }
 
             // Dispatch payment.
-            const payment = await bunq.makePayment(paymentOptions)
+            const paymentId = await bunq.makePayment(paymentOptions)
 
             const stravaPayment: StravaPayment = {
                 date: now.toDate(),
                 totalKm: totalKm,
                 activityCount: activities.length,
                 payment: {
-                    id: payment.id,
+                    id: paymentId,
                     amount: amount
                 }
             }

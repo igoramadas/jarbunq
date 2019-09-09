@@ -360,18 +360,19 @@ class Bunq extends BaseEvents {
             const logDraft = options.draft ? "Draft payment" : "Regular payment"
             const logAccount = _.find(this.accounts, {id: accountId}).description
             const logFromTo = `${niceAmount} ${options.currency} from ${logAccount} to ${options.toAlias}`
-            let payment
+            let paymentId: any
+            let paymentRecord: Payment
 
             logger.debug("Bunq.makePayment", "Will trigger now", `From account ${accountId}`, options)
 
             // Check if payments are disable. If so, log instead, otherwise proceed.
             if (settings.bunq.disablePayments) {
-                payment = {disabled: true}
+                paymentId = 0
                 logger.warn("Bunq.makePayment", `${logDraft} ! DISABLED !`, logFromTo, options.description)
             } else {
                 // Is it a draft or regular payment?
                 if (options.draft) {
-                    payment = await bunqClient.api.draftPayment.post(
+                    paymentId = await bunqClient.api.draftPayment.post(
                         this.user.id,
                         accountId,
                         options.description,
@@ -382,7 +383,7 @@ class Bunq extends BaseEvents {
                         alias
                     )
                 } else {
-                    payment = await bunqClient.api.payment.post(
+                    paymentId = await bunqClient.api.payment.post(
                         this.user.id,
                         accountId,
                         options.description,
@@ -394,16 +395,27 @@ class Bunq extends BaseEvents {
                     )
                 }
 
+                // Make sure we get the correct payment ID from response.
+                if (_.isArray(paymentId)) {
+                    paymentId = paymentId[0]
+                }
+                if (paymentId.Id) {
+                    paymentId = paymentId.Id
+                }
+                if (paymentId.id) {
+                    paymentId = paymentId.id
+                }
+
                 // Save payment record to database, which is a copy of
                 // the payment options but with a date added.
-                const paymentRecord: Payment = _.cloneDeep(options)
-                paymentRecord.id = payment.id
+                paymentRecord = _.cloneDeep(options)
+                paymentRecord.id = paymentId
                 paymentRecord.date = now.toDate()
 
                 database.insert("payments", paymentRecord)
                 this.events.emit("makePayment", paymentRecord)
 
-                logger.info("Bunq.makePayment", logDraft, `ID ${payment.id}`, logFromTo, options.description)
+                logger.info("Bunq.makePayment", logDraft, `ID ${paymentId}`, logFromTo, options.description)
 
                 // Send notification of successful payment?
                 if (settings.notification.events.paymentSuccess) {
@@ -418,18 +430,18 @@ class Bunq extends BaseEvents {
             }
 
             // Add notes to payment?
-            if (payment) {
+            if (paymentId) {
                 if (options.notes != null && options.notes.length > 0) {
-                    await this.addPaymentNotes(accountId, payment.id, options.notes as string[], options.draft)
+                    await this.addPaymentNotes(accountId, paymentId, options.notes as string[], options.draft)
                 }
 
                 // Add default notes to payment?
                 if (settings.bunq.addPaymentNotes) {
-                    await this.addPaymentNotes(accountId, payment.id, [`Triggered by ${settings.app.title}`], options.draft)
+                    await this.addPaymentNotes(accountId, paymentId, [`Triggered by ${settings.app.title}`], options.draft)
                 }
             }
 
-            return payment
+            return paymentRecord
         } catch (ex) {
             this.processBunqError(ex)
             this.failedPayment(options, ex, "processing")
