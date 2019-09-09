@@ -74,6 +74,7 @@ class Strava extends BaseEvents {
                     })
                     .value()
 
+                // There was a payment today?
                 if (existingPayment == null) {
                     logger.info("Strava.init", `Missed today's payment at ${settings.strava.payments.time}, will execute it now`)
                     this.payForActivities()
