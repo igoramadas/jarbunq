@@ -60,6 +60,20 @@ class Strava extends BaseEvents {
         const target = moment(now.format("YYYY-MM-DD") + " " + settings.strava.payments.time)
         let diff
 
+        // If we're past the execution time, add 24 hours and subtract the difference.
+        // The diff is already negative in this case, hence we do a + instead of - here.
+        if (now.isAfter(target) && now.diff(target) <= ms4Hours) {
+            // Maybe we just missed the payment? Check the database, if we're less than 4 hours
+            // close to the execution time and no payment was recorded today, then do it now.
+            if (database.get("payments").find({reference: `strava-${now.format("YYYY-MM-DD")}`}) == null) {
+                logger.info("Strava.init", `Missed payment at ${settings.strava.payments.time}, will execute it now`)
+                this.payForActivities()
+            }
+
+            // Add 1 day to the interval.
+            diff = msDay + diff
+        }
+
         // Calculate how many days till next paymentm, if weekly.
         if (paymentInterval == "weekly") {
             if (day == 0) {
@@ -73,20 +87,6 @@ class Strava extends BaseEvents {
             diff = target.diff(now)
         } else {
             throw new Error(`Invalid payment interval: ${paymentInterval}, must be daily or weekly.`)
-        }
-
-        // If we're past the execution time, add 24 hours and subtract the difference.
-        // The diff is already negative in this case, hence we do a + instead of - here.
-        if (now.isAfter(target)) {
-            // Maybe we just missed the payment? Check the database, if we're less than 4 hours
-            // close to the execution time and no payment was recorded today, then do it now.
-            if (diff > ms4Hours * -1 && database.get("payments").find({reference: `strava-${now.format("YYYY-MM-DD")}`}) == null) {
-                logger.info("Strava.init", `Missed payment at ${settings.strava.payments.time}, will execute it now`)
-                this.payForActivities()
-            }
-
-            // Add 1 day to the interval.
-            diff = msDay + diff
         }
 
         this.timerPay = setTimeout(this.payForActivities, diff)
