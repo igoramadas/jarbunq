@@ -2,7 +2,6 @@
 // This is a generic email rule that will transfer the specified
 // amount from the source account to the target account.
 
-import bunq = require("../bunq")
 import logger = require("anyhow")
 const settings = require("setmeup").settings
 

@@ -340,7 +340,7 @@ class EmailAccount extends BaseEvents {
                 }
 
                 // Action returned payment options? Add default notes and proceed with payment.
-                if (actionResult.amount && actionResult.toAlias) {
+                if (actionResult.amount && actionResult.toAlias && actionResult.description) {
                     if (!actionResult.notes) {
                         actionResult.notes = []
                     }
@@ -354,6 +354,8 @@ class EmailAccount extends BaseEvents {
                     processedEmail.actions[rule.action] = true
 
                     logger.info("EmailAccount.processEmail", this.id, logRule.join(", "), message.messageId, message.subject, `Payment ID: ${paymentId}`)
+                } else if (_.isString(actionResult)) {
+                    logger.info("EmailAccount.processEmail", this.id, logRule.join(", "), message.messageId, message.subject, actionResult)
                 } else {
                     logger.info("EmailAccount.processEmail", this.id, logRule.join(", "), message.messageId, message.subject, "Processed")
                 }
