@@ -94,6 +94,8 @@ class Database extends BaseEvents {
             // Serialization options to encrypt and decrypt the database.
             const serialization = {
                 serialize: data => {
+                    logger.debug("Database.serialize", Object.keys(data))
+
                     try {
                         return encrypt(JSON.stringify(data, null, 0))
                     } catch (ex) {
@@ -102,6 +104,8 @@ class Database extends BaseEvents {
                     }
                 },
                 deserialize: data => {
+                    logger.debug("Database.serialize", `Length ${data.length}`)
+
                     try {
                         if (data === null || data === "") {
                             return {}
@@ -138,6 +142,8 @@ class Database extends BaseEvents {
      * @param safe Set to true to exlude tokens and credentials, default is false.
      */
     dump = (safe: boolean) => {
+        logger.info("Database.dump", safe)
+
         const state = this.db.getState()
 
         if (safe) {

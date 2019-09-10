@@ -1,6 +1,7 @@
 // Notifications
 
 import BaseEvents = require("./base-events")
+import {NotificationOptions, EmailNotificationOptions} from "./types"
 
 const fs = require("fs")
 const logger = require("anyhow")
@@ -62,7 +63,7 @@ class Notifications extends BaseEvents {
         logger.debug("Notifications.send", options)
 
         if (this.smtp) {
-            this.toEmail(options as EmailOptions)
+            this.toEmail(options as EmailNotificationOptions)
         } else {
             logger.warn("Notifications.send", "SMTP not registered, will not send", options.subject, options.message)
         }
@@ -76,7 +77,9 @@ class Notifications extends BaseEvents {
      * @param options Email sending options with to, subject, body etc.
      * @event toEmail
      */
-    toEmail = async (options: EmailOptions) => {
+    toEmail = async (options: EmailNotificationOptions) => {
+        logger.debug("Notifications.toEmail", options)
+
         try {
             // Set default from.
             if (!options.from) {
@@ -122,32 +125,6 @@ class Notifications extends BaseEvents {
             logger.error("Notifications.toEmail", options.to, options.subject, ex)
         }
     }
-}
-
-/**
- * Defines a generic notification.
- */
-interface NotificationOptions {
-    /** The notification subject. */
-    subject: string
-    /** The actual message to be sent. */
-    message: string
-}
-
-/**
- * Defines an email notification.
- */
-interface EmailOptions {
-    /** The email subject. */
-    subject: string
-    /** The email message. */
-    message: string
-    /** The sender email address. If unspecified, will use defaul from settings. */
-    from?: string
-    /** The target email address. */
-    to?: string
-    /** The actual HTML to be sent out (filled automatically during send, by using template + message). */
-    html?: string
 }
 
 // Exports...

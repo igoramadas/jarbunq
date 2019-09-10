@@ -3,6 +3,7 @@
 import BaseEvents = require("./base-events")
 import EmailAccount = require("./email-account")
 
+const _ = require("lodash")
 const logger = require("anyhow")
 const settings = require("setmeup").settings
 
@@ -65,7 +66,8 @@ class EmailManager extends BaseEvents {
             logger.warn("EmailManager.start", "No accounts found. Please make sure you have accounts set via settings.email.accounts.")
         }
 
-        this.events.emit("start")
+        const accountIds = _.map(this.accounts, "id")
+        this.events.emit("start", accountIds)
     }
 
     /**
@@ -73,12 +75,14 @@ class EmailManager extends BaseEvents {
      * @event stop
      */
     stop = () => {
+        const accountIds = _.map(this.accounts, "id")
+
         for (let account of this.accounts) {
             account.stop()
         }
 
         this.accounts = []
-        this.events.emit("stop")
+        this.events.emit("stop", accountIds)
     }
 }
 

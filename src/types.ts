@@ -19,6 +19,32 @@ export interface Activity {
 }
 
 /**
+ * Defines a rule to trigger an email action.
+ */
+export interface EmailActionRule {
+    /** ID of the action to be executed. */
+    action: string
+    /** The from field must contain any of these values.  */
+    from?: string | string[]
+    /** The email subject must contain any of these values.  */
+    subject?: string | string[]
+    /** The email body must contain any of these values.  */
+    body?: string | string[]
+}
+
+/**
+ * Defines an email notification.
+ */
+export interface EmailNotificationOptions extends NotificationOptions {
+    /** The sender email address. If unspecified, will use defaul from settings. */
+    from?: string
+    /** The target email address. */
+    to?: string
+    /** The actual HTML to be sent out (usually filled automatically during send). */
+    html?: string
+}
+
+/**
  * Defines payment options.
  */
 export interface PaymentOptions {
@@ -43,6 +69,16 @@ export interface PaymentOptions {
 }
 
 /**
+ * Defines a generic notification.
+ */
+export interface NotificationOptions {
+    /** The notification subject. */
+    subject: string
+    /** The actual message to be sent. */
+    message: string
+}
+
+/**
  * Defines a payment on bunq.
  */
 export interface Payment extends PaymentOptions {
@@ -55,19 +91,8 @@ export interface Payment extends PaymentOptions {
 }
 
 /**
- * Defines a rule to trigger an email action.
+ * Defines an email message that was processed by actions.
  */
-export interface EmailActionRule {
-    /** ID of the action to be executed. */
-    action: string
-    /** The from field must contain any of these values.  */
-    from?: string | string[]
-    /** The email subject must contain any of these values.  */
-    subject?: string | string[]
-    /** The email body must contain any of these values.  */
-    body?: string | string[]
-}
-
 export interface ProcessedEmail {
     date: Date
     messageId: number

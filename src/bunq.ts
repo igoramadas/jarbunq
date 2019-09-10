@@ -489,11 +489,29 @@ class Bunq extends BaseEvents {
      * @param err The error or exeception object
      * @param step The payment step (preparing or processing)
      */
-    private failedPayment = (options: PaymentOptions, err: Error, step: string) => {
+    private failedPayment = (options: PaymentOptions, err: any, step: string) => {
         let amount = (options.amount as number).toFixed(2)
         let errorString = err.toString()
+        let resError = err.response
 
-        logger.error("Bunq.failedPayment", `${step} payment`, `${amount} ${options.currency} to ${options.toAlias}`, err)
+        // Catch error from response.
+        if (resError && resError.body) {
+            resError = resError.body
+        }
+        if (resError && resError.Error) {
+            resError = resError.Error
+        }
+        if (resError && resError.length > 0) {
+            resError = resError[0].error_description
+        }
+
+        if (resError) {
+            errorString += ` - ${resError}`
+        } else {
+            resError = "Unkown API error"
+        }
+
+        logger.error("Bunq.failedPayment", `${step} payment`, `${amount} ${options.currency} to ${options.toAlias}`, err, resError)
 
         // Send notification of payment failures?
         if (settings.notification.events.paymentError) {
@@ -508,7 +526,9 @@ class Bunq extends BaseEvents {
                             \n
                             Description: ${options.description}
                             \n\n
-                            ${errorString}`
+                            ${errorString}
+                            \n
+                            ${resError}`
 
             // Send notification of failed payment.
             notifications.send({subject: subject, message: message})
