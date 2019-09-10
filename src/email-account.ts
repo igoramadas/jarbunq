@@ -3,13 +3,14 @@
 import BaseEvents = require("./base-events")
 import {EmailActionRule, ProcessedEmail} from "./types"
 
-const _ = require("lodash")
-const database = require("./database")
-const imap = require("imap")
-const mailparser = require("mailparser")
-const moment = require("moment")
-const logger = require("anyhow")
-let settings
+import bunq = require("./bunq")
+import _ = require("lodash")
+import database = require("./database")
+import imap = require("imap")
+import mailparser = require("mailparser")
+import moment = require("moment")
+import logger = require("anyhow")
+const settings = require("setmeup").settings
 
 /**
  * Represents a single IMAP mail account.
@@ -19,7 +20,6 @@ class EmailAccount extends BaseEvents {
     constructor(id: string, config: any) {
         super()
 
-        settings = require("setmeup").settings
         this.id = id
         this.config = config
 
@@ -329,13 +329,32 @@ class EmailAccount extends BaseEvents {
 
             // Action!
             try {
-                const resultError = await actionModule(message, rule)
+                const actionResult = await actionModule(message, rule)
+                const resultError = actionResult.error
 
-                if (resultError != null && resultError != false) {
+                // Action returned an error? Log and stop.
+                if (resultError) {
                     processedEmail.actions[rule.action] = resultError
                     logger.warn("EmailAccount.processEmail", this.id, logRule.join(", "), message.messageId, message.subject, resultError)
-                } else {
+                    return
+                }
+
+                // Action returned payment options? Add default notes and proceed with payment.
+                if (actionResult.amount && actionResult.toAlias) {
+                    if (!actionResult.notes) {
+                        actionResult.notes = []
+                    }
+
+                    actionResult.notes.push`Email action: ${rule.action}`
+                    actionResult.notes.push`Email subject: ${message.subject}`
+                    actionResult.reference = `${rule.action}-${message.messageId}`
+
+                    // Pay!
+                    const paymentId = await bunq.makePayment(actionResult)
                     processedEmail.actions[rule.action] = true
+
+                    logger.info("EmailAccount.processEmail", this.id, logRule.join(", "), message.messageId, message.subject, `Payment ID: ${paymentId}`)
+                } else {
                     logger.info("EmailAccount.processEmail", this.id, logRule.join(", "), message.messageId, message.subject, "Processed")
                 }
             } catch (ex) {

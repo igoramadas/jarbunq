@@ -2,7 +2,6 @@
 // This will process orders from Amazon.de and automatically transfer the
 // necessary money to the Amazon Card account.
 
-import bunq = require("../bunq")
 import logger = require("anyhow")
 const settings = require("setmeup").settings
 
@@ -34,14 +33,14 @@ const EmailAction = async (message: any) => {
 
         // Only proceed if order was made in euros!
         if (partial == null || partial == "") {
-            return "Can't find order amount on the email body."
+            return {error: "Can't find order amount on the email body."}
         }
 
         partial = partial.substring(0, partial.indexOf("\n"))
 
         // Only proceed if order was made in euros!
         if (!partial.includes("EUR")) {
-            return "Order amount not in EUR"
+            return {error: "Order amount not in EUR"}
         }
 
         // Get actual total amount.
@@ -51,12 +50,12 @@ const EmailAction = async (message: any) => {
 
         // Parsing failed?
         if (isNaN(amount)) {
-            return "Could not find correct order amount"
+            return {error: "Could not find correct order amount"}
         }
 
         // Order has no amount (downloads for example)?
         if (parseFloat(amount) < 0.01) {
-            return "Free order or download, no payment needed"
+            return {error: "Free order or download, no payment needed"}
         }
 
         // Set transaction description based on order details.
@@ -85,13 +84,10 @@ const EmailAction = async (message: any) => {
         const paymentOptions = {
             amount: (parseFloat(amount) * settings.amazon.paymentMultiplier).toFixed(2),
             description: description,
-            toAlias: settings.bunq.accounts.amazon,
-            reference: `amazon-de-${message.messageId}`,
-            notes: "Email action: amazon-de"
+            toAlias: settings.bunq.accounts.amazon
         }
 
-        await bunq.makePayment(paymentOptions)
-        return null
+        return paymentOptions
     } catch (ex) {
         throw ex
     }

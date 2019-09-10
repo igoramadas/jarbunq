@@ -45,13 +45,10 @@ const EmailAction = async (message: any) => {
         const paymentOptions = {
             amount: diffAmount,
             description: description,
-            toAlias: settings.bunq.accounts.amazon,
-            reference: `lbb-${message.messageId}`,
-            notes: "Email action: lbb"
+            toAlias: settings.bunq.accounts.amazon
         }
 
-        await bunq.makePayment(paymentOptions)
-        return null
+        return paymentOptions
     } catch (ex) {
         throw ex
     }

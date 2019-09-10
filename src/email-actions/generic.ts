@@ -6,16 +6,50 @@ import bunq = require("../bunq")
 import logger = require("anyhow")
 const settings = require("setmeup").settings
 
+// Email parsing strings.
+const arrTotalText = ["Order Total Including VAT", "Order Grand Total", "Order Total", "Total Amount", "Total sum"]
+
 // Exported function. Always returns true (or rejects).
 export = async (message: any, rule: any) => {
     logger.debug("EmailAction.Generic", message.messageId, message.from, message.subject, `To ${message.to}`)
 
     let descriptions = ["Email rule", `from ${rule.from.join(", ")}`]
+    let amount, partial
 
     try {
-        // Amount is mandatory.
+        // If rule has not amount specified, try to get from the email message.
         if (rule.amount == null) {
-            throw new Error("Missing amount on rule definition")
+            let totalIndex = -1
+
+            // Find where the total order is defined on the email plain text.
+            for (let totalText of arrTotalText) {
+                if (totalIndex < 0) {
+                    totalIndex = message.text.indexOf(totalText)
+
+                    if (totalIndex >= 0) {
+                        partial = message.text.substring(totalIndex + totalText.length)
+                        break
+                    }
+                }
+            }
+
+            // Find amount and remove unecessary characters.
+            partial = partial.substring(0, partial.indexOf("\n"))
+            partial = partial.replace(":", "").replace("=", "")
+            partial = partial.replace(".", "").replace(",", ".")
+            partial = partial.replace(/ /gi, "")
+
+            if (isNaN(partial)) {
+                throw new Error("Could not find the payment amount in the email message")
+            }
+
+            amount = parseFloat(partial)
+        } else {
+            amount = rule.amount
+        }
+        // No amount?
+        if (amount == null) {
+            throw new Error("Missing the rule amount, and no valid amount was found on the message")
         }
 
         // The target account is mandatory.
@@ -36,15 +70,12 @@ export = async (message: any, rule: any) => {
 
         // Generic payment options.
         const paymentOptions = {
-            amount: rule.amount,
+            amount: amount,
             description: descriptions.join(", "),
-            toAlias: rule.toAlias,
-            reference: `generic-${message.messageId}`,
-            notes: "Email action: generic"
+            toAlias: rule.toAlias
         }
 
-        await bunq.makePayment(paymentOptions)
-        return true
+        return paymentOptions
     } catch (ex) {
         throw ex
     }
