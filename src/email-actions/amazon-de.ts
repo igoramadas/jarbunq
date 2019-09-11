@@ -2,6 +2,7 @@
 // This will process orders from Amazon.de and automatically transfer the
 // necessary money to the Amazon Card account.
 
+import {PaymentOptions} from "../types"
 import logger = require("anyhow")
 const settings = require("setmeup").settings
 
@@ -10,7 +11,7 @@ const arrTotalText = ["Order Total Including VAT", "Order Grand Total:", "Order 
 const arrOrderNumberText = ["Order #", "Order  #:"]
 
 // Exported function. Will return false if order amount is not in EUR.
-const EmailAction = async (message: any) => {
+const EmailAction = async (message: any): Promise<any> => {
     logger.debug("EmailAction.AmazonDe", message.messageId, message.from, message.subject, `To ${message.to}`)
 
     let amount, description, orderNumber, partial
@@ -81,7 +82,7 @@ const EmailAction = async (message: any) => {
         description = `Order ${orderNumber}, ${amount} EUR`
 
         // Set payment options.
-        const paymentOptions = {
+        const paymentOptions: PaymentOptions = {
             amount: (parseFloat(amount) * settings.amazon.paymentMultiplier).toFixed(2),
             description: description,
             toAlias: settings.bunq.accounts.amazon

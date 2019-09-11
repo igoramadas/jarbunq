@@ -30,6 +30,12 @@ export interface EmailActionRule {
     subject?: string | string[]
     /** The email body must contain any of these values.  */
     body?: string | string[]
+    /** Source account alias can be an email, phone or IBAN. */
+    fromAlias?: string
+    /** Target account alias can be an email, phone or IBAN. */
+    toAlias?: string
+    /** Payment amount, if any. */
+    amount: number
 }
 
 /**

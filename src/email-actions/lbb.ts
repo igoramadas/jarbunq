@@ -2,6 +2,7 @@
 // This will process invoices sent by LBB via email and make sure there
 // are enough funds on the Amazon account for the direct debit.
 
+import { PaymentOptions} from "../types"
 import bunq = require("../bunq")
 import logger = require("anyhow")
 const settings = require("setmeup").settings
@@ -11,7 +12,7 @@ const totalText = "Den aktuellen Rechnungsbetrag von"
 
 // Exported function. Will return false if Amazon account has enough funds
 // to pay the bills (consider this a good thing!), otherwise true.
-const EmailAction = async (message: any) => {
+const EmailAction = async (message: any): Promise<any> => {
     logger.debug("EmailAction.Lbb", message.messageId, message.from, message.subject, `To ${message.to}`)
 
     let invoiceAmount, description, partial
@@ -42,7 +43,7 @@ const EmailAction = async (message: any) => {
         const diffAmount = ((invoiceAmount - balance) * settings.amazon.paymentMultiplier).toFixed(2)
 
         // Set payment options.
-        const paymentOptions = {
+        const paymentOptions: PaymentOptions = {
             amount: diffAmount,
             description: description,
             toAlias: settings.bunq.accounts.amazon

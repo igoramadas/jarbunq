@@ -2,18 +2,17 @@
 // This is a generic email rule that will transfer the specified
 // amount from the source account to the target account.
 
-import {PaymentOptions} from "../types"
+import {EmailActionRule, PaymentOptions} from "../types"
 import logger = require("anyhow")
-const settings = require("setmeup").settings
 
 // Email parsing strings.
 const arrTotalText = ["Order Total Including VAT", "Order Grand Total", "Order Total", "Total Amount", "Total sum"]
 
 // Exported function. Always returns true (or rejects).
-export = async (message: any, rule: any) => {
+export = async (message: any, rule: EmailActionRule): Promise<any> => {
     logger.debug("EmailAction.Generic", message.messageId, message.from, message.subject, `To ${message.to}`)
 
-    let descriptions = ["Email rule", `from ${rule.from.join(", ")}`]
+    let descriptions = ["Email rule", `from ${(rule.from as string[]).join(", ")}`]
     let forceDraft = false
     let amount, partial
 
@@ -61,12 +60,6 @@ export = async (message: any, rule: any) => {
             throw new Error("Missing the target account (toAlias) on rule definition")
         }
 
-        // Use default account if fromAlias was not specified.
-        if (rule.fromAlias == null) {
-            rule.fromAlias = settings.bunq.accounts.main
-            logger.warn("EmailAction.Generic", message.messageId, `Missing fromAlias on rule definition, will use ${rule.fromAlias}`)
-        }
-
         // Rule has a subject? Include in description.
         if (rule.subject != null) {
             descriptions.push(`subject: ${rule.subject}`)
@@ -79,7 +72,7 @@ export = async (message: any, rule: any) => {
             toAlias: rule.toAlias
         }
 
-        // Amount was parsed from email? Then force draft payment.
+        // Amount was parsed from email? Then force draft payment, regardless of default settings.
         if (forceDraft) {
             paymentOptions.draft = true
         }
