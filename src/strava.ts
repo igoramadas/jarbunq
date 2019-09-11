@@ -57,20 +57,26 @@ class Strava extends require("./base-events") {
         const now = moment()
         const day = now.isoWeekday()
         const target = moment(now.format("YYYY-MM-DD") + " " + settings.strava.payments.time)
-        let diff
 
-        // If we're past the execution time, add 24 hours and subtract the difference.
-        // The diff is already negative in this case, hence we do a + instead of - here.
+        // Payment interval must be daily or weekly.
+        if (paymentInterval != "weekly" && paymentInterval != "daily") {
+            throw new Error(`Invalid payment interval: ${paymentInterval}, must be daily or weekly.`)
+        }
+
+        // Weekly payment and today is not Monday? Add remaining days.
+        if (paymentInterval == "weekly" && day > 1) {
+            target.add(7 - day, "days")
+        }
+
         if (now.isAfter(target)) {
             // Maybe we just missed the payment? Check the database, if we're less than 8 hours
             // from the execution time at same day, and no payment was recorded yet, then do it now.
             if (now.diff(target) <= ms8Hours && now.format("HH:mm") > settings.strava.payments.time) {
-                const existingPayment = database
-                    .get("stravaPayments")
-                    .find(p => {
-                        return moment(p.date).dayOfYear() == now.dayOfYear()
-                    })
-                    .value()
+                const paymentFinder = p => {
+                    return moment(p.date).dayOfYear() == now.dayOfYear()
+                }
+                const allPayments = database.get("stravaPayments")
+                const existingPayment = allPayments.find(paymentFinder).value()
 
                 // There was a payment today?
                 if (existingPayment == null) {
@@ -84,19 +90,7 @@ class Strava extends require("./base-events") {
             target.add(1, "days")
         }
 
-        // Calculate how many days till next paymentm, if weekly.
-        if (paymentInterval == "weekly") {
-            if (day < 7) {
-                target.add(7 - day, "days")
-            }
-
-            diff = target.diff(now)
-        } else if (paymentInterval == "daily") {
-            diff = target.diff(now)
-        } else {
-            throw new Error(`Invalid payment interval: ${paymentInterval}, must be daily or weekly.`)
-        }
-
+        const diff = target.diff(now)
         this.timerPay = setTimeout(this.payForActivities, diff)
 
         // Log successful init.
