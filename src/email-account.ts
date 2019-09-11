@@ -333,7 +333,7 @@ class EmailAccount extends require("./base-events") {
                 // Action returned an error? Log and stop.
                 if (resultError) {
                     processedEmail.actions[rule.action] = resultError
-                    logger.warn("EmailAccount.processEmail", this.id, logRule.join(", "), message.messageId, message.subject, resultError)
+                    logger.error("EmailAccount.processEmail", this.id, logRule.join(", "), message.messageId, message.subject, resultError)
                     return
                 }
 
@@ -358,7 +358,7 @@ class EmailAccount extends require("./base-events") {
                     logger.info("EmailAccount.processEmail", this.id, logRule.join(", "), message.messageId, message.subject, "Processed")
                 }
             } catch (ex) {
-                logger.error("EmailAccount.processEmail", this.id, logRule.join(", "), message.messageId, ex)
+                logger.error("EmailAccount.processEmail", this.id, logRule.join(", "), message.messageId, message.subject, ex)
             }
         }
 
