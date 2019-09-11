@@ -2,6 +2,7 @@
 // This is a generic email rule that will transfer the specified
 // amount from the source account to the target account.
 
+import {PaymentOptions} from "../types"
 import logger = require("anyhow")
 const settings = require("setmeup").settings
 
@@ -13,6 +14,7 @@ export = async (message: any, rule: any) => {
     logger.debug("EmailAction.Generic", message.messageId, message.from, message.subject, `To ${message.to}`)
 
     let descriptions = ["Email rule", `from ${rule.from.join(", ")}`]
+    let forceDraft = false
     let amount, partial
 
     try {
@@ -36,6 +38,7 @@ export = async (message: any, rule: any) => {
             partial = partial.substring(0, partial.indexOf("\n"))
             partial = partial.replace(":", "").replace("=", "")
             partial = partial.replace(".", "").replace(",", ".")
+            partial = partial.replace("EUR", "")
             partial = partial.replace(/ /gi, "")
 
             if (isNaN(partial)) {
@@ -43,12 +46,14 @@ export = async (message: any, rule: any) => {
             }
 
             amount = parseFloat(partial)
+            forceDraft = true
         } else {
             amount = rule.amount
         }
-        // No amount?
-        if (amount == null) {
-            throw new Error("Missing the rule amount, and no valid amount was found on the message")
+
+        // No valid amount? Stop here.
+        if (amount == null || amount <= 0) {
+            throw new Error("Missing the rule amount, and no valid amount was found on the email")
         }
 
         // The target account is mandatory.
@@ -68,10 +73,15 @@ export = async (message: any, rule: any) => {
         }
 
         // Generic payment options.
-        const paymentOptions = {
+        const paymentOptions: PaymentOptions = {
             amount: amount,
             description: descriptions.join(", "),
             toAlias: rule.toAlias
+        }
+
+        // Amount was parsed from email? Then force draft payment.
+        if (forceDraft) {
+            paymentOptions.draft = true
         }
 
         return paymentOptions

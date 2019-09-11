@@ -1,19 +1,18 @@
 // Database
 
-import BaseEvents = require("./base-events")
+import crypto = require("crypto")
+import fs = require("fs")
+import logger = require("anyhow")
+import lowdb = require("lowdb")
+import path = require("path")
 
 const env = process.env
-const fs = require("fs")
-const lowdb = require("lowdb")
-const crypto = require("crypto")
-const logger = require("anyhow")
-const path = require("path")
 const settings = require("setmeup").settings
 
 /**
  * Manages data stored by the service on the jarbunq.db file.
  */
-class Database extends BaseEvents {
+class Database extends require("./base-events") {
     private static _instance: Database
     static get Instance() {
         return this._instance || (this._instance = new this())

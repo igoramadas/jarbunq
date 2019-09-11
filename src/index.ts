@@ -1,8 +1,8 @@
 // Index
 
-const fs = require("fs")
-const jaul = require("jaul")
-const path = require("path")
+import fs = require("fs")
+import jaul = require("jaul")
+import path = require("path")
 
 // Env is "development" by default.
 if (!process.env.NODE_ENV) {
@@ -33,7 +33,7 @@ let startup = async function() {
 
     // Load Vue options.
     const bodyFile = path.join(__dirname, "../", "assets", "vue", "template.html")
-    const bodyTemplate = fs.readFileSync(bodyFile, {encoding: settings.general.encoding})
+    const bodyTemplate = fs.readFileSync(bodyFile, {encoding: settings.general.encoding as string})
     const bodyTag = "{{ CONTENTS }}"
     const bodyTagIndex = bodyTemplate.indexOf(bodyTag)
     const vueOptions = {

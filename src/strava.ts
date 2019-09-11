@@ -1,20 +1,18 @@
 // Strava
 
-import BaseEvents = require("./base-events")
 import {Activity, StravaPayment} from "./types"
-
-const _ = require("lodash")
-const bunq = require("./bunq")
-const database = require("./database")
-const logger = require("anyhow")
-const moment = require("moment")
-const request = require("request-promise-native")
+import _ = require("lodash")
+import bunq = require("./bunq")
+import database = require("./database")
+import logger = require("anyhow")
+import moment = require("moment")
+import request = require("request-promise-native")
 const settings = require("setmeup").settings
 
 /**
  * Gets rides and activities from Strava.
  */
-class Strava extends BaseEvents {
+class Strava extends require("./base-events") {
     private static _instance: Strava
     static get Instance() {
         return this._instance || (this._instance = new this())
@@ -311,9 +309,9 @@ and copy the Refresh Token to settings.strava.refreshToken
             // Iterate result to create activity results.
             for (let a of activities) {
                 const movingTime = moment.duration(a.moving_time * 1000)
-                const arrMovingTime = [movingTime.hours(), movingTime.minutes(), movingTime.seconds()]
+                const arrMovingTime: any[] = [movingTime.hours(), movingTime.minutes(), movingTime.seconds()]
                 const elapsedTime = moment.duration(a.elapsed_time * 1000)
-                const arrElapsedTime = [elapsedTime.hours(), elapsedTime.minutes(), elapsedTime.seconds()]
+                const arrElapsedTime: any[] = [elapsedTime.hours(), elapsedTime.minutes(), elapsedTime.seconds()]
 
                 // Make sure times have leading zeroes.
                 for (let i = 0; i < 2; i++) {
@@ -415,14 +413,14 @@ and copy the Refresh Token to settings.strava.refreshToken
             }
 
             // Dispatch payment.
-            const paymentId = await bunq.makePayment(paymentOptions)
+            const payment = await bunq.makePayment(paymentOptions)
 
             const stravaPayment: StravaPayment = {
                 date: now.toDate(),
                 totalKm: totalKm,
                 activityCount: activities.length,
                 payment: {
-                    id: paymentId,
+                    id: payment.id,
                     amount: amount
                 }
             }

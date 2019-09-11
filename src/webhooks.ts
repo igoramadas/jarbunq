@@ -1,7 +1,8 @@
 // Webhooks
 
 import logger = require("anyhow")
-const request = require("request-promise-native")
+import request = require("request-promise-native")
+
 const settings = require("setmeup").settings
 
 /**

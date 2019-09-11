@@ -1,16 +1,15 @@
 // EmailManager
 
-import BaseEvents = require("./base-events")
+import _ = require("lodash")
 import EmailAccount = require("./email-account")
+import logger = require("anyhow")
 
-const _ = require("lodash")
-const logger = require("anyhow")
 const settings = require("setmeup").settings
 
 /**
  * Manages email accounts, defined as [[EmailAccount]].
  */
-class EmailManager extends BaseEvents {
+class EmailManager extends require("./base-events") {
     private static _instance: EmailManager
     static get Instance() {
         return this._instance || (this._instance = new this())

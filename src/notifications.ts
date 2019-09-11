@@ -1,17 +1,15 @@
 // Notifications
 
-import BaseEvents = require("./base-events")
 import {NotificationOptions, EmailNotificationOptions} from "./types"
-
-const fs = require("fs")
-const logger = require("anyhow")
-const nodemailer = require("nodemailer")
+import fs = require("fs")
+import logger = require("anyhow")
+import nodemailer = require("nodemailer")
 const settings = require("setmeup").settings
 
 /**
  * Used to send notifications to users. Right now only email is supported.
  */
-class Notifications extends BaseEvents {
+class Notifications extends require("./base-events") {
     private static _instance: Notifications
     static get Instance() {
         return this._instance || (this._instance = new this())
@@ -109,7 +107,7 @@ class Notifications extends BaseEvents {
             }
 
             // Load template and replace keywords.
-            let template = fs.readFileSync(__dirname + "/../assets/email-template.html", {encoding: settings.general.encoding})
+            let template = fs.readFileSync(__dirname + "/../assets/email-template.html", {encoding: settings.general.encoding as string})
             for (let [key, value] of Object.entries(keywords)) {
                 template = template.split(`{{ ${key} }}`).join(value)
             }

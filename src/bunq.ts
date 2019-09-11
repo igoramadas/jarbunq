@@ -1,15 +1,13 @@
 // Bunq
 
-import BaseEvents = require("./base-events")
-import BunqJSClient from "@bunq-community/bunq-js-client"
 import {PaymentOptions, Payment} from "./types"
-
-const _ = require("lodash")
-const crypto = require("crypto")
-const database = require("./database")
-const logger = require("anyhow")
-const moment = require("moment")
-const notifications = require("./notifications")
+import BunqJSClient from "@bunq-community/bunq-js-client"
+import _ = require("lodash")
+import crypto = require("crypto")
+import database = require("./database")
+import logger = require("anyhow")
+import moment = require("moment")
+import notifications = require("./notifications")
 const settings = require("setmeup").settings
 let bunqClient, lastAuthWarning
 
@@ -17,7 +15,7 @@ let bunqClient, lastAuthWarning
  * This is a wrapper over bunq-js-client, and should have all the business
  * logic to handle notifications and transactions at bunq.
  */
-class Bunq extends BaseEvents {
+class Bunq extends require("./base-events") {
     private static _instance: Bunq
     static get Instance() {
         return this._instance || (this._instance = new this())
@@ -256,7 +254,7 @@ class Bunq extends BaseEvents {
      * Make a payment to another account.
      * @param options The payment options.
      */
-    makePayment = async (options: PaymentOptions) => {
+    makePayment = async (options: PaymentOptions): Promise<Payment> => {
         logger.debug("Bunq.makePayment", options)
 
         const alias: any = {value: options.toAlias}
@@ -301,12 +299,12 @@ class Bunq extends BaseEvents {
 
             // Basic payment validation.
             if (options.amount <= 0) {
-                return new Error("Payments must have an amount greater than 0.")
+                throw new Error("Payments must have an amount greater than 0.")
             }
 
             // Check if amount is under the maximum allowed.
             if (options.amount > settings.bunq.maxPaymentAmount) {
-                return new Error(`Payment amount ${niceAmount} is over the maximum allowed ${settings.bunq.maxPaymentAmount}.`)
+                throw new Error(`Payment amount ${niceAmount} is over the maximum allowed ${settings.bunq.maxPaymentAmount}.`)
             }
 
             // From account is an alias or an actual ID?
@@ -455,7 +453,7 @@ class Bunq extends BaseEvents {
      * @param paymentId The ID of the payment that was made previously.
      * @param notes Array of strings to be added as notes.
      */
-    addPaymentNotes = async (accountId: number, paymentId: number, notes: string[], draft?: boolean) => {
+    addPaymentNotes = async (accountId: number, paymentId: number, notes: string[], draft?: boolean): Promise<boolean> => {
         try {
             let eventType = draft ? "draft-paynent" : "payment"
 
@@ -464,8 +462,10 @@ class Bunq extends BaseEvents {
             }
 
             logger.info("Bunq.addPaymentNotes", `Payment ${paymentId} from account ${accountId}`, notes.join(", "))
+            return true
         } catch (ex) {
             logger.error("Bunq.addPaymentNotes", `Payment ${paymentId} from account ${accountId}`, ex)
+            return false
         }
     }
 

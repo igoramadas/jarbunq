@@ -1,10 +1,8 @@
 // EmailAccount
 
-import BaseEvents = require("./base-events")
 import {EmailActionRule, ProcessedEmail} from "./types"
-
-import bunq = require("./bunq")
 import _ = require("lodash")
+import bunq = require("./bunq")
 import database = require("./database")
 import imap = require("imap")
 import mailparser = require("mailparser")
@@ -15,7 +13,7 @@ const settings = require("setmeup").settings
 /**
  * Represents a single IMAP mail account.
  */
-class EmailAccount extends BaseEvents {
+class EmailAccount extends require("./base-events") {
     /** Default EmailAccount constructor. */
     constructor(id: string, config: any) {
         super()
@@ -350,10 +348,10 @@ class EmailAccount extends BaseEvents {
                     actionResult.reference = `${rule.action}-${message.messageId}`
 
                     // Pay!
-                    const paymentId = await bunq.makePayment(actionResult)
+                    const payment = await bunq.makePayment(actionResult)
                     processedEmail.actions[rule.action] = true
 
-                    logger.info("EmailAccount.processEmail", this.id, logRule.join(", "), message.messageId, message.subject, `Payment ID: ${paymentId}`)
+                    logger.info("EmailAccount.processEmail", this.id, logRule.join(", "), message.messageId, message.subject, `Payment ID: ${payment.id}`)
                 } else if (_.isString(actionResult)) {
                     logger.info("EmailAccount.processEmail", this.id, logRule.join(", "), message.messageId, message.subject, actionResult)
                 } else {
