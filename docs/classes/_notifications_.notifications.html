@@ -78,7 +78,7 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<a href="_base_events_.baseevents.html" class="tsd-signature-type">BaseEvents</a>
+						<span class="tsd-signature-type">any</span>
 						<ul class="tsd-hierarchy">
 							<li>
 								<span class="target">Notifications</span>
@@ -94,7 +94,6 @@
 						<section class="tsd-index-section tsd-is-not-exported">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported"><a href="_notifications_.notifications.html#events" class="tsd-kind-icon">events</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-not-exported"><a href="_notifications_.notifications.html#smtp" class="tsd-kind-icon">smtp</a></li>
 							</ul>
 						</section>
@@ -108,9 +107,6 @@
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-not-exported"><a href="_notifications_.notifications.html#init" class="tsd-kind-icon">init</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported"><a href="_notifications_.notifications.html#off" class="tsd-kind-icon">off</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported"><a href="_notifications_.notifications.html#on" class="tsd-kind-icon">on</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported"><a href="_notifications_.notifications.html#once" class="tsd-kind-icon">once</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-not-exported"><a href="_notifications_.notifications.html#send" class="tsd-kind-icon">send</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-not-exported"><a href="_notifications_.notifications.html#toemail" class="tsd-kind-icon">to<wbr>Email</a></li>
 							</ul>
@@ -120,29 +116,13 @@
 			</section>
 			<section class="tsd-panel-group tsd-member-group tsd-is-not-exported">
 				<h2>Properties</h2>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
-					<a name="events" class="tsd-anchor"></a>
-					<h3>events</h3>
-					<div class="tsd-signature tsd-kind-icon">events<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">EventEmitter</span><span class="tsd-signature-symbol"> =&nbsp;new EventEmitter()</span></div>
-					<aside class="tsd-sources">
-						<p>Inherited from <a href="_base_events_.baseevents.html">BaseEvents</a>.<a href="_base_events_.baseevents.html#events">events</a></p>
-						<ul>
-							<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/b94d948/src/base-events.ts#L10">base-events.ts:10</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>Event emitter.</p>
-						</div>
-					</div>
-				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-not-exported">
 					<a name="smtp" class="tsd-anchor"></a>
 					<h3>smtp</h3>
 					<div class="tsd-signature tsd-kind-icon">smtp<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/b94d948/src/notifications.ts#L24">notifications.ts:24</a></li>
+							<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/42e0072/src/notifications.ts#L22">notifications.ts:22</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -164,7 +144,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/b94d948/src/notifications.ts#L16">notifications.ts:16</a></li>
+									<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/42e0072/src/notifications.ts#L14">notifications.ts:14</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="_notifications_.notifications.html" class="tsd-signature-type">Notifications</a></h4>
@@ -184,7 +164,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/b94d948/src/notifications.ts#L32">notifications.ts:32</a></li>
+									<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/42e0072/src/notifications.ts#L30">notifications.ts:30</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -193,120 +173,6 @@
 								</div>
 							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
-					<a name="off" class="tsd-anchor"></a>
-					<h3>off</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
-						<li class="tsd-signature tsd-kind-icon">off<span class="tsd-signature-symbol">(</span>eventName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, callback<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">ListenerFn</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<p>Inherited from <a href="_base_events_.baseevents.html">BaseEvents</a>.<a href="_base_events_.baseevents.html#off">off</a></p>
-								<ul>
-									<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/b94d948/src/base-events.ts#L35">base-events.ts:35</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Unbind callback from event. Shortcut to <code>events.off()</code>.</p>
-								</div>
-							</div>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>eventName: <span class="tsd-signature-type">string</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>The name of the event.</p>
-									</div>
-								</li>
-								<li>
-									<h5>callback: <span class="tsd-signature-type">ListenerFn</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>Callback function.</p>
-									</div>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
-					<a name="on" class="tsd-anchor"></a>
-					<h3>on</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
-						<li class="tsd-signature tsd-kind-icon">on<span class="tsd-signature-symbol">(</span>eventName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, callback<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">ListenerFn</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<p>Inherited from <a href="_base_events_.baseevents.html">BaseEvents</a>.<a href="_base_events_.baseevents.html#on">on</a></p>
-								<ul>
-									<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/b94d948/src/base-events.ts#L17">base-events.ts:17</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Bind callback to event. Shortcut to <code>events.on()</code>.</p>
-								</div>
-							</div>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>eventName: <span class="tsd-signature-type">string</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>The name of the event.</p>
-									</div>
-								</li>
-								<li>
-									<h5>callback: <span class="tsd-signature-type">ListenerFn</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>Callback function.</p>
-									</div>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
-					<a name="once" class="tsd-anchor"></a>
-					<h3>once</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
-						<li class="tsd-signature tsd-kind-icon">once<span class="tsd-signature-symbol">(</span>eventName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, callback<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">ListenerFn</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<p>Inherited from <a href="_base_events_.baseevents.html">BaseEvents</a>.<a href="_base_events_.baseevents.html#once">once</a></p>
-								<ul>
-									<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/b94d948/src/base-events.ts#L26">base-events.ts:26</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Bind callback to event that will be triggered only once. Shortcut to <code>events.once()</code>.</p>
-								</div>
-							</div>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>eventName: <span class="tsd-signature-type">string</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>The name of the event.</p>
-									</div>
-								</li>
-								<li>
-									<h5>callback: <span class="tsd-signature-type">ListenerFn</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>Callback function.</p>
-									</div>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -320,7 +186,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/b94d948/src/notifications.ts#L62">notifications.ts:62</a></li>
+									<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/42e0072/src/notifications.ts#L60">notifications.ts:60</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -353,7 +219,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/b94d948/src/notifications.ts#L80">notifications.ts:80</a></li>
+									<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/42e0072/src/notifications.ts#L78">notifications.ts:78</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -435,9 +301,6 @@
 					<li class="current tsd-kind-class tsd-parent-kind-external-module tsd-is-not-exported">
 						<a href="_notifications_.notifications.html" class="tsd-kind-icon">Notifications</a>
 						<ul>
-							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
-								<a href="_notifications_.notifications.html#events" class="tsd-kind-icon">events</a>
-							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-not-exported">
 								<a href="_notifications_.notifications.html#smtp" class="tsd-kind-icon">smtp</a>
 							</li>
@@ -446,15 +309,6 @@
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-not-exported">
 								<a href="_notifications_.notifications.html#init" class="tsd-kind-icon">init</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
-								<a href="_notifications_.notifications.html#off" class="tsd-kind-icon">off</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
-								<a href="_notifications_.notifications.html#on" class="tsd-kind-icon">on</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
-								<a href="_notifications_.notifications.html#once" class="tsd-kind-icon">once</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-not-exported">
 								<a href="_notifications_.notifications.html#send" class="tsd-kind-icon">send</a>
@@ -466,15 +320,6 @@
 					</li>
 				</ul>
 				<ul class="after-current">
-					<li class=" tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
-						<a href="../modules/_notifications_.html#fs" class="tsd-kind-icon">fs</a>
-					</li>
-					<li class=" tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
-						<a href="../modules/_notifications_.html#logger" class="tsd-kind-icon">logger</a>
-					</li>
-					<li class=" tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
-						<a href="../modules/_notifications_.html#nodemailer" class="tsd-kind-icon">nodemailer</a>
-					</li>
 					<li class=" tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
 						<a href="../modules/_notifications_.html#settings" class="tsd-kind-icon">settings</a>
 					</li>
