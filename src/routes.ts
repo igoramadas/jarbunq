@@ -11,7 +11,7 @@ const settings = require("setmeup").settings
  * This is a wrapper over bunq-js-client, and should have all the business
  * logic to handle notifications and transactions at bunq.
  */
-class Routes extends require("./base-events") {
+class Routes {
     private static _instance: Routes
     static get Instance() {
         return this._instance || (this._instance = new this())
@@ -176,6 +176,5 @@ class Routes extends require("./base-events") {
     }
 }
 
-// Init routes, bind catch-all processor.
 // Exports...
-Routes.export = Routes.Instance
+export = Routes.Instance
