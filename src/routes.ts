@@ -1,6 +1,5 @@
 // Routes
 
-import _ = require("lodash")
 import bunq = require("./bunq")
 import database = require("./database")
 import jaul = require("jaul")
@@ -48,6 +47,7 @@ class Routes extends require("./base-events") {
             next()
         })
 
+        // Bind route definitions.
         for (let key of Object.keys(this.definitions)) {
             const method = key.substring(0, key.indexOf("/"))
             const route = key.substring(key.indexOf("/"))

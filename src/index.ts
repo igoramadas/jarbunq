@@ -1,7 +1,6 @@
 // Index
 
 import fs = require("fs")
-import jaul = require("jaul")
 import path = require("path")
 
 // Env is "development" by default.
