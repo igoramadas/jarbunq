@@ -25,7 +25,11 @@
             // this value on yout settings.private.json file!
             "cryptoKey": "13841C2E4529CFB112324B7DE0EDB781",
             // If you wish to make some tests, please set this to "SANDBOX".
-            "environment": "PRODUCTION"
+            "environment": "PRODUCTION",
+            // Range of IP addresses that Jarbunq should accept callbacks from. This default value
+            // represents the range for PRODUCTION, if you change the environment above to SANDBOX
+            // please set the ipRange to null to accept from any IP.
+            "ipRange": "185.40.108.0/22"
         },
         // Set to false to NOT add Jarbunq related notes to the payments. Default is true,
         // and it's highly recommended to keep it true :-)

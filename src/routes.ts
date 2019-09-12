@@ -2,6 +2,7 @@
 
 import bunq = require("./bunq")
 import database = require("./database")
+import logger = require("anyhow")
 import strava = require("./strava")
 
 /**
@@ -35,6 +36,9 @@ let Routes = {
         res.renderVue("login.vue", {}, req.vueOptions)
     },
 
+    // BUNQ ROUTES
+    // --------------------------------------------------------------------------
+
     /** Authentication route, used to start the OAuth2 auth flow. */
     "get/bunq/auth": async function(_req, res) {
         res.redirect(bunq.authUrl)
@@ -56,6 +60,14 @@ let Routes = {
             res.redirect("/error?e=OAuth2 flow failed")
         }
     },
+
+    /** OAuth2 redirect to process the code and get an access token. */
+    "post/bunq/notifications/:accountId/:category": async function(req, _res) {
+        logger.warn("Notifications NOT READY YET", req.params.accountId, req.params.category, req.body)
+    },
+
+    // STRAVA ROUTES
+    // --------------------------------------------------------------------------
 
     /** Authentication route, used to start the OAuth2 auth flow with Strava. */
     "get/strava/auth": async function(_req, res) {

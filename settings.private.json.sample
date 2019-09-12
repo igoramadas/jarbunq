@@ -1,4 +1,7 @@
 {
+    "app": {
+        "url": "string: full URL to the root of the service, default is https://jarbunq.local:8833/"
+    },
     "bunq": {
         "api": {
             "clientId": "string: your bunq OAuth2 client ID",

@@ -1,6 +1,6 @@
 // Bunq
 
-import {PaymentOptions, Payment} from "./types"
+import {PaymentOptions, Payment, NotificationFilterUrl} from "./types"
 import BunqJSClient from "@bunq-community/bunq-js-client"
 import _ = require("lodash")
 import crypto = require("crypto")
@@ -46,6 +46,9 @@ class Bunq extends require("./base-events") {
 
     /** List of bank accounts. */
     accounts: any[]
+
+    /** List of notification channels opened on bunq. */
+    notificationFilters: NotificationFilterUrl[]
 
     /** Timer to auto refresh user data and accounts. */
     timerRefresh: any
@@ -142,6 +145,69 @@ class Bunq extends require("./base-events") {
         } catch (ex) {
             logger.error("Bunq.getOAuthToken", ex)
             return false
+        }
+    }
+
+    /**
+     * Setup the notification callbacks so bunq will dispatch
+     * events related to the user's accounts to Jarbunq.
+     */
+    setupNotifications = async () => {
+        const aliasesFromSettings = Object.values(settings.bunq.accounts)
+        let userId, limiter
+
+        try {
+            userId = this.user.id
+            limiter = bunqClient.ApiAdapter.RequestLimitFactory.create("/monetary-account", "POST")
+        } catch (ex) {
+            logger.error("Jarbunq.setupNotifications", ex)
+            return
+        }
+
+        // Reset list of registered filters.
+        this.notificationFilters = []
+
+        // Iterate accounts to create individual notification filters, but only for accounts
+        // that are listed on settings.bunq.accounts.
+        for (let acc of this.accounts) {
+            const aliases = _.map(acc.alias, "value")
+            const intersect = _.intersection(aliases, aliasesFromSettings)
+            const logAccount = intersect.length > 0 ? intersect[0] : acc.id
+
+            if (intersect.length == 0) {
+                logger.debug("Jarbunq.setupNotifications", `Account ${logAccount} has no matching aliases on settings.bunq.accounts`, "Skip!")
+            } else {
+                for (let category of ["PAYMENT", "DRAFT_PAYMENT", "CARD_TRANSACTION_SUCCESSFUL", "CARD_TRANSACTION_FAILED"]) {
+                    try {
+                        let filters = {
+                            notification_filters: [
+                                {
+                                    category: category,
+                                    notification_target: `${settings.app.url}bunq/notifications/${acc.id}/${category.toLowerCase()}`
+                                }
+                            ]
+                        }
+
+                        // Response limiter taken directly from the bunqJSClient.
+                        const response = await limiter.run(async axiosClient =>
+                            bunqClient.ApiAdapter.post(`/v1/user/${userId}/monetary-account/${acc.id}/notification-filter-url`, filters, {}, {}, axiosClient)
+                        )
+
+                        // Valid response? Add the result to the notificationFilters list.
+                        if (response.Response && response.Response.length > 0) {
+                            const responseFilter = response.Response[0]
+                            const filter = {id: responseFilter.id, category: responseFilter.category, date: responseFilter.updated}
+                            this.notificationFilters.push(filter)
+                        } else {
+                            throw new Error(`The notification filter response is blank or invalid`)
+                        }
+                    } catch (ex) {
+                        logger.error("Jarbunq.setupNotifications", ex)
+                    }
+                }
+
+                logger.info("Jarbunq.setupNotifications", `Added notification filters for account ${logAccount}`)
+            }
         }
     }
 

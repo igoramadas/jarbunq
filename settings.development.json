@@ -2,7 +2,7 @@
 
 {
     "app": {
-        // URL for development.
+        // URL for development. Must end with /.
         "url": "https://bunq.local:8833/",
         "ssl": {
             // Enable SSL and set path to the key and certificate files.
