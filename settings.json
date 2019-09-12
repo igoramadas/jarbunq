@@ -37,8 +37,8 @@
         // Set to true to use draft payments (that needs approval) by default.
         // Please note parts of the code can still force the options.draff.
         "draftPayment": false,
-        // Safeguard to avoid automatic payments of large amounts, default is 500 EUR.
-        "maxPaymentAmount": 500,
+        // Safeguard to avoid automatic payments of large amounts, default is 800 EUR.
+        "maxPaymentAmount": 800,
         // Safeguard to avoid low balances on accounts, by default keep at least 1 EUR.
         "minBalance": 1,
         // Auto refresh user data automatically once per hour by default, value in minutes.
