@@ -126,7 +126,7 @@ class Routes extends require("./base-events") {
         },
 
         /** OAuth2 redirect to process the code and get an access token. */
-        "post/bunq/notifications/:accountId/:category": async (req, res) => {
+        "post/bunq/notification/:accountId/:category": async (req, res) => {
             const ip = jaul.network.getClientIP(req)
             const ipRange = settings.bunq.api.allowedCallbackIP
 
@@ -137,8 +137,8 @@ class Routes extends require("./base-events") {
 
             const category = req.params.category
 
-            logger.info(`Routes.notificationFilter.${category}`, req.params.accountId, req.body)
-            this.events.emit(`notificationFilter.${category}`, req.params.accountId, req.body)
+            logger.info(`Routes.bunqNotification.${category}`, req.params.accountId, req.body)
+            this.events.emit(`bunqNotification.${category}`, req.params.accountId, req.body)
         },
 
         // STRAVA ROUTES

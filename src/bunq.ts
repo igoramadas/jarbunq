@@ -196,7 +196,7 @@ class Bunq extends require("./base-events") {
                             notification_filters: [
                                 {
                                     category: category,
-                                    notification_target: `${settings.app.url}bunq/notifications/${acc.id}/${category.toLowerCase()}`
+                                    notification_target: `${settings.app.url}bunq/notification/${acc.id}/${category.toLowerCase()}`
                                 }
                             ]
                         }
