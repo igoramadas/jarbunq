@@ -21,15 +21,15 @@
     },
     "bunq": {
         "api": {
+            // Range of IP addresses that Jarbunq should accept callbacks from. This default value
+            // represents the range for PRODUCTION, if you change the environment above to SANDBOX
+            // please set the allowedCallbackIP to null to accept from any IP.
+            "allowedCallbackIP": "185.40.108.0/22",
             // Default 16 bytes crypto hex key for API communication, it's strongly advised that you update
             // this value on yout settings.private.json file!
             "cryptoKey": "13841C2E4529CFB112324B7DE0EDB781",
             // If you wish to make some tests, please set this to "SANDBOX".
-            "environment": "PRODUCTION",
-            // Range of IP addresses that Jarbunq should accept callbacks from. This default value
-            // represents the range for PRODUCTION, if you change the environment above to SANDBOX
-            // please set the allowedCallbackIP to null to accept from any IP.
-            "allowedCallbackIP": "185.40.108.0/22"
+            "environment": "PRODUCTION"
         },
         // Set to false to NOT add Jarbunq related notes to the payments. Default is true,
         // and it's highly recommended to keep it true :-)
@@ -46,8 +46,12 @@
     },
     "database": {
         "crypto": {
+            // Cipher used for database encryption. The default "aes-256-ctr" is pretty secure.
             "cipher": "aes-256-ctr",
+            // Default encryption key, it's HIGHLY RECOMMENDED that you change this key to your own either
+            // via the settings.private.json, or using the $SMU_database_crypto_key environment variable.
             "key": "bunq-DB-cryp7o-k3y-plssss-CHANGE",
+            // Database encryption is enabled by default.
             "enabled": true
         }
     },
