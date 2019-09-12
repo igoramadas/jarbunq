@@ -41,6 +41,9 @@
         "maxPaymentAmount": 800,
         // Safeguard to avoid low balances on accounts, by default keep at least 1 EUR.
         "minBalance": 1,
+        // Enable notification filters? If so, bunq will push certain events from your bank accounts
+        // to Jarbunq (mostly payments and transactions), so it can act upon them.
+        "notificationFilters": true,
         // Auto refresh user data automatically once per hour by default, value in minutes.
         "refreshMinutes": 60
     },

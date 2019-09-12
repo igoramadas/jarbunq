@@ -119,6 +119,11 @@ class Bunq extends require("./base-events") {
             logger.error("Bunq.init", "Can't load initial data", ex)
             return process.exit()
         }
+
+        // Setup notification filters?
+        if (settings.bunq.notificationFilters) {
+            await this.setupNotificationFilters()
+        }
     }
 
     /**
@@ -153,9 +158,9 @@ class Bunq extends require("./base-events") {
      * to the user's accounts to Jarbunq. Please note that this will only
      * work if Jarbunq is accessible from the internet!
      */
-    setupNotifications = async () => {
+    setupNotificationFilters = async () => {
         if (settings.app.url.indexOf("bunq.local") > 0) {
-            logger.error("Jarbunq.setupNotifications", `Can't setup notifications from bunq using a local URL: ${settings.app.url}`)
+            logger.error("Jarbunq.setupNotificationFilters", `Can't setup notifications from bunq using a local URL: ${settings.app.url}`)
             return
         }
 
@@ -166,7 +171,7 @@ class Bunq extends require("./base-events") {
             userId = this.user.id
             limiter = bunqClient.ApiAdapter.RequestLimitFactory.create("/monetary-account", "POST")
         } catch (ex) {
-            logger.error("Jarbunq.setupNotifications", ex)
+            logger.error("Jarbunq.setupNotificationFilters", ex)
             return
         }
 
@@ -181,8 +186,10 @@ class Bunq extends require("./base-events") {
             const logAccount = intersect.length > 0 ? intersect[0] : acc.id
 
             if (intersect.length == 0) {
-                logger.debug("Jarbunq.setupNotifications", `Account ${logAccount} has no matching aliases on settings.bunq.accounts`, "Skip!")
+                logger.debug("Jarbunq.setupNotificationFilters", `Account ${logAccount} has no matching aliases on settings.bunq.accounts`, "Skip!")
             } else {
+                const filterIds = []
+
                 for (let category of ["PAYMENT", "DRAFT_PAYMENT", "CARD_TRANSACTION_SUCCESSFUL", "CARD_TRANSACTION_FAILED"]) {
                     try {
                         let filters = {
@@ -204,15 +211,17 @@ class Bunq extends require("./base-events") {
                             const responseFilter = response.Response[0]
                             const filter = {id: responseFilter.id, category: responseFilter.category, date: responseFilter.updated}
                             this.notificationFilters.push(filter)
+                            filterIds.push(filter.id)
                         } else {
                             throw new Error(`The notification filter response is blank or invalid`)
                         }
                     } catch (ex) {
-                        logger.error("Jarbunq.setupNotifications", ex)
+                        logger.error("Jarbunq.setupNotificationFilters", logAccount, ex)
                     }
                 }
 
-                logger.info("Jarbunq.setupNotifications", `Added notification filters for account ${logAccount}`)
+                const logFilterIds = filterIds.join(", ")
+                logger.info("Jarbunq.setupNotificationFilters", logAccount, `Created: ${logFilterIds}`)
             }
         }
     }
