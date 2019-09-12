@@ -11,7 +11,7 @@ const settings = require("setmeup").settings
  * This is a wrapper over bunq-js-client, and should have all the business
  * logic to handle notifications and transactions at bunq.
  */
-class Routes {
+class Routes extends require("./base-events") {
     private static _instance: Routes
     static get Instance() {
         return this._instance || (this._instance = new this())
@@ -130,11 +130,15 @@ class Routes {
             const ip = jaul.network.getClientIP(req)
             const ipRange = settings.bunq.api.allowedCallbackIP
 
+            // Check if sender is really bunq.
             if (ipRange && !jaul.network.ipInRange(ip, ipRange)) {
                 return this.sendAccessDenied(req, res)
             }
 
-            logger.warn("Notifications NOT READY YET", req.params.accountId, req.params.category, req.body)
+            const category = req.params.category
+
+            logger.info(`Routes.notificationFilter.${category}`, req.params.accountId, req.body)
+            this.events.emit(`notificationFilter.${category}`, req.params.accountId, req.body)
         },
 
         // STRAVA ROUTES
