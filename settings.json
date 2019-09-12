@@ -64,6 +64,7 @@
         // if you host your own email server and does not validate the headers.
         "checkSecurity": true,
         // When the app starts up, it will initially fetch emails received on the last 24 hours.
+        // Then emails are fetched as they arrive.
         "fetchHours": 24,
         // When failed to open the email inbox, retry after 10 seconds by default, value in milliseconds.
         "retryInterval": 10000
@@ -72,6 +73,8 @@
         // Use UTF8 as default encoding for files and streams.
         "encoding": "utf8"
     },
+    // Notification options (from Jarbunq to the user). Not to be confused with notification
+    // filters / callbacks from bunq to Jarbunq.
     "notification": {
         "events": {
             // Do not notify successful payments by default.
