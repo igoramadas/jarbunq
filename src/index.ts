@@ -54,29 +54,9 @@ let startup = async function() {
     const expressVue = require("express-vue")
     await expressVue.use(app.expressApp, vueOptions)
 
-    // Catch all route to pre-process requests.
-    app.expressApp.use((req, res, next) => {
-        const ext = req.url.substring(req.url.lengrh - 4)
-        const ip = jaul.network.getClientIP(req)
-
-        if (req.path.substring(0, 6) != "/error" && settings.app.allowedIP && settings.app.allowedIP.length > 0 && settings.app.allowedIP.indexOf(ip) < 0) {
-            logger.warn("Route", "Access denied", req.method, req.url, `From ${ip}`)
-            return res.redirect("/error?e=Access denied")
-        }
-
-        if (ext.indexOf(".") < 0) {
-            logger.info("Route", req.method, req.path, `From ${ip}`)
-        }
-        next()
-    })
-
     // Setup routes.
     const routes = require("./routes")
-    for (let key of Object.keys(routes)) {
-        const method = key.substring(0, key.indexOf("/"))
-        const route = key.substring(key.indexOf("/"))
-        app[method](route, routes[key])
-    }
+    routes.init(app.expressApp)
 
     // Init the database.
     const database = require("./database")

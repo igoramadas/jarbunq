@@ -10,7 +10,7 @@
         "paymentMultiplier": 1.005
     },
     "app": {
-        // List of IPs allowed to access Jarbunq pages. Leave blank to allow all.
+        // List of IPs allowed to access Jarbunq resources. Leave blank or empty to allow all.
         "allowedIP": [],
         // Port in which the server should run.
         "port": 8833,
@@ -28,8 +28,8 @@
             "environment": "PRODUCTION",
             // Range of IP addresses that Jarbunq should accept callbacks from. This default value
             // represents the range for PRODUCTION, if you change the environment above to SANDBOX
-            // please set the ipRange to null to accept from any IP.
-            "ipRange": "185.40.108.0/22"
+            // please set the allowedCallbackIP to null to accept from any IP.
+            "allowedCallbackIP": "185.40.108.0/22"
         },
         // Set to false to NOT add Jarbunq related notes to the payments. Default is true,
         // and it's highly recommended to keep it true :-)

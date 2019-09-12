@@ -149,10 +149,16 @@ class Bunq extends require("./base-events") {
     }
 
     /**
-     * Setup the notification callbacks so bunq will dispatch
-     * events related to the user's accounts to Jarbunq.
+     * Setup the notification callbacks so bunq will dispatch events related
+     * to the user's accounts to Jarbunq. Please note that this will only
+     * work if Jarbunq is accessible from the internet!
      */
     setupNotifications = async () => {
+        if (settings.app.url.indexOf("bunq.local") > 0) {
+            logger.error("Jarbunq.setupNotifications", `Can't setup notifications from bunq using a local URL: ${settings.app.url}`)
+            return
+        }
+
         const aliasesFromSettings = Object.values(settings.bunq.accounts)
         let userId, limiter
 
