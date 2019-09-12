@@ -428,14 +428,11 @@ class Bunq extends require("./base-events") {
             }
 
             // Add notes to payment?
-            if (paymentId) {
+            if (paymentId && settings.bunq.addPaymentNotes) {
+                await this.addPaymentNotes(accountId, paymentId, [`Triggered by ${settings.app.title}`], options.draft)
+
                 if (options.notes != null && options.notes.length > 0) {
                     await this.addPaymentNotes(accountId, paymentId, options.notes as string[], options.draft)
-                }
-
-                // Add default notes to payment?
-                if (settings.bunq.addPaymentNotes) {
-                    await this.addPaymentNotes(accountId, paymentId, [`Triggered by ${settings.app.title}`], options.draft)
                 }
             }
 
@@ -455,6 +452,11 @@ class Bunq extends require("./base-events") {
      */
     addPaymentNotes = async (accountId: number, paymentId: number, notes: string[], draft?: boolean): Promise<boolean> => {
         try {
+            if (!settings.bunq.addPaymentNotes) {
+                logger.warn("Bunq.addPaymentNotes", `Payment ${paymentId} from account ${accountId}`, "The settings.bunq.addPaymentNotes is disabled, will not add notes")
+                return false
+            }
+
             let eventType = draft ? "draft-paynent" : "payment"
 
             for (let note of notes) {

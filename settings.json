@@ -27,7 +27,8 @@
             // If you wish to make some tests, please set this to "SANDBOX".
             "environment": "PRODUCTION"
         },
-        // Set to false to NOT add Jarbunq related notes to the payments. Default is true (add default notes).
+        // Set to false to NOT add Jarbunq related notes to the payments. Default is true,
+        // and it's highly recommended to keep it true :-)
         "addPaymentNotes": true,
         // Set to true to use draft payments (that needs approval) by default.
         // Please note parts of the code can still force the options.draff.
