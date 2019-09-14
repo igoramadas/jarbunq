@@ -66,6 +66,8 @@
         // When the app starts up, it will initially fetch emails received on the last 24 hours.
         // Then emails are fetched as they arrive.
         "fetchHours": 24,
+        // Mark processed messages as read? Set to false to keep all messages unread.
+        "markAsRead": true,
         // When failed to open the email inbox, retry after 10 seconds by default, value in milliseconds.
         "retryInterval": 10000
     },

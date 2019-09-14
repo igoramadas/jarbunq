@@ -153,6 +153,8 @@ class EmailAccount extends require("./base-events") {
      * @param rawMessage The unprocessed, raw message
      */
     downloadMessage = rawMessage => {
+        let uid
+
         let parserCallback = async (err, parsedMessage) => {
             if (err) {
                 return logger.error("EmailAccount.downloadMessage", this.id, err)
@@ -160,6 +162,7 @@ class EmailAccount extends require("./base-events") {
 
             try {
                 // We don't need the brackets on the message ID.
+                parsedMessage.uid = uid
                 parsedMessage.messageId = parsedMessage.messageId.replace(/\</g, "").replace(/\>/g, "")
 
                 logger.debug("EmailAccount.downloadMessage", parsedMessage.messageId, parsedMessage.from, parsedMessage.subject, `To ${parsedMessage.to}`)
@@ -175,6 +178,9 @@ class EmailAccount extends require("./base-events") {
         }
 
         // Get message attributes and body chunks, and on end proccess the message.
+        rawMessage.once("attributes", attrs => {
+            uid = attrs.uid
+        })
         rawMessage.on("body", stream => mailparser.simpleParser(stream, parserCallback))
     }
 
@@ -374,6 +380,15 @@ class EmailAccount extends require("./base-events") {
         if (processedEmail != null) {
             database.insert("processedEmails", processedEmail)
             this.events.emit("processEmail", processedEmail)
+
+            // Mark message as read?
+            if (settings.email.markAsRead && message.uid) {
+                this.client.addFlags(message.uid, "SEEN", err => {
+                    if (err) {
+                        logger.error("EmailAccount.processEmail", "markAsRead", message.messageId, message.subject, err)
+                    }
+                })
+            }
         }
     }
 }
