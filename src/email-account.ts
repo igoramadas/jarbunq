@@ -316,7 +316,7 @@ class EmailAccount extends require("./base-events") {
             if (processedEmail == null) {
                 processedEmail = {
                     messageId: message.messageId,
-                    from: message.from,
+                    from: from,
                     subject: message.subject,
                     date: moment().toDate(),
                     actions: []

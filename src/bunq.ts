@@ -207,8 +207,8 @@ class Bunq extends require("./base-events") {
                         )
 
                         // Valid response? Add the result to the notificationFilters list.
-                        if (response.Response && response.Response.length > 0) {
-                            const responseFilter = response.Response[0]
+                        if (response.Response && response.Response.length > 0 && response.Response[0].NotificationFilterUrl) {
+                            const responseFilter = response.Response[0].NotificationFilterUrl
                             const filter = {id: responseFilter.id, category: responseFilter.category, date: responseFilter.updated}
                             this.notificationFilters.push(filter)
                             filterIds.push(filter.id)
