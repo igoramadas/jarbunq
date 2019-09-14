@@ -78,7 +78,7 @@ class EmailAccount extends require("./base-events") {
      * Opens the mailbox.
      * @param retry When true it will retry opening the mailbox if failed.
      */
-    openBox(retry: boolean): void {
+    openBox = (retry: boolean) => {
         if (this.client && this.client.state == "authenticated") {
             return logger.warn("EmailAccount.openBox", this.id, "Already connected. Abort.")
         }
@@ -116,7 +116,7 @@ class EmailAccount extends require("./base-events") {
             logger.error("EmailAccount.openBox.onError", this.id, err)
 
             if (err.code == "ECONNRESET") {
-                return _.delay(this.openBox, settings.imap.retryInterval, true)
+                return _.delay(this.openBox, settings.email.retryInterval, true)
             }
         })
 
@@ -128,7 +128,7 @@ class EmailAccount extends require("./base-events") {
      * Fetch new unread messages for the specified account.
      * @param since Optional date, if not specified will fetch new / unseen messages.
      */
-    fetchMessages(since?: Date): void {
+    fetchMessages = (since?: Date) => {
         let query = since ? ["SINCE", since] : "UNSEEN"
 
         return this.client.search([query], (err, results) => {
@@ -152,7 +152,7 @@ class EmailAccount extends require("./base-events") {
      * Download the specified message and load the related Email Action.
      * @param rawMessage The unprocessed, raw message
      */
-    downloadMessage(rawMessage): void {
+    downloadMessage = rawMessage => {
         let parserCallback = async (err, parsedMessage) => {
             if (err) {
                 return logger.error("EmailAccount.downloadMessage", this.id, err)
@@ -181,7 +181,7 @@ class EmailAccount extends require("./base-events") {
      * Process the specified message against the rules defined on the settings.
      * @param message The downloaded email message
      */
-    async processEmail(message: any): Promise<void> {
+    processEmail = async (message: any): Promise<void> => {
         logger.debug("EmailAccount.processEmail", message.messageId, message.from, message.subject, `To ${message.to}`)
 
         let processedEmail: ProcessedEmail = null
