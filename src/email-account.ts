@@ -166,6 +166,7 @@ class EmailAccount extends require("./base-events") {
 
                 // Only process message if we haven't done it before (in case message goes back to inbox).
                 if (!this.messageIds[parsedMessage.messageId] && parsedMessage) {
+                    this.messageIds[parsedMessage.messageId] = moment()
                     await this.processEmail(parsedMessage)
                 }
             } catch (ex) {
@@ -185,6 +186,13 @@ class EmailAccount extends require("./base-events") {
         logger.debug("EmailAccount.processEmail", message.messageId, message.from, message.subject, `To ${message.to}`)
 
         let processedEmail: ProcessedEmail = null
+
+        // Check if message was processed before.
+        const findExisting = database.get("processedEmails").find({messageId: message.messageId})
+        const existingMessage = findExisting.value()
+        if (existingMessage != null) {
+            return logger.warn("EmailAccount.processEmail", message.messageId, message.from, message.subject, `Skip, was already processed at ${existingMessage.date}`)
+        }
 
         // Iterate rules.
         for (let r of settings.email.rules) {
