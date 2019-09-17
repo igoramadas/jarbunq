@@ -363,16 +363,17 @@ class EmailAccount extends require("./base-events") {
 
                     // Pay!
                     const payment = await bunq.makePayment(actionResult)
-                    processedEmail.actions[rule.action] = true
-
                     logger.info("EmailAccount.processEmail", this.id, logRule.join(", "), message.messageId, message.subject, `Payment ID: ${payment.id}`)
                 } else if (_.isString(actionResult)) {
                     logger.info("EmailAccount.processEmail", this.id, logRule.join(", "), message.messageId, message.subject, actionResult)
                 } else {
                     logger.info("EmailAccount.processEmail", this.id, logRule.join(", "), message.messageId, message.subject, "Processed")
                 }
+
+                processedEmail.actions[rule.action] = true
             } catch (ex) {
                 logger.error("EmailAccount.processEmail", this.id, logRule.join(", "), message.messageId, message.subject, ex)
+                processedEmail.actions[rule.action] = false
             }
         }
 
