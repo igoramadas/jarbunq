@@ -209,16 +209,13 @@ class Strava extends require("./base-events") {
                 if (errDetails.indexOf("invalid") >= 0) {
                     console.warn(`
 ---------------------------------------------------------------
-Please open https://www.strava.com/settings/api on your browser
-and copy the Refresh Token to settings.strava.refreshToken
+Please open ${settings.app.url + "strava/auth"} on your browser
 ---------------------------------------------------------------
 `)
                 }
             } else {
                 logger.error("Strava.refreshToken", ex)
             }
-
-            throw ex
         }
     }
 
