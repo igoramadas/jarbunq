@@ -162,7 +162,11 @@ class Database extends require("./base-events") {
                         logger.debug("Database.migrations", f, "Deadline expired", migration.deadline)
                     } else {
                         logger.info("Database.migrations", f, "Executing...")
-                        await migration.run()
+                        const result = await migration.run()
+
+                        if (result) {
+                            logger.info("Database.migrations", f, result)
+                        }
                     }
                 } catch (ex) {
                     logger.error("Database.migrations", f, ex)
