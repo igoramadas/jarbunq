@@ -532,24 +532,32 @@ class Bunq extends require("./base-events") {
      * @param notes Array of strings to be added as notes.
      */
     addPaymentNotes = async (accountId: number, paymentId: number, notes: string[], draft?: boolean): Promise<boolean> => {
-        try {
-            if (!settings.bunq.addPaymentNotes) {
-                logger.warn("Bunq.addPaymentNotes", `Payment ${paymentId} from account ${accountId}`, "The settings.bunq.addPaymentNotes is disabled, will not add notes")
-                return false
-            }
-
-            let eventType = draft ? "draft-paynent" : "payment"
-
-            for (let note of notes) {
-                await bunqClient.api.noteText.post(eventType, this.user.id, accountId, paymentId, note)
-            }
-
-            logger.info("Bunq.addPaymentNotes", `Payment ${paymentId} from account ${accountId}`, notes.join(", "))
-            return true
-        } catch (ex) {
-            logger.error("Bunq.addPaymentNotes", `Payment ${paymentId} from account ${accountId}`, ex)
+        if (!settings.bunq.addPaymentNotes) {
+            logger.warn("Bunq.addPaymentNotes", `Payment ${paymentId} from account ${accountId}`, "The settings.bunq.addPaymentNotes is disabled, will not add notes")
             return false
         }
+
+        let eventType = draft ? "draft-paynent" : "payment"
+        let addedNotes = []
+        let result = true
+
+        // Iterate and add payment notes.
+        for (let note of notes) {
+            try {
+                await bunqClient.api.noteText.post(eventType, this.user.id, accountId, paymentId, note)
+                addedNotes.push(note)
+            } catch (ex) {
+                logger.error("Bunq.addPaymentNotes", `Payment ${paymentId} on account ${accountId}`, note, ex)
+                result = false
+            }
+        }
+
+        // Any notes added?
+        if (addedNotes.length > 0) {
+            logger.info("Bunq.addPaymentNotes", `Payment ${paymentId} on account ${accountId}`, addedNotes.join(", "))
+        }
+
+        return result
     }
 
     // HELPERS

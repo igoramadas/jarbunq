@@ -357,8 +357,8 @@ class EmailAccount extends require("./base-events") {
                         actionResult.notes = []
                     }
 
-                    actionResult.notes.push`Email action: ${rule.action}`
-                    actionResult.notes.push`Email subject: ${message.subject}`
+                    actionResult.notes.push(`Email action: ${rule.action}`)
+                    actionResult.notes.push(message.subject)
                     actionResult.reference = `${rule.action}-${message.messageId}`
 
                     // Pay!
