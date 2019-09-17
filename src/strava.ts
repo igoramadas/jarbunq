@@ -331,7 +331,8 @@ and copy the Refresh Token to settings.strava.refreshToken
                 result.push(activity)
             }
 
-            logger.info("Strava.getActivities", logQuery, `Got ${result.length} activities`)
+            const logDistances = _.map(result, "distance").join(", ")
+            logger.info("Strava.getActivities", logQuery, `Got ${result.length} activities`, `Distances: ${logDistances}`)
 
             return result
         } catch (ex) {
