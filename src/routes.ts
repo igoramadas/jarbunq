@@ -1,5 +1,6 @@
 // Routes
 
+import _ = require("lodash")
 import bunq = require("./bunq")
 import database = require("./database")
 import jaul = require("jaul")
@@ -28,6 +29,7 @@ class Routes extends require("./base-events") {
             const ext = req.url.substring(req.url.lengrh - 4)
             const ip = jaul.network.getClientIP(req)
             let allowedIP = settings.app.allowedIP || []
+            allowedIP = _.cloneDeep(allowedIP)
 
             // Bunq has its own allowed callback IPs?
             if (settings.bunq.api.allowedCallbackIP) {
