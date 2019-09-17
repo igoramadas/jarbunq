@@ -320,12 +320,11 @@ and copy the Refresh Token to settings.strava.refreshToken
                 // Create activity object.
                 let activity: Activity = {
                     name: a.name,
-                    date: moment(a.date).toDate(),
+                    date: moment(a.start_date).toDate(),
                     distance: Math.round(a.distance / 1000),
                     elevation: a.total_elevation_gain,
                     movingTime: arrMovingTime.join(":"),
                     elapsedTime: arrElapsedTime.join(":"),
-
                     location: a.location_country
                 }
 
