@@ -559,9 +559,9 @@ class Bunq extends require("./base-events") {
      * Helper to process and take action on errors from the bunq API.
      */
     private processBunqError = (ex: any) => {
-        const statusCode = ex.response && ex.response.statusCode ? ex.response.statusCode : ex.statusCode || 500
+        const statusCode = ex.response && ex.response.statusCode ? ex.response.statusCode : ex.statusCode
 
-        if (statusCode == 401 || statusCode == 403) {
+        if (statusCode == 401 || statusCode == 403 || ex.toString().indexOf("status code 401") > 0) {
             this.authNeeded()
         }
     }

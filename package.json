@@ -1,6 +1,6 @@
 {
     "name": "jarbunq",
-    "version": "19.37.615",
+    "version": "19.38.210",
     "description": "Automate your bunq account with email and Strava based actions!",
     "keywords": [
         "bunq",
@@ -32,7 +32,7 @@
         "expresser": "^4.0.5",
         "express-vue": "^5.14.1",
         "imap": "^0.8.19",
-        "jaul": "^1.0.5",
+        "jaul": "^1.1.0",
         "lodash": "^4.17.15",
         "lowdb": "^1.0.0",
         "mailparser": "^2.7.1",
