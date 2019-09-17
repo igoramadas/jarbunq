@@ -135,6 +135,9 @@ class Database extends require("./base-events") {
         this.get = this.db.get.bind(this.db)
         this.set = this.db.set.bind(this.db)
         this.unset = this.db.unset.bind(this.db)
+
+        // Execute migrations.
+        this.migrations()
     }
 
     /**
@@ -145,22 +148,25 @@ class Database extends require("./base-events") {
         let files = fs.readdirSync(path.join(__dirname, "migrations"))
 
         for (let f of files) {
-            try {
-                let migration = require("./migrations/" + f)
+            if (path.extname(f) == ".js") {
+                try {
+                    let migration = require("./migrations/" + f)
 
-                // Migrations must specify a deadline!
-                if (!migration.deadline) {
-                    logger.warn("Database.migrations", f, "No deadline set, so won't execute")
-                    continue
-                }
+                    // Migrations must specify a deadline!
+                    if (!migration.deadline) {
+                        logger.warn("Database.migrations", f, "No deadline set, so won't execute")
+                        continue
+                    }
 
-                if (moment(migration.deadline).isBefore(now)) {
-                    logger.debug("Database.migrations", f, "Deadline expired", migration.deadline)
-                } else {
-                    await migration.run()
+                    if (moment(migration.deadline).isBefore(now)) {
+                        logger.debug("Database.migrations", f, "Deadline expired", migration.deadline)
+                    } else {
+                        logger.info("Database.migrations", f, "Executing...")
+                        await migration.run()
+                    }
+                } catch (ex) {
+                    logger.error("Database.migrations", f, ex)
                 }
-            } catch (ex) {
-                logger.error("Database.migrations", f, ex)
             }
         }
     }

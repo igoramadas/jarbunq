@@ -9,7 +9,7 @@ let Migration = {
     // Migration code.
     run: async () => {
         let processedEmails = database.get("processedEmails")
-        let iterator = p => {
+        let iterator = function(p) {
             if (p.from.value && p.from.value.length > 0) {
                 p.from = p.from.value[0].address.toLowerCase()
                 logger.info("Database.migrations", p.messageId, `Updated from to ${p.from}`)
