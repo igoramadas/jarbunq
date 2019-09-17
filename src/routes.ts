@@ -35,7 +35,7 @@ class Routes extends require("./base-events") {
             }
 
             // Check if client is whitelisted.
-            if (req.path.substring(0, 6) != "/error" && allowedIP.length > 0 && !jaul.network.ipInRange(ip, allowedIP)) {
+            if (req.path.substring(0, 6) != "/error" && settings.app.allowedIP.length > 0 && !jaul.network.ipInRange(ip, allowedIP)) {
                 return this.sendAccessDenied(req, res)
             }
 
