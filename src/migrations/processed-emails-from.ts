@@ -8,7 +8,7 @@ let Migration = {
 
     // Migration code.
     run: async () => {
-        let processedEmails = database.get("processedEmails")
+        let processedEmails = database.get("processedEmails").value()
         let iterator = function(p) {
             if (p.from.value && p.from.value.length > 0) {
                 p.from = p.from.value[0].address.toLowerCase()
@@ -19,6 +19,7 @@ let Migration = {
         // Iterate and update "from" fields.
         processedEmails.forEach(iterator)
 
+        // Save DB.
         database.db.write()
     }
 }
