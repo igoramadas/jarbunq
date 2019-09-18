@@ -180,8 +180,8 @@ class Bunq extends require("./base-events") {
                 try {
                     const subject = `Jarbunq token expires in ${days} days`
                     const message = `The authorization tokens used by Jarbunq to connect to your bunq accounts will expire in ${days} days!
-                                 \n\n
-                                 Please open ${settings.app.url}bunq/auth on your browser to renew the tokens and avoid interruptions.`
+                                     \n\n
+                                     Please open ${settings.app.url}bunq/auth on your browser to renew the tokens and avoid interruptions.`
 
                     notifications.send({subject: subject, message: message})
                 } catch (ex) {
@@ -192,6 +192,7 @@ class Bunq extends require("./base-events") {
             }
         }
 
+        // Run next day again.
         _.delay(this.remindOAuthRenew, msDay)
     }
 
