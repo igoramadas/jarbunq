@@ -29,7 +29,7 @@ class Bunq extends require("./base-events") {
 
     /** The authentication URL used to start the OAuth2 flow. */
     get authenticated(): boolean {
-        const result = database.get("bunqTokenDate").value() != null
+        const result = database.get("jsClient.tokenTimestamp").value() != null
 
         if (!result) {
             this.authNeeded()
@@ -119,10 +119,12 @@ class Bunq extends require("./base-events") {
                 this.timerRefresh = setInterval(this.refreshUserData, settings.bunq.refreshMinutes * 1000 * 60)
 
                 // Calculate dates to remind user of token renewal.
-                const tokenDate = moment(database.get("bunqTokenDate").value())
+                const tokenDate = moment(database.get("jsClient.tokenTimestamp").value())
                 const diffDays = moment().diff(tokenDate) / msDay
                 const remind2 = (settings.bunq.tokenLifetimehDays - diffDays - 2) * msDay
                 const remind7 = (settings.bunq.tokenLifetimehDays - diffDays - 7) * msDay
+
+                console.dir(diffDays, remind2 / msDay, remind7 / msDay)
 
                 // Setup timers to remind user of token refresh.
                 _.delay(this.remindOAuthRenew, remind2, 2)
@@ -155,8 +157,7 @@ class Bunq extends require("./base-events") {
             }
 
             // Save current date to database.
-            const now = new Date()
-            database.set("bunqTokenDate", now.toString()).write()
+            database.set("jsClient.tokenTimestamp", moment().unix()).write()
 
             logger.info("Bunq.getOAuthToken", "Got a new access token")
             return true
