@@ -117,18 +117,6 @@ class Bunq extends require("./base-events") {
             } else {
                 await this.refreshUserData()
                 this.timerRefresh = setInterval(this.refreshUserData, settings.bunq.refreshMinutes * 1000 * 60)
-
-                // Calculate dates to remind user of token renewal.
-                const tokenDate = moment(database.get("jsClient.tokenTimestamp").value())
-                const diffDays = moment().diff(tokenDate) / msDay
-                const remind2 = (settings.bunq.tokenLifetimehDays - diffDays - 2) * msDay
-                const remind7 = (settings.bunq.tokenLifetimehDays - diffDays - 7) * msDay
-
-                console.dir(diffDays, remind2 / msDay, remind7 / msDay)
-
-                // Setup timers to remind user of token refresh.
-                _.delay(this.remindOAuthRenew, remind2, 2)
-                _.delay(this.remindOAuthRenew, remind7, 7)
             }
         } catch (ex) {
             logger.error("Bunq.init", "Can't load initial data", ex)
@@ -139,6 +127,9 @@ class Bunq extends require("./base-events") {
         if (settings.bunq.notificationFilters) {
             await this.setupNotificationFilters()
         }
+
+        // Reminder to renew OAuth tokens.
+        this.remindOAuthRenew()
     }
 
     /**
@@ -171,21 +162,37 @@ class Bunq extends require("./base-events") {
      * Send notification to remind user to renew the OAuth2 tokens
      * by logging in again and approving the access on bunq.
      */
-    remindOAuthRenew = (days: number) => {
-        try {
-            const subject = `Jarbunq token expires in ${days} days`
-            const message = `The authorization tokens used by Jarbunq to connect to your bunq accounts will expire in ${days} days!
-                             \n\n
-                             Please open ${settings.app.url}bunq/auth on your browser to renew the tokens and avoid interruptions.`
+    remindOAuthRenew = () => {
+        const tokenDate = moment.unix(database.get("jsClient.tokenTimestamp").value())
 
-            notifications.send({subject: subject, message: message})
-        } catch (ex) {
-            logger.error("Bunq.remindOAuthRenew", `${days} days`, ex)
+        if (!tokenDate) {
+            logger.debug("Bunq.remindOAuthRenew", "Not authenticated yet")
+        } else {
+            const diffDays = moment().diff(tokenDate) / msDay
+            let days = Math.floor(settings.bunq.tokenLifetimehDays - diffDays)
+            let remind = false
+
+            if (days == 2 || days == 7) {
+                remind = true
+            }
+
+            if (remind) {
+                try {
+                    const subject = `Jarbunq token expires in ${days} days`
+                    const message = `The authorization tokens used by Jarbunq to connect to your bunq accounts will expire in ${days} days!
+                                 \n\n
+                                 Please open ${settings.app.url}bunq/auth on your browser to renew the tokens and avoid interruptions.`
+
+                    notifications.send({subject: subject, message: message})
+                } catch (ex) {
+                    logger.error("Bunq.remindOAuthRenew", `${days} days`, ex)
+                }
+            } else {
+                days = logger.info("Bunq.remindOAuthRenew", `Token needs to be renewd in ${days} days`)
+            }
         }
 
-        // Setup timers to remind again based on the token lifetime.
-        const interval = settings.bunq.tokenLifetimehDays * msDay
-        _.delay(this.remindOAuthRenew, interval, settings.bunq.tokenLifetimehDays)
+        _.delay(this.remindOAuthRenew, msDay)
     }
 
     /**

@@ -29,9 +29,7 @@
             // this value on yout settings.private.json file!
             "cryptoKey": "13841C2E4529CFB112324B7DE0EDB781",
             // If you wish to make some tests, please set this to "SANDBOX".
-            "environment": "PRODUCTION",
-            // OAuth authorizations must be renewed at least once every 90 days.
-            "tokenLifetimehDays": 90
+            "environment": "PRODUCTION"
         },
         // Set to false to NOT add Jarbunq related notes to the payments. Default is true,
         // and it's highly recommended to keep it true :-)
@@ -47,7 +45,9 @@
         // to Jarbunq (mostly payments and transactions), so it can act upon them.
         "notificationFilters": true,
         // Auto refresh user data automatically once per hour by default, value in minutes.
-        "refreshMinutes": 60
+        "refreshMinutes": 60,
+        // OAuth authorizations must be renewed at least once every 90 days.
+        "tokenLifetimehDays": 90
     },
     "database": {
         "crypto": {

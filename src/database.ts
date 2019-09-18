@@ -166,6 +166,8 @@ class Database extends require("./base-events") {
 
                         if (result) {
                             logger.info("Database.migrations", f, result)
+                        } else {
+                            logger.debug("Database.migrations", f, "No result")
                         }
                     }
                 } catch (ex) {

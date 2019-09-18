@@ -22,7 +22,11 @@ let Migration = {
         // Save DB.
         database.db.write()
 
-        return `Updated from address on ${counter} email messages`
+        if (counter > 0) {
+            return `Updated from address on ${counter} email messages`
+        }
+
+        return null
     }
 }
 
