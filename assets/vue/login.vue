@@ -9,7 +9,7 @@
             </p>
             <p>
                 <br />
-                <a class="button is-primary" href="/bunq/auth" title="Authorize Jarbunq">Connect to bunq</a>
+                <a href="/bunq/auth" title="Connect to bunq"><img src="/images/bunq-connect.svg" width="190px"/></a>
             </p>
         </section>
     </div>
