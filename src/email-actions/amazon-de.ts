@@ -9,12 +9,20 @@ const settings = require("setmeup").settings
 // Email parsing strings.
 const arrTotalText = ["Order Total Including VAT", "Order Grand Total:", "Order Total:"]
 const arrOrderNumberText = ["Order #", "Order  #:"]
+const rewardPointsText = "Reward Points:"
+
+// Helper to cleanup amount text.
+const amountCleanup = function(value) {
+    value = value.replace("EUR", "").replace(":", "")
+    value = value.replace(".", "").replace(",", ".")
+    return value.trim()
+}
 
 // Exported function. Will return false if order amount is not in EUR.
 const EmailAction = async (message: any): Promise<any> => {
     logger.debug("EmailAction.AmazonDe", message.messageId, message.from, message.subject, `To ${message.to}`)
 
-    let amount, description, orderNumber, partial
+    let amount, rewardAmount, paymentAmount, description, orderNumber, partial
 
     try {
         let totalIndex = -1
@@ -45,18 +53,38 @@ const EmailAction = async (message: any): Promise<any> => {
         }
 
         // Get actual total amount.
-        partial = partial.replace("EUR", "").replace(":", "")
-        partial = partial.replace(".", "").replace(",", ".")
-        amount = partial.trim()
+        amount = amountCleanup(partial)
 
         // Parsing failed?
         if (isNaN(amount)) {
             return {error: "Could not find correct order amount"}
         }
 
+        amount = parseFloat(amount)
+
         // Order has no amount (downloads for example)?
-        if (parseFloat(amount) < 0.01) {
+        if (amount < 0.01) {
             return {error: "Free order or download, no payment needed"}
+        }
+
+        // Set payment amount depending on the multiplier.
+        paymentAmount = amount * settings.amazon.paymentMultiplier
+
+        // Check if reward points were used, and subtract from order amount.
+        let rewardIndex = message.text.indexOf(rewardPointsText)
+        if (rewardIndex > 0) {
+            partial = message.text.substring(rewardPointsText + rewardPointsText.length)
+            partial = partial.substring(0, partial.indexOf("\n"))
+            partial = partial.replace("-", "")
+            rewardAmount = amountCleanup(partial)
+
+            // Reward amount found? Otherwise set to zero.
+            if (isNaN(rewardAmount)) {
+                rewardAmount = 0
+            } else {
+                rewardAmount = parseFloat(rewardAmount)
+                paymentAmount = paymentAmount - rewardAmount
+            }
         }
 
         // Set transaction description based on order details.
@@ -83,9 +111,14 @@ const EmailAction = async (message: any): Promise<any> => {
 
         // Set payment options.
         const paymentOptions: PaymentOptions = {
-            amount: (parseFloat(amount) * settings.amazon.paymentMultiplier).toFixed(2),
+            amount: paymentAmount.toFixed(2),
             description: description,
             toAlias: settings.bunq.accounts.amazon
+        }
+
+        // Add notes about reward points usage.
+        if (rewardAmount > 0) {
+            paymentOptions.notes = [`Used reward points: ${rewardAmount.toFixed(2)} EUR`]
         }
 
         return paymentOptions
