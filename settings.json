@@ -70,8 +70,8 @@
         "fetchHours": 24,
         // Mark processed messages as read? Set to false to keep all messages unread.
         "markAsRead": true,
-        // When failed to open the email inbox, retry after 10 seconds by default, value in milliseconds.
-        "retryInterval": 10000
+        // When failed to open the email inbox, retry after 30 seconds by default, value in milliseconds.
+        "retryInterval": 30000
     },
     "general": {
         // Use UTF8 as default encoding for files and streams.

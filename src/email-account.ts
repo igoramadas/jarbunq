@@ -39,6 +39,9 @@ class EmailAccount extends require("./base-events") {
     /** Cache of email message IDs. */
     messageIds: any
 
+    /** Timestamp of last fetch. */
+    lastFetch: number
+
     // MAIN METHODS
     // --------------------------------------------------------------------------
 
@@ -80,7 +83,7 @@ class EmailAccount extends require("./base-events") {
      */
     openBox = (retry: boolean) => {
         if (this.client && this.client.state == "authenticated") {
-            return logger.warn("EmailAccount.openBox", this.id, "Already connected. Abort.")
+            return logger.warn("EmailAccount.openBox", this.id, "Already connected, abort.")
         }
 
         // Once IMAP is ready, open the inbox and start listening to messages.
@@ -112,12 +115,19 @@ class EmailAccount extends require("./base-events") {
         })
 
         // Handle IMAP errors. If disconnected because of connection reset, call openBox again.
-        this.client.on("error", err => {
+        this.client.once("error", err => {
             logger.error("EmailAccount.openBox.onError", this.id, err)
 
             if (err.code == "ECONNRESET") {
                 return _.delay(this.openBox, settings.email.retryInterval, true)
             }
+        })
+
+        // Auto reconnect when connection closes.
+        this.client.once("end", () => {
+            logger.info("EmailAccount.end", this.id, "Connection closed")
+
+            _.delay(this.openBox, settings.email.retryInterval, true)
         })
 
         // Connect to the IMAP server.
@@ -144,7 +154,9 @@ class EmailAccount extends require("./base-events") {
             fetcher.on("message", msg => this.downloadMessage(msg))
             fetcher.once("error", err => logger.error("EmailAccount.fetchMessages.onError", this.id, err))
 
+            // Log and set last fetch timestamp.
             logger.info("EmailAccount.fetchMessages", this.id, `${results.length} new message(s)`)
+            this.lastFetch = moment().unix()
         })
     }
 
