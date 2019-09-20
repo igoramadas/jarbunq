@@ -25,7 +25,7 @@ Jarbunq is a Node.js / TypeScript based service to automate tasks on your bunq a
 - Web frontend to configure the settings and view status / logs
 - Create a single app-package using [pkg](https://github.com/zeit/pkg)
 
-## Super quick start guide
+## Crazy quick start guide
 
     $ git clone git@github.com:igoramadas/jarbunq.git
     $ make clean update

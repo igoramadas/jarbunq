@@ -85,7 +85,7 @@ class Bunq extends require("./base-events") {
             }
 
             bunqClient = new BunqJSClient(store)
-            bunqClient.setKeepAlive(true)
+            bunqClient.setKeepAlive(false)
         } catch (ex) {
             logger.error("Bunq", "Constructor", ex)
         }
