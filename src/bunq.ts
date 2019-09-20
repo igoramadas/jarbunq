@@ -84,7 +84,29 @@ class Bunq extends require("./base-events") {
                 remove: (key: string) => database.unset(`jsClient.${key}`).write()
             }
 
-            bunqClient = new BunqJSClient(store)
+            // Custom adapter wrapping the anyhow logger.
+            const customLogger = {
+                log: obj => {
+                    logger.debug("BunqJSClient", obj)
+                },
+                trace: obj => {
+                    logger.debug("BunqJSClient", obj)
+                },
+                debug: obj => {
+                    logger.debug("BunqJSClient", obj)
+                },
+                info: obj => {
+                    logger.info("BunqJSClient", obj)
+                },
+                warn: obj => {
+                    logger.warn("BunqJSClient", obj)
+                },
+                error: obj => {
+                    logger.error("BunqJSClient", obj)
+                }
+            }
+
+            bunqClient = new BunqJSClient(store, customLogger)
             bunqClient.setKeepAlive(false)
         } catch (ex) {
             logger.error("Bunq", "Constructor", ex)
