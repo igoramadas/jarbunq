@@ -73,7 +73,7 @@ const EmailAction = async (message: any): Promise<any> => {
         // Check if reward points were used, and subtract from order amount.
         let rewardIndex = message.text.indexOf(rewardPointsText)
         if (rewardIndex > 0) {
-            partial = message.text.substring(rewardPointsText + rewardPointsText.length)
+            partial = message.text.substring(rewardIndex + rewardPointsText.length)
             partial = partial.substring(0, partial.indexOf("\n"))
             partial = partial.replace("-", "")
             rewardAmount = amountCleanup(partial)
