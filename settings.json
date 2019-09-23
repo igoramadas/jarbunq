@@ -71,7 +71,9 @@
         // Mark processed messages as read? Set to false to keep all messages unread.
         "markAsRead": true,
         // When failed to open the email inbox, retry after 30 seconds by default, value in milliseconds.
-        "retryInterval": 30000
+        "retryInterval": 30000,
+        // Send weekly reports to the owner's email?
+        "weeklyReports": true
     },
     "general": {
         // Use UTF8 as default encoding for files and streams.

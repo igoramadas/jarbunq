@@ -2,7 +2,7 @@
 
 import {Payment} from "./types"
 import _ = require("lodash")
-import database = require("database")
+import database = require("./database")
 import EmailAccount = require("./email-account")
 import logger = require("anyhow")
 import moment = require("moment")
@@ -26,6 +26,9 @@ class EmailManager extends require("./base-events") {
 
     /** SMTP client created via Nodemailer. */
     smtp: any
+
+    /** Timer to send the weekly reports. */
+    timerWeeklyReport: any
 
     // MAIN METHODS
     // --------------------------------------------------------------------------
@@ -68,6 +71,31 @@ class EmailManager extends require("./base-events") {
             logger.warn("EmailManager.start", "No accounts found. Please make sure you have accounts set via settings.email.accounts.")
         }
 
+        // Send weekly reports?
+        if (settings.email.weeklyReports) {
+            const now = moment()
+            const target = moment().hours(6)
+            const day = now.isoWeekday()
+            let interval = 0
+
+            // If Monday send straight away, otherwise calculate correct schedule for next Monday.
+            if (day == 1) {
+                if (now.isAfter(target)) {
+                    this.sendWeeklyReport()
+                } else {
+                    interval = target.diff(now)
+                }
+            } else {
+                target.add(8 - day, "days")
+            }
+
+            // Report needs to be scheduled?
+            if (interval > 0) {
+                this.timerWeeklyReport = setTimeout(this.sendWeeklyReport, interval)
+            }
+        }
+
+        // Dispatch start event.
         const accountIds = _.map(this.accounts, "id")
         this.events.emit("start", accountIds)
     }
@@ -83,6 +111,11 @@ class EmailManager extends require("./base-events") {
             account.stop()
         }
 
+        if (this.timerWeeklyReport) {
+            clearTimeout(this.timerWeeklyReport)
+            this.timerWeeklyReport = null
+        }
+
         this.accounts = []
         this.events.emit("stop", accountIds)
     }
@@ -93,7 +126,7 @@ class EmailManager extends require("./base-events") {
     /**
      * Send a weekly summary report of payments to the account owner.
      */
-    sendWeeklySummary = () => {
+    sendWeeklyReport = () => {
         try {
             const yesterday = moment().subtract(1, "days")
             yesterday.hours(23)
@@ -156,9 +189,13 @@ class EmailManager extends require("./base-events") {
 
             //Send email!
             notifications.toEmail({subject: subject, message: message})
+            this.events.emit("sendWeeklyReport", payments)
         } catch (ex) {
             logger.error("EmailManager.sendWeeklySummary", ex)
         }
+
+        // Schedule next report for next week.
+        this.timerWeeklyReport = setTimeout(this.sendWeeklyReport, 604800000)
     }
 }
 
