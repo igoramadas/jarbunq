@@ -65,7 +65,7 @@ class Strava extends require("./base-events") {
 
         // Weekly payment and today is not Monday? Add remaining days.
         if (paymentInterval == "weekly" && day > 1) {
-            target.add(7 - day, "days")
+            target.add(8 - day, "days")
         }
 
         if (now.isAfter(target)) {

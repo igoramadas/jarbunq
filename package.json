@@ -2,12 +2,7 @@
     "name": "jarbunq",
     "version": "19.39.115",
     "description": "Automate your bunq account with email and Strava based actions!",
-    "keywords": [
-        "bunq",
-        "assistant",
-        "automation",
-        "bank"
-    ],
+    "keywords": ["bunq", "assistant", "automation", "bank"],
     "author": "Igor Ramadas <igor@devv.com>",
     "homepage": "https://jarbunq.devv.com",
     "subdomain": "jarbunq",
