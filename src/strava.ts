@@ -358,8 +358,8 @@ Please open ${settings.app.url + "strava/auth"} on your browser
             before.seconds(59)
 
             let query = {
-                after: after.unix(),
-                before: before.unix()
+                after: after.unix() - 1,
+                before: before.unix() + 1
             }
 
             let result = await this.getActivities(query)
