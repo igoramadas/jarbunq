@@ -87,11 +87,13 @@ class EmailManager extends require("./base-events") {
                 }
             } else {
                 target.add(8 - day, "days")
+                interval = target.diff(now)
             }
 
             // Report needs to be scheduled?
             if (interval > 0) {
                 this.timerWeeklyReport = setTimeout(this.sendWeeklyReport, interval)
+                logger.debug("EmailManager.start", `Weekly report will be sent ${moment.duration(interval).humanize(true)}`)
             }
         }
 
@@ -177,7 +179,7 @@ class EmailManager extends require("./base-events") {
                     paymentStrings.push(msg)
                 }
             } else {
-                paymentStrings.push("No payments were made in this period. Strange... :-(")
+                paymentStrings.push("No payments were made in this period. Strange, isn't it? :-(")
             }
 
             // Build subject and message strings.
