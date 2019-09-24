@@ -299,6 +299,12 @@ class Bunq extends require("./base-events") {
      */
     refreshUserData = async () => {
         try {
+            await bunqClient.registerSession()
+        } catch (ex) {
+            logger.debug("Bunq.refreshUserData", "Can't register session", ex)
+        }
+
+        try {
             await this.getUser()
             await this.getAccounts()
         } catch (ex) {
