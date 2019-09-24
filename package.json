@@ -1,6 +1,6 @@
 {
     "name": "jarbunq",
-    "version": "19.39.215",
+    "version": "19.39.222",
     "description": "Automate your bunq account with email and Strava based actions!",
     "keywords": [
         "bunq",
@@ -46,14 +46,14 @@
     "devDependencies": {
         "@babel/core": "^7.6.2",
         "@types/express": "^4.17.1",
-        "@types/node": "^12.7.5",
+        "@types/node": "^12.7.7",
         "axios-debug-log": "^0.6.2",
         "chalk": "^2.4.2",
         "css-loader": "^3.2.0",
         "typedoc": "^0.15.0",
         "typescript": "^3.6.3",
         "vue-loader": "^15.7.1",
-        "webpack": "^4.40.2"
+        "webpack": "^4.41.0"
     },
     "pkg": {
         "scripts": "lib/**/*.js",
