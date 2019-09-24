@@ -116,7 +116,7 @@ export interface ProcessedEmail {
     messageId: number
     from: string
     subject: string
-    actions: any[]
+    actions: any
 }
 
 /**

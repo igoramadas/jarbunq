@@ -337,7 +337,7 @@ class EmailAccount extends require("./base-events") {
                     from: from,
                     subject: message.subject,
                     date: moment().toDate(),
-                    actions: []
+                    actions: {}
                 }
             }
 
