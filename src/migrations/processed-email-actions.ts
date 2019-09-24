@@ -3,7 +3,7 @@
 import database = require("../database")
 
 let Migration = {
-    deadline: "2019-09-20",
+    deadline: "2019-09-27",
 
     // Migration code.
     run: async () => {
