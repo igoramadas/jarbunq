@@ -186,8 +186,8 @@ class EmailManager extends require("./base-events") {
             const subject = `Weekly payment report from ${settings.app.title}`
             const message = `Aloha! This is your weekly report of payments triggered by Jarbunq last week,
                              from ${minDate.format("ll")} to ${yesterday.format("ll")}.
-                             \n\n
-                             ${paymentStrings.join("\n")}`
+                             \n-\n
+                             ${paymentStrings.join("\n-\n")}`
 
             //Send email!
             notifications.toEmail({subject: subject, message: message})
