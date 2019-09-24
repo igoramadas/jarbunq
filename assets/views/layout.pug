@@ -1,0 +1,39 @@
+doctype html
+html.no-js(lang="en")
+    head
+        title Jarbunq
+        meta(charset="utf-8")
+        meta(name="mobile-web-app-capable", content="yes")
+        meta(name="robots" content="noindex")
+        script.
+            window.jarbunq = {
+                routes: [],
+                views: []
+            }
+
+        != css("bulma")
+        != css("main")
+        != js("lib/axios")
+        != js("lib/vue")
+        != js("lib/vue-router")
+        != js("lib/baseview")
+
+        each c in components
+            != js("components/" + c)
+
+        block head
+
+    body
+        .wrapper
+            h1.title.is-1 Jarbunq
+            .header
+
+            block contents
+
+            footer.inner-footer
+                a.icon.github(href="https://github.com/igoramadas/jarbunq")
+                    img(src="/images/icon-github.png")
+                a.icon.docs(href="https://jarbunq.devv.com")
+                    img(src="/images/icon-docs.png")
+
+        != js("main")

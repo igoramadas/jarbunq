@@ -3,10 +3,13 @@
 import _ = require("lodash")
 import bunq = require("./bunq")
 import database = require("./database")
+import fs = require("fs")
 import jaul = require("jaul")
 import logger = require("anyhow")
+import path = require("path")
 import strava = require("./strava")
 const settings = require("setmeup").settings
+const app = require("expresser").app
 
 /**
  * This is a wrapper over bunq-js-client, and should have all the business
@@ -24,8 +27,8 @@ class Routes extends require("./base-events") {
     /**
      * Init the routes on the express app.
      */
-    init = expressApp => {
-        expressApp.use((req, res, next) => {
+    init = () => {
+        app.expressApp.use((req, res, next) => {
             const ext = req.url.substring(req.url.lengrh - 4)
             const ip = jaul.network.getClientIP(req)
             let allowedIP = settings.app.allowedIP || []
@@ -53,7 +56,7 @@ class Routes extends require("./base-events") {
         for (let key of Object.keys(this.definitions)) {
             const method = key.substring(0, key.indexOf("/"))
             const route = key.substring(key.indexOf("/"))
-            expressApp[method](route, this.definitions[key])
+            app.expressApp[method](route, this.definitions[key])
         }
     }
 
@@ -78,21 +81,13 @@ class Routes extends require("./base-events") {
      */
     definitions: any = {
         /** Index page, redirects to home or to login. */
-        "get/": async (_req, res) => {
-            if (bunq.authenticated) {
-                res.redirect("/home")
-            } else {
-                res.redirect("/login")
-            }
-        },
-
-        /** Homepage route. */
-        "get/home": async (req, res) => {
+        "get/": async (req, res) => {
             if (!bunq.authenticated) {
                 res.redirect("/login")
             } else {
-                req.vueOptions.head.title = "Home"
-                res.renderVue("home.vue", {}, req.vueOptions)
+                const files = fs.readdirSync(path.join(__dirname, "../", "assets/scripts/components"))
+                const options = {nodeEnv: process.env.NODE_ENV, components: files}
+                app.renderView(req, res, "index.pug", options)
             }
         },
 
@@ -100,6 +95,18 @@ class Routes extends require("./base-events") {
         "get/login": async (req, res) => {
             req.vueOptions.head.title = "Login"
             res.renderVue("login.vue", {}, req.vueOptions)
+        },
+
+        /** Global error page, expects actual error message on the query "e". */
+        "get/error": async (req, res) => {
+            req.vueOptions.head.title = "Error"
+            res.renderVue("error.vue", {message: req.query.e}, req.vueOptions)
+        },
+
+        /** Database view page. */
+        "get/database": async (req, res) => {
+            req.vueOptions.head.title = "Database"
+            res.renderVue("database.vue", {jsonData: JSON.stringify(database.dump(true), null, 4)}, req.vueOptions)
         },
 
         // BUNQ ROUTES
@@ -168,16 +175,11 @@ class Routes extends require("./base-events") {
             }
         },
 
-        /** Database view page. */
-        "get/database": async (req, res) => {
-            req.vueOptions.head.title = "Database"
-            res.renderVue("database.vue", {jsonData: JSON.stringify(database.dump(true), null, 4)}, req.vueOptions)
-        },
+        // HELPERS ROUTES
+        // --------------------------------------------------------------------------
 
-        /** Global error page, expects actual error message on the query "e". */
-        "get/error": async (req, res) => {
-            req.vueOptions.head.title = "Error"
-            res.renderVue("error.vue", {message: req.query.e}, req.vueOptions)
+        "get/view/*": async (req, res) => {
+            app.renderView(req, res, `${req.params[0]}.pug`)
         }
     }
 }

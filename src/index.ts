@@ -1,5 +1,6 @@
 // Index
 
+import _ = require("lodash")
 import fs = require("fs")
 import path = require("path")
 
@@ -26,36 +27,14 @@ let startup = async function() {
     logger.appName = settings.app.title
 
     // Load and start Expresser.
+    const connectAssets = require("connect-assets")(_.cloneDeep(settings.connectAssets))
     const expresser = require("expresser")
     const app = expresser.app
-    app.init()
-
-    // Load Vue options.
-    const bodyFile = path.join(__dirname, "../", "assets", "vue", "template.html")
-    const bodyTemplate = fs.readFileSync(bodyFile, {encoding: settings.general.encoding as string})
-    const bodyTag = "{{ CONTENTS }}"
-    const bodyTagIndex = bodyTemplate.indexOf(bodyTag)
-    const vueOptions = {
-        pagesPath: path.join(__dirname, "../", "assets", "vue"),
-        head: {
-            metas: [{name: "viewport", content: "width=device-width, initial-scale=1"}],
-            styles: [{style: "styles/bulma.min.css"}, {style: "styles/main.css"}]
-        },
-        template: {
-            body: {
-                start: bodyTemplate.substring(0, bodyTagIndex),
-                end: bodyTemplate.substring(bodyTagIndex + bodyTag.length)
-            }
-        }
-    }
-
-    // Register express-vue.
-    const expressVue = require("express-vue")
-    await expressVue.use(app.expressApp, vueOptions)
+    app.init({append: [connectAssets]})
 
     // Setup routes.
     const routes = require("./routes")
-    routes.init(app.expressApp)
+    routes.init()
 
     // Init the database.
     const database = require("./database")
