@@ -3,7 +3,7 @@ class StatusView extends jarbunq.BaseView {
     viewRoutes = [{path: ":id", component: "detail"}]
 
     main = {
-        created: () => {
+        created: async function() {
             console.warn(123)
         },
 

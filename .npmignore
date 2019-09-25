@@ -1,6 +1,7 @@
 .DS_Store
 .history/
 .vscode/
+assets/build/
 bin/
 coverage/
 

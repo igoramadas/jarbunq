@@ -1,0 +1,21 @@
+extends layout
+
+block head
+    title Login to bunq
+    if success
+        meta(http-equiv="refresh" content="3;url='/'")
+
+block contents
+    h1.title=appTitle
+    .header
+
+    #login.contents
+        section.section
+            if success
+                p You have logged in successfully!
+            else
+                p You haven't logged in yet!
+                p Please click on the button below to proceed to bunq and authorize Jarbunq.
+                p.section
+                    a(href="/bunq/auth" title="Connect to bunq")
+                        img(src="/images/bunq-connect.svg" width="190px")

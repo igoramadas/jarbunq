@@ -4,8 +4,14 @@ import _ = require("lodash")
 import database = require("../database")
 import moment = require("moment")
 const app = require("expresser").app
+const settings = require("setmeup").settings
 
 const apiRoutes = {
+    /** Get data from database. */
+    "get/api/settings": async (req, res) => {
+        app.renderJson(req, res, settings)
+    },
+
     /** Get data from database. */
     "get/api/*": async (req, res) => {
         const dbKey = req.params[0]

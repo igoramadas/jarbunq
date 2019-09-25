@@ -51,6 +51,28 @@ export interface EmailNotificationOptions extends NotificationOptions {
 }
 
 /**
+ * Defines a generic notification from Jarbunq to the user.
+ */
+export interface NotificationOptions {
+    /** The notification subject. */
+    subject: string
+    /** The actual message to be sent. */
+    message: string
+}
+
+/**
+ * Defines a notification filter URL (channel) opened with bunq.
+ */
+export interface NotificationFilterUrl {
+    /** The URL id. */
+    id: number
+    /** The category, can be PAYMENT, DRAFT_PAYMENT, CARD_TRANSACTION_SUCCESSFUL, CARD_TRANSACTION_FAILED. */
+    category: string
+    /** Date of creation. */
+    date: Date
+}
+
+/**
  * Defines payment options.
  */
 export interface PaymentOptions {
@@ -72,28 +94,6 @@ export interface PaymentOptions {
     notes?: string | string[]
     /** The hash generated based on reference or payment data. */
     hash?: string
-}
-
-/**
- * Defines a generic notification from Jarbunq to the user.
- */
-export interface NotificationOptions {
-    /** The notification subject. */
-    subject: string
-    /** The actual message to be sent. */
-    message: string
-}
-
-/**
- * Defines a notification filter URL (channel) opened with bunq.
- */
-export interface NotificationFilterUrl {
-    /** The URL id. */
-    id: number
-    /** The category, can be PAYMENT, DRAFT_PAYMENT, CARD_TRANSACTION_SUCCESSFUL, CARD_TRANSACTION_FAILED. */
-    category: string
-    /** Date of creation. */
-    date: Date
 }
 
 /**

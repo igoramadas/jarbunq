@@ -10,6 +10,8 @@
         "paymentMultiplier": 1.005
     },
     "app": {
+        // Password needed to access the web admin UI. Please change this on your private settings!
+        "adminPassword": "jarbunq",
         // List of IPs allowed to access Jarbunq resources. Leave blank or empty to allow all.
         "allowedIP": [],
         // Port in which the server should run.
@@ -18,7 +20,7 @@
         "title": "Jarbunq",
         // Frontend files served by Expresser are all located on /assets.
         "publicPath": "./assets/",
-        // Use PUG for views.
+        // Use PUG for view rendering.
         "viewEngine": "pug",
         "viewPath": "./assets/views/"
     },
@@ -54,7 +56,7 @@
     },
     // Connect Assets module options.
     "connectAssets": {
-        "build": false,
+        "build": true,
         "buildDir": "assets/build",
         "compress": false,
         "gzip": false,

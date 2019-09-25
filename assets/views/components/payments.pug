@@ -1,0 +1,24 @@
+#payments.contents
+    .panel
+        p.panel-heading Payments
+        .panel-block
+            p.control.has-icons-left
+                input.input.is-small(type="text", placeholder="search payments")
+                span.icon.is-small.is-left
+                    i.fas.fa-search(aria-hidden="true")
+        .panel-block
+            table.table.is-fullwidth
+                thead
+                    tr
+                        th ID
+                        th Date
+                        th Amount
+                        th Description
+                tbody
+                    tr(v-for="p in payments")
+                        td {{ p.id }}
+                        td {{ moment(p.date).format("ll HH:mm") }}
+                        td {{ p.amount }}
+                        td
+                            span {{ p.description }}
+                            div.to-alias {{ p.toAlias }}

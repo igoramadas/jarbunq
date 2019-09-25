@@ -1,8 +1,9 @@
 extends layout
 
 block head
-    title Jarbunq
+    title=appTitle
 
 block contents
-    #contents
-        router-view(v-cloak)
+    include partials/navbar
+    .header
+    router-view(v-cloak)
