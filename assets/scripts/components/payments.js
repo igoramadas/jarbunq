@@ -3,12 +3,17 @@ class PaymentsView extends jarbunq.BaseView {
     viewRoutes = [{path: ":id", component: "detail"}]
 
     main = {
-        created() {
-            console.warn(123)
+        created: async () => {
+            try {
+                this.payments = await apiFetchData("payments")
+                console.dir(this.payments)
+            } catch (ex) {
+                logger.error(ex)
+            }
         },
 
         data: {
-            payments: 0
+            payments: null
         }
     }
 }

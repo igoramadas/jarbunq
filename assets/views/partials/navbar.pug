@@ -1,0 +1,13 @@
+nav.navbar(role="navigation", aria-label="main navigation")
+    .navbar-brand
+        a.app-title.navbar-item(href="/") Jarbunq
+    .navbar-menu
+        .navbar-start
+            router-link.navbar-item(to="/status" title="Status") Status
+            router-link.navbar-item(to="/payments" title="Payments") Payments
+            router-link.navbar-item(to="/emails" title="Emails") Emails
+            router-link.navbar-item(to="/strava" title="Strava") Strava
+        .navbar-end
+            .navbar-item
+                .buttons
+                    a.button.is-light Authorize

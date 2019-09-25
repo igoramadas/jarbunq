@@ -1,9 +1,9 @@
-class HomeView extends jarbunq.BaseView {
-    viewId = "home"
+class StatusView extends jarbunq.BaseView {
+    viewId = "status"
     viewRoutes = [{path: ":id", component: "detail"}]
 
     main = {
-        created() {
+        created: () => {
             console.warn(123)
         },
 
@@ -13,4 +13,4 @@ class HomeView extends jarbunq.BaseView {
     }
 }
 
-window.jarbunq.views.push(new HomeView())
+window.jarbunq.views.push(new StatusView())

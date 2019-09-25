@@ -3,7 +3,7 @@ class EmailsView extends jarbunq.BaseView {
     viewRoutes = [{path: ":id", component: "detail"}]
 
     main = {
-        created() {
+        created: () => {
             console.warn(123)
         },
 
