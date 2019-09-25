@@ -2,12 +2,10 @@
 
 import _ = require("lodash")
 import bunq = require("./bunq")
-import database = require("./database")
 import fs = require("fs")
 import jaul = require("jaul")
 import logger = require("anyhow")
 import path = require("path")
-import strava = require("./strava")
 const settings = require("setmeup").settings
 const app = require("expresser").app
 
@@ -46,7 +44,7 @@ class Routes extends require("./base-events") {
 
             // Log requests (ignore assets that have extensions).
             if (ext.indexOf(".") < 0) {
-                logger.info("Route", req.method, req.path, `From ${ip}`)
+                logger.info("Route", req.method, req.url, `From ${ip}`)
             }
 
             next()
@@ -57,6 +55,20 @@ class Routes extends require("./base-events") {
             const method = key.substring(0, key.indexOf("/"))
             const route = key.substring(key.indexOf("/"))
             app.expressApp[method](route, this.definitions[key])
+        }
+
+        // Bind routes from /routes folder.
+        const routerFiles = fs.readdirSync(path.join(__dirname, "routes"))
+        for (let file of routerFiles) {
+            if (path.extname(file) == ".js") {
+                const routerDefinitions = require("./routes/" + file)
+
+                for (let key of Object.keys(routerDefinitions)) {
+                    const method = key.substring(0, key.indexOf("/"))
+                    const route = key.substring(key.indexOf("/"))
+                    app.expressApp[method](route, routerDefinitions[key])
+                }
+            }
         }
     }
 
@@ -89,97 +101,6 @@ class Routes extends require("./base-events") {
                 const options = {nodeEnv: process.env.NODE_ENV, components: files}
                 app.renderView(req, res, "index.pug", options)
             }
-        },
-
-        /** Homepage route. */
-        "get/login": async (req, res) => {
-            req.vueOptions.head.title = "Login"
-            res.renderVue("login.vue", {}, req.vueOptions)
-        },
-
-        /** Global error page, expects actual error message on the query "e". */
-        "get/error": async (req, res) => {
-            req.vueOptions.head.title = "Error"
-            res.renderVue("error.vue", {message: req.query.e}, req.vueOptions)
-        },
-
-        /** Database view page. */
-        "get/database": async (req, res) => {
-            req.vueOptions.head.title = "Database"
-            res.renderVue("database.vue", {jsonData: JSON.stringify(database.dump(true), null, 4)}, req.vueOptions)
-        },
-
-        // BUNQ ROUTES
-        // --------------------------------------------------------------------------
-
-        /** Authentication route, used to start the OAuth2 auth flow. */
-        "get/bunq/auth": async (_req, res) => {
-            res.redirect(bunq.authUrl)
-        },
-
-        /** OAuth2 redirect to process the code and get an access token. */
-        "get/bunq/auth/callback": async (req, res) => {
-            const code = req.query.code
-
-            if (!code) {
-                return res.redirect("/error?e=Missing authorization code from bunq")
-            }
-
-            const ok = await bunq.getOAuthToken(code)
-
-            if (ok) {
-                res.redirect("/home")
-            } else {
-                res.redirect("/error?e=OAuth2 flow failed")
-            }
-        },
-
-        /** OAuth2 redirect to process the code and get an access token. */
-        "post/bunq/notification/:accountId/:category": async (req, res) => {
-            const ip = jaul.network.getClientIP(req)
-            const ipRange = settings.bunq.api.allowedCallbackIP
-
-            // Check if sender is really bunq.
-            if (ipRange && !jaul.network.ipInRange(ip, ipRange)) {
-                return this.sendAccessDenied(req, res)
-            }
-
-            const category = req.params.category
-
-            logger.info(`Routes.bunqNotification.${category}`, req.params.accountId, req.body)
-            this.events.emit(`bunqNotification.${category}`, req.params.accountId, req.body)
-        },
-
-        // STRAVA ROUTES
-        // --------------------------------------------------------------------------
-
-        /** Authentication route, used to start the OAuth2 auth flow with Strava. */
-        "get/strava/auth": async (_req, res) => {
-            res.redirect(strava.authUrl)
-        },
-
-        /** OAuth2 redirect to process the code and get an access token from Strava. */
-        "get/strava/auth/callback": async (req, res) => {
-            const code = req.query.code
-
-            if (!code) {
-                return res.redirect("/error?e=Missing authorization code from Strava")
-            }
-
-            const ok = await strava.getOAuthToken(code)
-
-            if (ok) {
-                res.redirect("/home")
-            } else {
-                res.redirect("/error?e=OAuth2 flow failed")
-            }
-        },
-
-        // HELPERS ROUTES
-        // --------------------------------------------------------------------------
-
-        "get/view/*": async (req, res) => {
-            app.renderView(req, res, `${req.params[0]}.pug`)
         }
     }
 }

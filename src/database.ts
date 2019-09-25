@@ -132,6 +132,7 @@ class Database extends require("./base-events") {
         this.db.defaults({jsClient: {}, payments: [], processedEmails: [], stravaPayments: []}).write()
 
         // Shortcut methods.
+        this.has = this.db.has.bind(this.db)
         this.get = this.db.get.bind(this.db)
         this.set = this.db.set.bind(this.db)
         this.unset = this.db.unset.bind(this.db)
