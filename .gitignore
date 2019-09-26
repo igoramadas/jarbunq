@@ -4,9 +4,9 @@
 assets/build/
 bin/
 coverage/
-lib/
+/lib
 node_modules/
-src/plugins.ts
+/src/plugins.ts
 jarbunq.db
 npm-debug.log
 settings.private.json

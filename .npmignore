@@ -6,7 +6,7 @@ bin/
 coverage/
 
 node_modules/
-src/
+/src
 jarbunq.db
 npm-debug.log
 settings.private.json
