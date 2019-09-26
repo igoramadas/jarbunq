@@ -3,7 +3,7 @@
         p.panel-heading Payments
         .panel-block
             p.control.has-icons-left
-                input.input.is-small(type="text", placeholder="search payments")
+                input.input.is-small(type="text" placeholder="search payments" v-model="inputSearch" v-on:keyup="fetchPaymentsDelay")
                 span.icon.is-small.is-left
                     i.fas.fa-search(aria-hidden="true")
         .panel-block

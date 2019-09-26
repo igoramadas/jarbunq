@@ -1,6 +1,7 @@
 window.jarbunq = {
     routes: [],
-    views: []
+    views: [],
+    inputDebounce: 400
 }
 
 // Helper to fetch API (mostly database) data from Jarbunq.
@@ -19,6 +20,7 @@ window.jarbunqInit = async function() {
 
     // Not on index page? Then do not load Vue.
     if (document.location.pathname != "/") {
+        console.log("Vue was not loaded")
         return
     }
 

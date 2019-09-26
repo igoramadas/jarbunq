@@ -1,14 +1,32 @@
 class EmailsView extends jarbunq.BaseView {
     viewId = "emails"
-    viewRoutes = [{path: ":id", component: "detail"}]
 
     main = {
         created: async function() {
-            console.warn(123)
+            this.fetchEmails()
+        },
+
+        methods: {
+            fetchEmails: async function() {
+                try {
+                    if (this.inputSearch.trim() == "") {
+                        this.emails = await apiFetchData("processedEmails")
+                    } else {
+                        this.emails = await apiFetchData(`processedEmails?q=${this.inputSearch}`)
+                    }
+                } catch (ex) {
+                    console.error("Can't fetch emails", ex)
+                }
+            },
+
+            fetchEmailsDelay: _.debounce(function() {
+                this.fetchEmails()
+            }, jarbunq.inputDebounce)
         },
 
         data: {
-            payments: 0
+            inputSearch: "",
+            emails: []
         }
     }
 }

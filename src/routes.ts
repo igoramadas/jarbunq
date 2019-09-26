@@ -50,19 +50,25 @@ class Routes extends require("./base-events") {
             next()
         })
 
-        // Password protect.
-        app.expressApp.use((req, res, next) => {
-            const auth = {login: "admin", password: settings.app.adminPassword}
-            const b64auth = (req.headers.authorization || "").split(" ")[1] || ""
-            const [login, password] = new Buffer(b64auth, "base64").toString().split(":")
+        // Password protect pages?
+        if (settings.app.adminPassword) {
+            app.expressApp.use((req, res, next) => {
+                const auth = {username: "admin", password: settings.app.adminPassword}
+                const b64auth = (req.headers.authorization || "").split(" ")[1] || ""
+                const [username, password] = new Buffer(b64auth, "base64").toString().split(":")
 
-            if (login && password && login === auth.login && password === auth.password) {
-                return next()
-            }
+                if (username && password && username == auth.username && password == auth.password) {
+                    return next()
+                }
 
-            res.set("WWW-Authenticate", 'Basic realm="401"')
-            res.status(401).send("Authentication required.")
-        })
+                // Send access denied if password didn't match.
+                logger.warn("Route", req.method, req.url, "Access denied, wrong password")
+                res.set("WWW-Authenticate", 'Basic realm="401"')
+                res.status(401).send("Authentication required.")
+            })
+        } else {
+            logger.warn("Routes.init", "No password set on settings.app.adminPassword", "This is a security risk, please set the adminPassword!")
+        }
 
         // Bind route definitions.
         for (let key of Object.keys(this.definitions)) {
