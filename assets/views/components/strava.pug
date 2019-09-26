@@ -1,0 +1,22 @@
+#payments.contents
+    .panel
+        p.panel-heading Strava
+        .panel-block
+            p.control.has-icons-left
+                input.input.is-small(type="text" placeholder="search strava payments" v-model="inputSearch" v-on:keyup="fetchPaymentsDelay")
+                span.icon.is-small.is-left
+                    i.fas.fa-search(aria-hidden="true")
+        .panel-block
+            table.table.is-fullwidth
+                thead
+                    tr
+                        th ID
+                        th Date
+                        th Amount
+                        th KM
+                tbody
+                    tr(v-for="s in stravaPayments")
+                        td {{ s.payment.id }}
+                        td {{ moment(s.date).format("ll HH:mm") }}
+                        td {{ s.payment.amount }}
+                        td {{ s.totalKm }}
