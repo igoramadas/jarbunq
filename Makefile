@@ -47,4 +47,9 @@ update:
 	npm install
 	tsc
 
-.PHONY: docs package
+pm2:
+	git pull
+	tsc
+	pm2 restart jarbunq
+
+.PHONY: docs package pm2
