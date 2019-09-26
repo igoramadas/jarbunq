@@ -53,6 +53,10 @@ class Routes extends require("./base-events") {
         // Password protect pages?
         if (settings.app.adminPassword) {
             app.expressApp.use((req, res, next) => {
+                if (req.path != "/" && req.path.substring(0, 4) != "/api" && req.path.indexOf("/auth") < 0) {
+                    return next()
+                }
+
                 const auth = {username: "admin", password: settings.app.adminPassword}
                 const b64auth = (req.headers.authorization || "").split(" ")[1] || ""
                 const [username, password] = new Buffer(b64auth, "base64").toString().split(":")
