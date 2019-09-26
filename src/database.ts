@@ -25,6 +25,9 @@ class Database extends require("./base-events") {
     /** Holds the lowdb instance. */
     db: any
 
+    /** Shortcut to db.has(). */
+    has: Function
+
     /** Shortcut to db.get(). */
     get: Function
 

@@ -96,6 +96,7 @@
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-not-exported"><a href="_email_manager_.emailmanager.html#accounts" class="tsd-kind-icon">accounts</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-not-exported"><a href="_email_manager_.emailmanager.html#smtp" class="tsd-kind-icon">smtp</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-not-exported"><a href="_email_manager_.emailmanager.html#timerweeklyreport" class="tsd-kind-icon">timer<wbr>Weekly<wbr>Report</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
@@ -108,6 +109,7 @@
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-not-exported"><a href="_email_manager_.emailmanager.html#init" class="tsd-kind-icon">init</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-not-exported"><a href="_email_manager_.emailmanager.html#sendweeklyreport" class="tsd-kind-icon">send<wbr>Weekly<wbr>Report</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-not-exported"><a href="_email_manager_.emailmanager.html#start" class="tsd-kind-icon">start</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-not-exported"><a href="_email_manager_.emailmanager.html#stop" class="tsd-kind-icon">stop</a></li>
 							</ul>
@@ -123,7 +125,7 @@
 					<div class="tsd-signature tsd-kind-icon">accounts<span class="tsd-signature-symbol">:</span> <a href="_email_account_.emailaccount.html" class="tsd-signature-type">EmailAccount</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> =&nbsp;[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/40bf1a0/src/email-manager.ts#L22">email-manager.ts:22</a></li>
+							<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/c0d1197/src/email-manager.ts#L25">email-manager.ts:25</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -138,12 +140,27 @@
 					<div class="tsd-signature tsd-kind-icon">smtp<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/40bf1a0/src/email-manager.ts#L25">email-manager.ts:25</a></li>
+							<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/c0d1197/src/email-manager.ts#L28">email-manager.ts:28</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
 							<p>SMTP client created via Nodemailer.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-not-exported">
+					<a name="timerweeklyreport" class="tsd-anchor"></a>
+					<h3>timer<wbr>Weekly<wbr>Report</h3>
+					<div class="tsd-signature tsd-kind-icon">timer<wbr>Weekly<wbr>Report<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/c0d1197/src/email-manager.ts#L31">email-manager.ts:31</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Timer to send the weekly reports.</p>
 						</div>
 					</div>
 				</section>
@@ -160,7 +177,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/40bf1a0/src/email-manager.ts#L14">email-manager.ts:14</a></li>
+									<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/c0d1197/src/email-manager.ts#L17">email-manager.ts:17</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="_email_manager_.emailmanager.html" class="tsd-signature-type">EmailManager</a></h4>
@@ -180,7 +197,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/40bf1a0/src/email-manager.ts#L33">email-manager.ts:33</a></li>
+									<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/c0d1197/src/email-manager.ts#L39">email-manager.ts:39</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -189,6 +206,28 @@
 								</div>
 							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-not-exported">
+					<a name="sendweeklyreport" class="tsd-anchor"></a>
+					<h3>send<wbr>Weekly<wbr>Report</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-not-exported">
+						<li class="tsd-signature tsd-kind-icon">send<wbr>Weekly<wbr>Report<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/c0d1197/src/email-manager.ts#L131">email-manager.ts:131</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Send a weekly summary report of payments to the account owner.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -202,7 +241,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/40bf1a0/src/email-manager.ts#L41">email-manager.ts:41</a></li>
+									<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/c0d1197/src/email-manager.ts#L47">email-manager.ts:47</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -224,7 +263,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/40bf1a0/src/email-manager.ts#L76">email-manager.ts:76</a></li>
+									<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/c0d1197/src/email-manager.ts#L109">email-manager.ts:109</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -272,6 +311,9 @@
 						<a href="../modules/_index_.html">"index"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
+						<a href="../modules/_migrations_processed_email_actions_.html">"migrations/processed-<wbr>email-<wbr>actions"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
 						<a href="../modules/_migrations_processed_emails_from_.html">"migrations/processed-<wbr>emails-<wbr>from"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
@@ -282,6 +324,18 @@
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="../modules/_routes_.html">"routes"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_routes_api_.html">"routes/api"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_routes_bunq_.html">"routes/bunq"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_routes_strava_.html">"routes/strava"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_routes_views_.html">"routes/views"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="../modules/_strava_.html">"strava"</a>
@@ -307,11 +361,17 @@
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-not-exported">
 								<a href="_email_manager_.emailmanager.html#smtp" class="tsd-kind-icon">smtp</a>
 							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-not-exported">
+								<a href="_email_manager_.emailmanager.html#timerweeklyreport" class="tsd-kind-icon">timer<wbr>Weekly<wbr>Report</a>
+							</li>
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class tsd-is-static">
 								<a href="_email_manager_.emailmanager.html#instance" class="tsd-kind-icon">Instance</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-not-exported">
 								<a href="_email_manager_.emailmanager.html#init" class="tsd-kind-icon">init</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-not-exported">
+								<a href="_email_manager_.emailmanager.html#sendweeklyreport" class="tsd-kind-icon">send<wbr>Weekly<wbr>Report</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-not-exported">
 								<a href="_email_manager_.emailmanager.html#start" class="tsd-kind-icon">start</a>
