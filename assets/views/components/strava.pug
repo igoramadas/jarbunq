@@ -18,5 +18,5 @@
                     tr(v-for="s in stravaPayments")
                         td {{ s.payment.id }}
                         td {{ moment(s.date).format("ll HH:mm") }}
-                        td {{ s.payment.amount }}
+                        td.amount.has-text-right {{ s.payment.amount }} EUR
                         td {{ s.totalKm }}

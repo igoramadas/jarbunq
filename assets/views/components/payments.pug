@@ -18,7 +18,7 @@
                     tr(v-for="p in payments")
                         td {{ p.id }}
                         td {{ moment(p.date).format("ll HH:mm") }}
-                        td {{ p.amount }}
+                        td.amount.has-text-right {{ p.amount }} {{ p.currency }}
                         td
                             span {{ p.description }}
                             div.to-alias {{ p.toAlias }}
