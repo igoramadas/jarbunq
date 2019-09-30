@@ -10,7 +10,6 @@ build-settings-sample:
 clean:
 	rm -rf ./lib
 	rm -rf ./node_modules
-	rm -rf ./expressvue
 	rm -f package-lock.json
 
 docs:
@@ -37,7 +36,6 @@ publish:
 	tsc
 
 run:
-	rm -rf ./expressvue
 	tsc
 	DEBUG=axios node index.js
 
