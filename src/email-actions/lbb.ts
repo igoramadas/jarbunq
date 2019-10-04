@@ -2,7 +2,7 @@
 // This will process invoices sent by LBB via email and make sure there
 // are enough funds on the Amazon account for the direct debit.
 
-import { PaymentOptions} from "../types"
+import {PaymentOptions} from "../types"
 import bunq = require("../bunq")
 import logger = require("anyhow")
 const settings = require("setmeup").settings
@@ -34,7 +34,7 @@ const EmailAction = async (message: any): Promise<any> => {
             return null
         }
 
-        logger.warn("EmailAction.Lbb", `Invoice ${invoiceAmount} is higher than current account balance ${balance}`)
+        logger.info("EmailAction.Lbb", `Invoice ${invoiceAmount} is higher than current account balance ${balance}, will top-up`)
 
         // Set payment description.
         description = `Invoice top-up to ${invoiceAmount}`
