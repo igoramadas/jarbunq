@@ -5,19 +5,20 @@
         .container
             h5.title.is-5.has-text-left Accounts
             .columns.has-text-left(v-for="a in accounts")
-                .column {{ a.description }}
+                .column.is-one-third {{ a.description }}
                 .column {{ _.find(a.alias, {type: "IBAN"}).value }}
-                .column.is-narrow {{ a.balance.value }} {{ a.balance.currency }}
+                .column.is-one-fifth.has-text-right {{ a.balance.value }} {{ a.balance.currency }}
 
         .container
             h5.title.is-5.has-text-left Recent payments
             .columns.has-text-left(v-for="p in recentPayments")
-                .column {{ moment(p.date).format("l HH:mm") }}
+                .column.is-one-fifth {{ moment(p.date).format("l HH:mm") }}
                 .column to {{ p.toAlias }}
-                .column.is-narrow {{ p.amount }} {{ p.currency }}
+                .column.is-one-fifth.has-text-right {{ p.amount }} {{ p.currency }}
 
         .container
             h5.title.is-5.has-text-left Recent emails
             .columns.has-text-left(v-for="e in recentEmails")
-                .column.is-narrow {{ moment(e.date).format("l HH:mm") }}
-                .column {{ e.subject}}
+                .column.is-one-fifth {{ moment(e.date).format("l HH:mm") }}
+                .column {{ e.subject }}
+                .column.is-one-fifth {{ _.keys(e.actions).join(", ") }}
