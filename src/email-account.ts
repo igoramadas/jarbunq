@@ -118,7 +118,7 @@ class EmailAccount extends require("./base-events") {
         this.client.once("error", err => {
             logger.error("EmailAccount.openBox.onError", this.id, err)
 
-            if (err.code == "ECONNRESET") {
+            if (err.code == "ECONNRESET" || err.code == "EAI_AGAIN") {
                 return _.delay(this.openBox, settings.email.retryInterval, true)
             }
         })
@@ -126,12 +126,15 @@ class EmailAccount extends require("./base-events") {
         // Auto reconnect when connection closes.
         this.client.once("end", () => {
             logger.info("EmailAccount.end", this.id, "Connection closed")
-
             _.delay(this.openBox, settings.email.retryInterval, true)
         })
 
         // Connect to the IMAP server.
-        return this.client.connect()
+        try {
+            return this.client.connect()
+        } catch (ex) {
+            logger.error("EmailAccount.openBox", "Can't connect", ex)
+        }
     }
 
     /**
