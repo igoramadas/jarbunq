@@ -15,10 +15,13 @@ class BaseView {
             const component = {
                 template: response.data,
                 methods: this[compId].methods || {},
-                created: this[compId].created,
                 data: () => {
                     return this[compId].data
                 }
+            }
+
+            if (this[compId].created) {
+                component.created = this[compId].created
             }
 
             if (this[compId].mounted) {

@@ -1,2 +1,23 @@
 #status.contents
-    p Status here
+    .panel
+        p.panel-heading Status
+
+        .container
+            h5.title.is-5.has-text-left Accounts
+            .columns.has-text-left(v-for="a in accounts")
+                .column {{ a.description }}
+                .column {{ _.find(a.alias, {type: "IBAN"}).value }}
+                .column.is-narrow {{ a.balance.value }} {{ a.balance.currency }}
+
+        .container
+            h5.title.is-5.has-text-left Recent payments
+            .columns.has-text-left(v-for="p in recentPayments")
+                .column {{ moment(p.date).format("l HH:mm") }}
+                .column to {{ p.toAlias }}
+                .column.is-narrow {{ p.amount }} {{ p.currency }}
+
+        .container
+            h5.title.is-5.has-text-left Recent emails
+            .columns.has-text-left(v-for="e in recentEmails")
+                .column.is-narrow {{ moment(e.date).format("l HH:mm") }}
+                .column {{ e.subject}}

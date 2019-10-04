@@ -1,6 +1,7 @@
 // API Routes
 
 import _ = require("lodash")
+import bunq = require("../bunq")
 import database = require("../database")
 import logger = require("anyhow")
 import moment = require("moment")
@@ -8,9 +9,14 @@ const app = require("expresser").app
 const settings = require("setmeup").settings
 
 const apiRoutes = {
-    /** Get data from database. */
+    /** Get settings. */
     "get/api/settings": async (req, res) => {
         app.renderJson(req, res, settings)
+    },
+
+    /** Get bunq accounts. */
+    "get/api/bunq/accounts": async (req, res) => {
+        app.renderJson(req, res, bunq.accounts)
     },
 
     /** Get data from database. */
@@ -21,8 +27,14 @@ const apiRoutes = {
             return app.renderError(req, res, {error: "Not found"}, 404)
         }
 
+        let limit: any = 50
+
         // Get limit from query, otherwise set default to 50.
-        let limit = req.query.limit ? req.query.limit : 50
+        if (req.query.limit) {
+            limit = req.query.limit
+            delete req.query.limit
+        }
+
         if (isNaN(limit)) {
             logger.warn(`Routes.api`, req.url, `Passed limit ${limit} is not a number, will default to 50`)
             limit = 50

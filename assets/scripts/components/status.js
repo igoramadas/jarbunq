@@ -1,14 +1,20 @@
 class StatusView extends jarbunq.BaseView {
     viewId = "status"
-    viewRoutes = [{path: ":id", component: "detail"}]
 
     main = {
-        created: async function() {
-            console.warn(123)
+        mounted: async function() {
+            this.accounts = await apiFetchData("bunq/accounts")
+            this.recentPayments = await apiFetchData("payments?limit=3")
+            this.recentEmails = await apiFetchData("processedEmails?limit=3")
+
+            console.dir(this.accounts)
+            console.dir(this.recentPayments)
         },
 
         data: {
-            payments: 0
+            accounts: [],
+            recentPayments: [],
+            recentEmails: []
         }
     }
 }
