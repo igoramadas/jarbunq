@@ -73,7 +73,7 @@ const apiRoutes = {
 
         // Return matching data.
         let data = database.get(dbKey).filter(filter)
-        data = data.take(limit)
+        data = data.reverse().take(limit)
 
         app.renderJson(req, res, data.value())
     }
