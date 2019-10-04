@@ -6,9 +6,6 @@ class StatusView extends jarbunq.BaseView {
             this.accounts = await apiFetchData("bunq/accounts")
             this.recentPayments = await apiFetchData("payments?limit=3")
             this.recentEmails = await apiFetchData("processedEmails?limit=3")
-
-            console.dir(this.accounts)
-            console.dir(this.recentPayments)
         },
 
         data: {
