@@ -433,7 +433,7 @@ class Bunq extends require("./base-events") {
                 options.fromAlias = settings.bunq.accounts.main
             }
 
-            // Notes must be handled as array.
+            // Always handle notes as array.
             if (options.notes != null && _.isString(options.notes)) {
                 options.notes = [options.notes as string]
             }

@@ -79,7 +79,7 @@ export interface PaymentOptions {
     /** The source account alias can be an email or phone. */
     fromAlias?: number | string
     /** Target account alias can be an email, phone or IBAN. */
-    toAlias: string
+    toAlias: number | string
     /** Payment description, only valid ASCII characters. */
     description: string
     /** Payment amount. */
@@ -106,6 +106,8 @@ export interface Payment extends PaymentOptions {
     date: Date
     /** Error string if any, if successful this should be null. */
     error?: string
+    /** If payment was reversed, the reverse payment ID is set here. */
+    reverseId?: number
 }
 
 /**

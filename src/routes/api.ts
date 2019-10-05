@@ -1,5 +1,6 @@
 // API Routes
 
+import {PaymentOptions, Payment} from "src/types"
 import _ = require("lodash")
 import bunq = require("../bunq")
 import database = require("../database")
@@ -17,6 +18,54 @@ const apiRoutes = {
     /** Get bunq accounts. */
     "get/api/bunq/accounts": async (req, res) => {
         app.renderJson(req, res, bunq.accounts)
+    },
+
+    /** Reverse a payment made by Jarbunq. */
+    "post/api/bunq/reverse-payment/:id/:date": async (req, res) => {
+        try {
+            const paymentId = parseInt(req.params.id)
+            let findPayment = database.get("payments").find({id: paymentId})
+            let payment: Payment = findPayment.value()
+
+            // Payment not found? Stop here.
+            if (payment == null) {
+                return app.renderError(req, res, {error: "Payment not found"}, 404)
+            }
+
+            // Confirm date of payment.
+            if (moment(payment.date).format("YYYY-MM-DD") != req.params.date) {
+                return app.renderError(req, res, {error: "Invalid payment date"}, 404)
+            }
+
+            // Payment already reversed?
+            if (payment.reverseId) {
+                return app.renderError(req, res, {error: `Payment already reversed, ID ${payment.reverseId}`}, 400)
+            }
+
+            let paymentOptions = _.cloneDeep(payment) as PaymentOptions
+
+            // Reverse the source and target accounts.
+            const fromAlias = paymentOptions.toAlias
+            const toAlias = paymentOptions.fromAlias
+            paymentOptions.fromAlias = fromAlias
+            paymentOptions.toAlias = toAlias
+
+            // Append reversal note.
+            const notes = (paymentOptions.notes as string[]) || []
+            notes.unshift(`Reversal for payment ${paymentId}, ${req.params.date}`)
+            paymentOptions.notes = notes
+
+            // Make payment reversal.
+            let reversePayment = await bunq.makePayment(paymentOptions)
+
+            // Add reverse payment ID to the original.
+            findPayment = database.get("payments").find({id: paymentId})
+            findPayment.assign({reverseId: reversePayment.id}).write()
+
+            app.renderJson(req, res, reversePayment)
+        } catch (ex) {
+            app.renderError(req, res, ex)
+        }
     },
 
     /** Get data from database. */
