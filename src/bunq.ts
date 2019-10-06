@@ -9,7 +9,7 @@ import logger = require("anyhow")
 import moment = require("moment")
 import notifications = require("./notifications")
 const settings = require("setmeup").settings
-let bunqClient, lastAuthWarning
+let bunqClient, lastAuthWarning: moment.Moment, authFailedCount: number
 
 // Milliseconds in a day.
 const msDay = 1000 * 60 * 60 * 24
@@ -74,6 +74,7 @@ class Bunq extends require("./base-events") {
             throw new Error("Missing a valid settings.bunq.api.clientId and settings.bunq.api.clientSecret combination.")
         }
 
+        authFailedCount = 0
         lastAuthWarning = moment("2000-01-01")
 
         // Create bunq JS client.
@@ -307,6 +308,7 @@ class Bunq extends require("./base-events") {
         try {
             await this.getUser()
             await this.getAccounts()
+            authFailedCount = 0
         } catch (ex) {
             // Only log error, do not throw as this is mainly called on a scheduled basis.
             logger.error("Bunq.refreshUserData", ex)
@@ -502,6 +504,8 @@ class Bunq extends require("./base-events") {
             if (existingPayment.value()) {
                 throw new Error(`Duplicate payment: ${options.reference}`)
             }
+
+            authFailedCount = 0
         } catch (ex) {
             this.failedPayment(options, ex, "preparing")
             throw ex
@@ -704,7 +708,9 @@ class Bunq extends require("./base-events") {
      * Limits warnings to 1 every 8 hours.
      */
     private authNeeded = () => {
-        if (lastAuthWarning.isBefore(moment().subtract(8, "hours"))) {
+        authFailedCount++
+
+        if (authFailedCount > 2 && lastAuthWarning.isBefore(moment().subtract(8, "hours"))) {
             lastAuthWarning = moment()
 
             if (process.env.NODE_ENV != "production") {
