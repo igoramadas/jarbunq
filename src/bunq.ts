@@ -710,6 +710,7 @@ class Bunq extends require("./base-events") {
     private authNeeded = () => {
         authFailedCount++
 
+        // Only alert user if it failed at least 3 times and last warning was over 8 hours ago.
         if (authFailedCount > 2 && lastAuthWarning.isBefore(moment().subtract(8, "hours"))) {
             lastAuthWarning = moment()
 
