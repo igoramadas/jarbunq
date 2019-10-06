@@ -704,11 +704,14 @@ class Bunq extends require("./base-events") {
     private authNeeded = () => {
         if (lastAuthWarning.isBefore(moment().subtract(8, "hours"))) {
             lastAuthWarning = moment()
-            console.warn(`
+
+            if (process.env.NODE_ENV != "production") {
+                console.warn(`
 ---------------------------------------------------------------
 Please open ${settings.app.url + "login"} on your browser
 ---------------------------------------------------------------
 `)
+            }
 
             // Build and send reauth notification.
             const subject = "Reauthentication needed"
