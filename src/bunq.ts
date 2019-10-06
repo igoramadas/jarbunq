@@ -482,10 +482,12 @@ class Bunq extends require("./base-events") {
                 throw new Error(`Payment would cause balance to go under the minimum of ${settings.bunq.minBalance}.`)
             }
 
+            const toAliasString = options.toAlias.toString()
+
             // Set alias to email, phone or IBAN depending on its value.
-            if (options.toAlias.indexOf("@") > 0) {
+            if (toAliasString.indexOf("@") > 0) {
                 alias.type = "EMAIL"
-            } else if (options.toAlias.length < 15) {
+            } else if (toAliasString.length < 15) {
                 alias.type = "PHONE_NUMBER"
             } else {
                 alias.type = "IBAN"
