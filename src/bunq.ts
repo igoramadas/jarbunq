@@ -333,6 +333,7 @@ class Bunq extends require("./base-events") {
             }
 
             logger.info("Bunq.getUser", `ID ${this.user.id}`, this.user.public_nick_name)
+            return this.user
         } catch (ex) {
             this.processBunqError(ex)
             logger.error("Bunq.getUser", ex)
@@ -367,6 +368,7 @@ class Bunq extends require("./base-events") {
             }
 
             logger.info("Bunq.getAccounts", `Got ${accounts.length} accounts`, _.map(this.accounts, "description").join(", "))
+            return this.accounts
         } catch (ex) {
             this.processBunqError(ex)
             logger.error("Bunq.getAccounts", ex)

@@ -2,23 +2,32 @@
     .panel
         p.panel-heading Status
 
-        .container
-            h5.title.is-5.has-text-left Accounts
-            .columns.has-text-left(v-for="a in accounts")
-                .column.is-one-third {{ a.description }}
-                .column {{ _.find(a.alias, {type: "IBAN"}).value }}
-                .column.is-one-fifth.has-text-right {{ a.balance.value }} {{ a.balance.currency }}
 
         .container
             h5.title.is-5.has-text-left Recent payments
-            .columns.has-text-left(v-for="p in recentPayments")
-                .column.is-one-fifth {{ moment(p.date).format("l HH:mm") }}
-                .column to {{ p.toAlias }}
-                .column.is-one-fifth.has-text-right {{ p.amount }} {{ p.currency }}
+            table.table.is-fullwidth
+                thead
+                    tr(v-for="p in recentPayments")
+                        td.has-text-left
+                            div {{ moment(p.date).format("DD/MM/YY HH:mm") }}
+                            div to {{ p.toAlias }}
+                        td.has-text-right {{ p.amount }} {{ p.currency }}
 
         .container
             h5.title.is-5.has-text-left Recent emails
-            .columns.has-text-left(v-for="e in recentEmails")
-                .column.is-one-fifth {{ moment(e.date).format("l HH:mm") }}
-                .column {{ e.subject }}
-                .column.is-one-fifth {{ _.keys(e.actions).join(", ") }}
+            table.table.is-fullwidth
+                thead
+                    tr(v-for="e in recentEmails")
+                        td.has-text-left
+                            div {{ moment(e.date).format("DD/MM/YY HH:mm") }}: {{ _.keys(e.actions).join(", ") }}
+                            div {{ e.subject }}
+
+        .container
+            h5.title.is-5.has-text-left Accounts
+            table.table.is-fullwidth
+                thead
+                    tr(v-for="a in accounts")
+                        td.has-text-left
+                            div {{ a.description }}
+                            div {{ _.find(a.alias, {type: "IBAN"}).value }}
+                        td.has-text-right {{ a.balance.value }} {{ a.balance.currency }}

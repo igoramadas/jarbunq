@@ -17,7 +17,12 @@ const apiRoutes = {
 
     /** Get bunq accounts. */
     "get/api/bunq/accounts": async (req, res) => {
-        app.renderJson(req, res, bunq.accounts)
+        try {
+            const accounts = await bunq.getAccounts()
+            app.renderJson(req, res, accounts)
+        } catch (ex) {
+            app.renderError(req, res, ex)
+        }
     },
 
     /** Reverse a payment made by Jarbunq. */
