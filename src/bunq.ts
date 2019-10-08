@@ -410,7 +410,7 @@ class Bunq extends require("./base-events") {
      * Get the current account balance for the specified alias.
      * @param alias The email, phone or IBAN of the account.
      */
-    getAccountBalance = async (alias: string) => {
+    getAccountBalance = async (alias: string | number) => {
         logger.debug("Bunq.getAccountBalance", alias)
 
         try {
@@ -457,6 +457,7 @@ class Bunq extends require("./base-events") {
             if (options.currency == null) {
                 options.currency = "EUR"
             }
+
             // Get default type of payment (regular or draft) if options.draft was not specified.
             if (options.draft == null) {
                 options.draft = settings.bunq.draftPayment
