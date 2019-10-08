@@ -31,6 +31,7 @@ Jarbunq is a Node.js / TypeScript based service to automate tasks on your bunq a
     $ make clean update
     $ cat settings.private.json.sample
     $ vim settings.private.json
+    $ make certificate
     $ make run
 
 Need help? Sure you do. Then follow these [detailed instructions](https://github.com/igoramadas/jarbunq/wiki/Downloading-the-code)...
@@ -48,7 +49,7 @@ And a big **thank you** to all the open-source warriors that are responsible for
 ## Why Jarbunq?
 
 Total lack of creativity. Jarvis + bunq.
-sure. 
+sure.
 ## How stable is this?
 
 I have it running myself on my own server since 1st of September 2019. No issues so far, and a bunch of Amazon and Strava related payments processed successfully :-)
