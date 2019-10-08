@@ -6,7 +6,7 @@
         "url": "https://bunq.local:8833/",
         "ssl": {
             // Enable SSL and set path to the key and certificate files.
-            // A default pre-generated certificate is available at the repo.
+            // To generate a certificate, use "$ make certificate".
             "enabled": true,
             "keyFile": "bunq.local.key",
             "certFile": "bunq.local.crt",
