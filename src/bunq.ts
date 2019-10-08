@@ -377,9 +377,35 @@ class Bunq extends require("./base-events") {
     }
 
     /**
+     * Get the account details for the specified alias.
+     * @param alias The email, phone or IBAN of the owner's account.
+     */
+    getAccountFromAlias = (alias: string | number) => {
+        logger.debug("Bunq.getAccountFromAlias", alias)
+
+        try {
+            if (!this.authenticated) {
+                throw new Error("Not authenticated to bunq")
+            }
+
+            const acc = _.find(this.accounts, a => {
+                return _.find(a.alias, {value: alias}) != null
+            })
+
+            if (!acc) {
+                throw new Error(`Account ${alias} not found.`)
+            }
+
+            return acc
+        } catch (ex) {
+            logger.error("Bunq.getAccountFromAlias", alias, ex)
+            throw ex
+        }
+    }
+
+    /**
      * Get the current account balance for the specified alias.
      * @param alias The email, phone or IBAN of the account.
-     * @event makePayment
      */
     getAccountBalance = async (alias: string) => {
         logger.debug("Bunq.getAccountBalance", alias)

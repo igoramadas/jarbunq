@@ -2,6 +2,7 @@
 
 import {Payment} from "./types"
 import _ = require("lodash")
+import bunq = require("./bunq")
 import database = require("./database")
 import EmailAccount = require("./email-account")
 import logger = require("anyhow")
@@ -158,20 +159,30 @@ class EmailManager extends require("./base-events") {
 
                     // Payment has notes?
                     if (payment.notes && payment.notes.length > 0) {
-                        notes = "\n" + (payment.notes as string[]).join("\n")
+                        notes = "<br>" + (payment.notes as string[]).join("<br>")
                     } else {
                         notes = ""
                     }
 
                     const paymentTitle = payment.draft ? "Draft payment" : "Payment"
+                    let fromAccount = payment.fromAlias
+                    let toAccount = payment.toAlias
+
+                    // Get actual account names.
+                    try {
+                        fromAccount = bunq.getAccountFromAlias(payment.fromAlias).description
+                        toAccount = bunq.getAccountFromAlias(payment.fromAlias).description
+                    } catch (ex) {
+                        logger.warn("EmailManager.sendWeeklySummary", ex)
+                    }
 
                     // Create payment HTML string.
-                    let msg = `<div><strong>${paymentTitle} ${payment.id}</strong>
+                    let msg = `<div><strong>${parseFloat(payment.amount as any).toFixed(2)} ${payment.currency} - ${payment.description}</strong>
                                <br>
-                               ${payment.amount} ${payment.currency}, from ${payment.fromAlias} to ${payment.toAlias}
-                               <br>
-                               ${payment.description}
+                               from ${fromAccount} to ${toAccount}
                                ${notes}
+                               <br>
+                               <small>${paymentTitle} ${payment.id}</small>
                                </div>`
 
                     paymentStrings.push(msg)
