@@ -7,6 +7,10 @@ build:
 build-settings-sample:
 	./jarbuncli.js build-settings-sample
 
+certificate:
+	openssl genrsa -out bunq.local.key 4096
+	openssl req -new -x509 -key bunq.local.key -out bunq.local.crt -days 999 -subj /C=DE/L=Berlin/CN=bunq.local
+
 clean:
 	rm -rf ./lib
 	rm -rf ./node_modules

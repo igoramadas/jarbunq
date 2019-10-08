@@ -2,6 +2,8 @@
 .history/
 .vscode/
 assets/build/
+bunq.local.crt
+bunq.local.key
 bin/
 coverage/
 
