@@ -15,6 +15,6 @@
                         th.actions Actions
                 tbody
                     tr(v-for="e in emails")
-                        td.date {{ moment(e.date).format("ll HH:mm") }}
+                        td.date {{ moment(e.date).format(jarbunq.shortDateTimeFormat) }}
                         td.subject {{ e.subject }}
                         td.actions {{ Object.keys(e.actions).join(", ") }}

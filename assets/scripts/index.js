@@ -1,7 +1,22 @@
 window.jarbunq = {
+    inputDebounce: 400,
+    shortDateTimeFormat: "DD/MM HH:MM",
+
     routes: [],
     views: [],
-    inputDebounce: 400
+    accounts: [],
+
+    getAccountFromAlias: function(alias) {
+        const acc = _.find(this.accounts, a => {
+            return _.find(a.alias, {value: alias}) != null
+        })
+
+        if (acc != null) {
+            return acc.description
+        }
+
+        return alias
+    }
 }
 
 // Helper to fetch API (mostly database) data from Jarbunq.
@@ -35,12 +50,20 @@ window.jarbunqInit = async function() {
     jarbunq.app.$mount("#app")
 
     // Top nav menu.
+    const $navbarLinksWrapper = document.getElementById("navbar-links")
     const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll(".navbar-burger"), 0)
     $navbarBurgers.forEach(el => {
         el.addEventListener("click", () => {
-            const $target = document.getElementById("navbar-links")
             el.classList.toggle("is-active")
-            $target.classList.toggle("is-active")
+            $navbarLinksWrapper.classList.toggle("is-active")
+        })
+    })
+
+    const $navbarLinks = Array.prototype.slice.call(document.querySelectorAll("a.navbar-item"), 0)
+    $navbarLinks.forEach(el => {
+        el.addEventListener("click", () => {
+            $navbarBurgers[0].classList.toggle("is-active")
+            $navbarLinksWrapper.classList.toggle("is-active")
         })
     })
 }

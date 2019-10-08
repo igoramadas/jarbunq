@@ -56,10 +56,7 @@
     },
     // Connect Assets module options.
     "connectAssets": {
-        "build": true,
         "buildDir": "assets/build",
-        "compress": false,
-        "gzip": false,
         "paths": ["assets/scripts", "assets/styles"]
     },
     "database": {

@@ -7,6 +7,12 @@
             "enabled": false
         }
     },
+    // Connect assets on production.
+    "connectAssets": {
+        "build": true,
+        "compress": false,
+        "gzip": false
+    },
     "general": {
         // Debugging should not be enabled on production.
         "debug": false

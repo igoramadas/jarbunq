@@ -14,6 +14,12 @@
             "rejectUnauthorized": false
         }
     },
+    // Connect assets on development.
+    "connectAssets": {
+        "build": false,
+        "compress": false,
+        "gzip": false
+    },
     "general": {
         // Set to true to enable debugging on development.
         "debug": false

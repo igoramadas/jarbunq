@@ -2,16 +2,15 @@
     .panel
         p.panel-heading Status
 
-
         .container
             h5.title.is-5.has-text-left Recent payments
             table.table.is-fullwidth
                 thead
                     tr(v-for="p in recentPayments")
                         td.has-text-left
-                            div {{ moment(p.date).format("DD/MM/YY HH:mm") }}
-                            div to {{ p.toAlias }}
-                        td.has-text-right {{ p.amount }} {{ p.currency }}
+                            div.is-pulled-right {{ p.amount }} {{ p.currency }}
+                            div {{ moment(p.date).format(jarbunq.shortDateTimeFormat) }} to {{ jarbunq.getAccountFromAlias(p.toAlias) }}
+                            div.is-size-7.has-text-dark {{ p.description }}
 
         .container
             h5.title.is-5.has-text-left Recent emails
@@ -19,15 +18,17 @@
                 thead
                     tr(v-for="e in recentEmails")
                         td.has-text-left
-                            div {{ moment(e.date).format("DD/MM/YY HH:mm") }}: {{ _.keys(e.actions).join(", ") }}
-                            div {{ e.subject }}
+                            div.is-pulled-right {{ _.keys(e.actions).join(", ") }}
+                            div {{ moment(e.date).format(jarbunq.shortDateTimeFormat) }}
+                            div.is-size-7.has-text-dark {{ e.from }}
+                            div.is-size-7.has-text-dark {{ e.subject }}
 
         .container
-            h5.title.is-5.has-text-left Accounts
+            h5.title.is-5.has-text-left Balance
             table.table.is-fullwidth
                 thead
                     tr(v-for="a in accounts")
                         td.has-text-left
+                            div.is-pulled-right {{ a.balance.value }} {{ a.balance.currency }}
                             div {{ a.description }}
                             div {{ _.find(a.alias, {type: "IBAN"}).value }}
-                        td.has-text-right {{ a.balance.value }} {{ a.balance.currency }}
