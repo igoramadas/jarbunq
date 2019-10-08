@@ -10,14 +10,12 @@
             table.table.is-fullwidth
                 thead
                     tr
-                        th Date
                         th Details
-                        th Amount
+                        th.has-text-right Amount
                 tbody
                     tr(v-for="p in payments")
-                        td {{ moment(p.date).format(jarbunq.shortDateTimeFormat) }}
-
                         td
-                            span {{ p.description }}
-                            div.to-alias {{ jarbunq.getAccountFromAlias(p.toAlias) }}
+                            .date {{ moment(p.date).format(jarbunq.shortDateTimeFormat) }}
+                            .accounts {{ jarbunq.getAccountFromAlias(p.fromAlias) }} to {{ jarbunq.getAccountFromAlias(p.toAlias) }}
+                            .description.is-size-7 {{ p.description }}
                         td.amount.has-text-right {{ p.amount }} {{ p.currency }}

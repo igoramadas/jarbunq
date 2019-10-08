@@ -10,13 +10,11 @@
             table.table.is-fullwidth
                 thead
                     tr
-                        th ID
-                        th Date
-                        th Amount
+                        th Details
                         th KM
+                        th.has-text-right Amount
                 tbody
                     tr(v-for="s in stravaPayments")
-                        td {{ s.payment.id }}
-                        td {{ moment(s.date).format("ll HH:mm") }}
+                        td.date {{ moment(s.date).format(jarbunq.shortDateTimeFormat) }}
+                        td.km {{ s.totalKm }} KM
                         td.amount.has-text-right {{ s.payment.amount }} EUR
-                        td {{ s.totalKm }}

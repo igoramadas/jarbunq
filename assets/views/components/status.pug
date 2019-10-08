@@ -8,9 +8,9 @@
                 thead
                     tr(v-for="p in recentPayments")
                         td.has-text-left
-                            div.is-pulled-right {{ p.amount }} {{ p.currency }}
-                            div {{ moment(p.date).format(jarbunq.shortDateTimeFormat) }} to {{ jarbunq.getAccountFromAlias(p.toAlias) }}
-                            div.is-size-7.has-text-dark {{ p.description }}
+                            .amount.is-pulled-right {{ p.amount }} {{ p.currency }}
+                            .date {{ moment(p.date).format(jarbunq.shortDateTimeFormat) }} to {{ jarbunq.getAccountFromAlias(p.toAlias) }}
+                            .description.is-size-7.has-text-dark {{ p.description }}
 
         .container
             h5.title.is-5.has-text-left Recent emails
@@ -18,10 +18,10 @@
                 thead
                     tr(v-for="e in recentEmails")
                         td.has-text-left
-                            div.is-pulled-right {{ _.keys(e.actions).join(", ") }}
-                            div {{ moment(e.date).format(jarbunq.shortDateTimeFormat) }}
-                            div.is-size-7.has-text-dark {{ e.from }}
-                            div.is-size-7.has-text-dark {{ e.subject }}
+                            .actions.is-pulled-right {{ _.keys(e.actions).join(", ") }}
+                            .date {{ moment(e.date).format(jarbunq.shortDateTimeFormat) }}
+                            .from.is-size-7 {{ e.from }}
+                            .subject.is-size-7 {{ e.subject }}
 
         .container
             h5.title.is-5.has-text-left Balance
@@ -29,6 +29,6 @@
                 thead
                     tr(v-for="a in accounts")
                         td.has-text-left
-                            div.is-pulled-right {{ a.balance.value }} {{ a.balance.currency }}
-                            div {{ a.description }}
-                            div {{ _.find(a.alias, {type: "IBAN"}).value }}
+                            .balance.is-pulled-right {{ a.balance.value }} {{ a.balance.currency }}
+                            .description {{ a.description }}
+                            .iban {{ _.find(a.alias, {type: "IBAN"}).value }}

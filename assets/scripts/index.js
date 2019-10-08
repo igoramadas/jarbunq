@@ -33,6 +33,8 @@ window.apiFetchData = async url => {
 window.jarbunqInit = async function() {
     const jarbunq = window.jarbunq
 
+    jarbunq.accounts = await apiFetchData("bunq/accounts")
+
     // Not on index page? Then do not load Vue.
     if (document.location.pathname != "/") {
         console.log("Vue was not loaded")

@@ -3,12 +3,12 @@ class StravaView extends jarbunq.BaseView {
     viewRoutes = [{path: ":id", component: "detail"}]
 
     main = {
-        created: async function() {
-            this.fetchPayments()
+        mounted: async function() {
+            this.fetchStravaPayments()
         },
 
         methods: {
-            fetchPayments: async function() {
+            fetchStravaPayments: async function() {
                 try {
                     if (this.inputSearch.trim() == "") {
                         this.stravaPayments = await apiFetchData("stravaPayments")

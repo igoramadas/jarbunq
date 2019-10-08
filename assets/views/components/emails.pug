@@ -3,18 +3,19 @@
         p.panel-heading Emails
         .panel-block
             p.control.has-icons-left
-                input.input.is-small(type="text", placeholder="search emails" v-model="inputSearch" v-on:keyup="fetchEmailsDelay")
+                input.input.is-small(type="text" placeholder="search emails" v-model="inputSearch" v-on:keyup="fetchEmailsDelay")
                 span.icon.is-small.is-left
                     i.fas.fa-search(aria-hidden="true")
         .panel-block
             table.table.is-fullwidth
                 thead
                     tr
-                        th Date
-                        th Subject
-                        th.actions Actions
+                        th Details
+                        th.has-text-right Action(s)
                 tbody
                     tr(v-for="e in emails")
-                        td.date {{ moment(e.date).format(jarbunq.shortDateTimeFormat) }}
-                        td.subject {{ e.subject }}
-                        td.actions {{ Object.keys(e.actions).join(", ") }}
+                        td(colspan="2")
+                            .actions.is-pulled-right {{ Object.keys(e.actions).join(", ") }}
+                            .date {{ moment(e.date).format(jarbunq.shortDateTimeFormat) }}
+                            .from From {{ e.from }}
+                            .subject.is-size-7 {{ e.subject }}
