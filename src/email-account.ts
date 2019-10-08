@@ -363,29 +363,28 @@ class EmailAccount extends require("./base-events") {
                 if (resultError) {
                     processedEmail.actions[rule.action] = resultError
                     logger.error("EmailAccount.processEmail", this.id, logRule.join(", "), message.messageId, message.subject, resultError)
-                    return
-                }
+                } else {
+                    // Action returned payment options? Add default notes and proceed with payment.
+                    if (actionResult.amount && actionResult.toAlias && actionResult.description) {
+                        if (!actionResult.notes) {
+                            actionResult.notes = []
+                        }
 
-                // Action returned payment options? Add default notes and proceed with payment.
-                if (actionResult.amount && actionResult.toAlias && actionResult.description) {
-                    if (!actionResult.notes) {
-                        actionResult.notes = []
+                        actionResult.notes.unshift(message.subject)
+                        actionResult.notes.unshift(`Email action: ${rule.action}`)
+                        actionResult.reference = `${rule.action}-${message.messageId}`
+
+                        // Pay!
+                        const payment = await bunq.makePayment(actionResult)
+                        logger.info("EmailAccount.processEmail", this.id, logRule.join(", "), message.messageId, message.subject, `Payment ID: ${payment.id}`)
+                    } else if (_.isString(actionResult)) {
+                        logger.info("EmailAccount.processEmail", this.id, logRule.join(", "), message.messageId, message.subject, actionResult)
+                    } else {
+                        logger.info("EmailAccount.processEmail", this.id, logRule.join(", "), message.messageId, message.subject, "Processed")
                     }
 
-                    actionResult.notes.unshift(message.subject)
-                    actionResult.notes.unshift(`Email action: ${rule.action}`)
-                    actionResult.reference = `${rule.action}-${message.messageId}`
-
-                    // Pay!
-                    const payment = await bunq.makePayment(actionResult)
-                    logger.info("EmailAccount.processEmail", this.id, logRule.join(", "), message.messageId, message.subject, `Payment ID: ${payment.id}`)
-                } else if (_.isString(actionResult)) {
-                    logger.info("EmailAccount.processEmail", this.id, logRule.join(", "), message.messageId, message.subject, actionResult)
-                } else {
-                    logger.info("EmailAccount.processEmail", this.id, logRule.join(", "), message.messageId, message.subject, "Processed")
+                    processedEmail.actions[rule.action] = true
                 }
-
-                processedEmail.actions[rule.action] = true
             } catch (ex) {
                 logger.error("EmailAccount.processEmail", this.id, logRule.join(", "), message.messageId, message.subject, ex)
                 processedEmail.actions[rule.action] = false
