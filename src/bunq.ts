@@ -343,6 +343,7 @@ class Bunq extends require("./base-events") {
 
     /**
      * Get all the relevant accounts for the user.
+     * @event getAccounts
      */
     getAccounts = async () => {
         try {
@@ -368,6 +369,8 @@ class Bunq extends require("./base-events") {
             }
 
             logger.info("Bunq.getAccounts", `Got ${accounts.length} accounts`, _.map(this.accounts, "description").join(", "))
+            this.events.emit("getAccounts", this.accounts)
+
             return this.accounts
         } catch (ex) {
             this.processBunqError(ex)
@@ -435,6 +438,7 @@ class Bunq extends require("./base-events") {
     /**
      * Make a payment to another account.
      * @param options The payment options.
+     * @event makePayment
      */
     makePayment = async (options: PaymentOptions): Promise<Payment> => {
         logger.debug("Bunq.makePayment", options)
