@@ -94,7 +94,8 @@ const EmailAction = async (message: any): Promise<any> => {
             amount: amount.toFixed(2),
             description: description,
             fromAlias: settings.bunq.accounts.amazon,
-            toAlias: settings.bunq.accounts.main
+            toAlias: settings.bunq.accounts.main,
+            draft: true
         }
 
         return paymentOptions

@@ -387,7 +387,7 @@ class EmailAccount extends require("./base-events") {
                 }
             } catch (ex) {
                 logger.error("EmailAccount.processEmail", this.id, logRule.join(", "), message.messageId, message.subject, ex)
-                processedEmail.actions[rule.action] = false
+                processedEmail.actions[rule.action] = ex.toString()
             }
         }
 

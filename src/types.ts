@@ -114,10 +114,15 @@ export interface Payment extends PaymentOptions {
  * Defines an email message that was processed by actions.
  */
 export interface ProcessedEmail {
+    /** Date of the email. */
     date: Date
-    messageId: number
+    /** Email message ID. */
+    messageId: string
+    /** The from address. */
     from: string
+    /** Email subject. */
     subject: string
+    /** Array of email actions. */
     actions: any
 }
 
