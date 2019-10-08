@@ -18,7 +18,7 @@ const amountCleanup = function(value) {
     return value.trim()
 }
 
-// Exported function. Will return false if order amount is not in EUR.
+// Exported function.
 const EmailAction = async (message: any): Promise<any> => {
     logger.debug("EmailAction.AmazonDe", message.messageId, message.from, message.subject, `To ${message.to}`)
 
@@ -40,14 +40,14 @@ const EmailAction = async (message: any): Promise<any> => {
             }
         }
 
-        // Only proceed if order was made in euros!
+        // Stop if amount not found.
         if (partial == null || partial == "") {
-            return {error: "Can't find order amount on the email body."}
+            return {error: "Can't find order amount on the email body"}
         }
 
         partial = partial.substring(0, partial.indexOf("\n"))
 
-        // Only proceed if order was made in euros!
+        // Only proceed if order was made in euros.
         if (!partial.includes("EUR")) {
             return {error: "Order amount not in EUR"}
         }
