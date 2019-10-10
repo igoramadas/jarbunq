@@ -74,13 +74,6 @@ class Routes extends require("./base-events") {
             logger.warn("Routes.init", "No password set on settings.app.adminPassword", "This is a security risk, please set the adminPassword!")
         }
 
-        // Bind route definitions.
-        for (let key of Object.keys(this.definitions)) {
-            const method = key.substring(0, key.indexOf("/"))
-            const route = key.substring(key.indexOf("/"))
-            app.expressApp[method](route, this.definitions[key])
-        }
-
         // Bind routes from /routes folder.
         const routerFiles = fs.readdirSync(path.join(__dirname, "routes"))
         for (let file of routerFiles) {
@@ -89,7 +82,7 @@ class Routes extends require("./base-events") {
 
                 for (let key of Object.keys(routerDefinitions)) {
                     const method = key.substring(0, key.indexOf(":"))
-                    const route = "/" + key.substring(key.indexOf(":"))
+                    const route = "/" + key.substring(key.indexOf(":") + 1)
 
                     if (app.expressApp[method]) {
                         app.expressApp[method](route, routerDefinitions[key])
@@ -99,7 +92,7 @@ class Routes extends require("./base-events") {
         }
 
         // Default route for home.
-        app.expressApp.get("/", async (req, res) => {
+        app.expressApp.get("/", (req, res) => {
             if (!bunq.authenticated) {
                 res.redirect("/login")
             } else {
