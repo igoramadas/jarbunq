@@ -158,7 +158,7 @@ class EmailAccount extends require("./base-events") {
             fetcher.once("error", err => logger.error("EmailAccount.fetchMessages.onError", this.id, err))
 
             // Log and set last fetch timestamp.
-            logger.info("EmailAccount.fetchMessages", this.id, `${results.length} new message(s)`)
+            logger.info("EmailAccount.fetchMessages", this.id, `${results.length} message(s)`)
             this.lastFetch = moment().unix()
         })
     }

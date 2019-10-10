@@ -258,11 +258,13 @@ class Bunq extends require("./base-events") {
 
                 for (let category of ["PAYMENT", "DRAFT_PAYMENT", "CARD_TRANSACTION_SUCCESSFUL", "CARD_TRANSACTION_FAILED"]) {
                     try {
+                        const callback = `${settings.app.url}bunq/notification/${acc.id}/${category.toLowerCase()}`
+
                         let filters = {
                             notification_filters: [
                                 {
                                     category: category,
-                                    notification_target: `${settings.app.url}bunq/notification/${acc.id}/${category.toLowerCase()}`
+                                    notification_target: callback
                                 }
                             ]
                         }
@@ -276,8 +278,11 @@ class Bunq extends require("./base-events") {
                         if (response.Response && response.Response.length > 0 && response.Response[0].NotificationFilterUrl) {
                             const responseFilter = response.Response[0].NotificationFilterUrl
                             const filter = {id: responseFilter.id, category: responseFilter.category, date: responseFilter.updated}
+
                             this.notificationFilters.push(filter)
                             filterIds.push(filter.id)
+
+                            logger.info("Jarbunq.setupNotificationFilters", category, callback)
                         } else {
                             throw new Error(`The notification filter response is blank or invalid`)
                         }
