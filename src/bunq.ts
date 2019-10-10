@@ -281,8 +281,6 @@ class Bunq extends require("./base-events") {
 
                             this.notificationFilters.push(filter)
                             filterIds.push(filter.id)
-
-                            logger.info("Jarbunq.setupNotificationFilters", category, callback)
                         } else {
                             throw new Error(`The notification filter response is blank or invalid`)
                         }

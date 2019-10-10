@@ -35,7 +35,8 @@ const bunqRoutes = {
 
         // Check if sender is really bunq.
         if (ipRange && !jaul.network.ipInRange(ip, ipRange)) {
-            return this.sendAccessDenied(req, res)
+            logger.error("Route", "Access denied", req.method, req.url, `From ${ip}`)
+            return res.status(401).json({error: "Access denied"})
         }
 
         const category = req.params.category
