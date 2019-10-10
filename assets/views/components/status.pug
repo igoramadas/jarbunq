@@ -5,30 +5,39 @@
         .container
             h5.title.is-5.has-text-left Recent payments
             table.table.is-fullwidth
-                thead
+                tbody
                     tr(v-for="p in recentPayments")
                         td.has-text-left
-                            .amount.is-pulled-right {{ p.amount }} {{ p.currency }}
+                            .amount.is-pulled-right.is-hidden-desktop {{ p.amount }} {{ p.currency }}
                             .date {{ moment(p.date).format(jarbunq.shortDateTimeFormat) }} to {{ jarbunq.getAccountFromAlias(p.toAlias) }}
-                            .description.is-size-7.has-text-dark {{ p.description }}
+                            .description.is-size-7.is-hidden-desktop {{ p.description }}
+                        td.description.is-hidden-touch {{ p.description }}
+                        td.has-text-right.is-hidden-touch {{ p.amount }} {{ p.currency }}
+
 
         .container
             h5.title.is-5.has-text-left Recent emails
             table.table.is-fullwidth
-                thead
+                tbody
                     tr(v-for="e in recentEmails")
                         td.has-text-left
-                            .actions.is-pulled-right {{ _.keys(e.actions).join(", ") }}
+                            .actions.is-pulled-right.is-hidden-desktop {{ _.keys(e.actions).join(", ") }}
                             .date {{ moment(e.date).format(jarbunq.shortDateTimeFormat) }}
+                            .from.is-size-7.is-hidden-desktop {{ e.from }}
+                            .subject.is-size-7.is-hidden-desktop {{ e.subject }}
+                        td.is-hidden-touch
+                            .subject {{ e.subject }}
                             .from.is-size-7 {{ e.from }}
-                            .subject.is-size-7 {{ e.subject }}
+                        td.actions.has-text-right.is-hidden-touch {{ _.keys(e.actions).join(", ") }}
 
         .container
             h5.title.is-5.has-text-left Balance
             table.table.is-fullwidth
-                thead
+                tbody
                     tr(v-for="a in accounts")
                         td.has-text-left
-                            .balance.is-pulled-right {{ a.balance.value }} {{ a.balance.currency }}
+                            .balance.is-pulled-right.is-hidden-desktop {{ a.balance.value }} {{ a.balance.currency }}
                             .description {{ a.description }}
-                            .iban {{ _.find(a.alias, {type: "IBAN"}).value }}
+                            .iban.is-hidden-desktop {{ _.find(a.alias, {type: "IBAN"}).value }}
+                        td.iban.is-hidden-touch {{ _.find(a.alias, {type: "IBAN"}).value }}
+                        td.amount.has-text-right.is-hidden-touch {{ a.balance.value }} {{ a.balance.currency }}
