@@ -88,12 +88,26 @@ class Routes extends require("./base-events") {
                 const routerDefinitions = require("./routes/" + file)
 
                 for (let key of Object.keys(routerDefinitions)) {
-                    const method = key.substring(0, key.indexOf("/"))
-                    const route = key.substring(key.indexOf("/"))
-                    app.expressApp[method](route, routerDefinitions[key])
+                    const method = key.substring(0, key.indexOf(":"))
+                    const route = "/" + key.substring(key.indexOf(":"))
+
+                    if (app.expressApp[method]) {
+                        app.expressApp[method](route, routerDefinitions[key])
+                    }
                 }
             }
         }
+
+        // Default route for home.
+        app.expressApp.get("/", async (req, res) => {
+            if (!bunq.authenticated) {
+                res.redirect("/login")
+            } else {
+                const files = fs.readdirSync(path.join(__dirname, "../", "assets/scripts/components"))
+                const options = {nodeEnv: process.env.NODE_ENV, components: files}
+                app.renderView(req, res, "index.pug", options)
+            }
+        })
     }
 
     /**
@@ -105,27 +119,6 @@ class Routes extends require("./base-events") {
         const ip = jaul.network.getClientIP(req)
         logger.error("Route", "Access denied", req.method, req.url, `From ${ip}`)
         return res.status(401).json({error: "Access denied"})
-    }
-
-    // ROUTE DEFINITIONS
-    // --------------------------------------------------------------------------
-
-    /**
-     * Routes are defined using the format "method/route". So for instance
-     * "get/dashboard" would be a GET request to /dashboard. All routes
-     * should be defined as async functions.
-     */
-    definitions: any = {
-        /** Index page, redirects to home or to login. */
-        "get/": async (req, res) => {
-            if (!bunq.authenticated) {
-                res.redirect("/login")
-            } else {
-                const files = fs.readdirSync(path.join(__dirname, "../", "assets/scripts/components"))
-                const options = {nodeEnv: process.env.NODE_ENV, components: files}
-                app.renderView(req, res, "index.pug", options)
-            }
-        }
     }
 }
 

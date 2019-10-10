@@ -6,13 +6,13 @@ import logger = require("anyhow")
 const settings = require("setmeup").settings
 
 const bunqRoutes = {
-    "get/bunq/auth": async (_req, res) => {
+    "get:bunq/auth": async (_req, res) => {
         res.redirect(bunq.authUrl)
     },
 
     /** OAuth2 redirect to process the code and get an access token. */
     // this comment was added because the screen was not looked
-    "get/bunq/auth/callback": async (req, res) => {
+    "get:bunq/auth/callback": async (req, res) => {
         const code = req.query.code
 
         if (!code) {
@@ -29,7 +29,7 @@ const bunqRoutes = {
     },
 
     /** OAuth2 redirect to process the code and get an access token. */
-    "post/bunq/notification/:accountId/:category": async (req, res) => {
+    "post:bunq/notification/:accountId/:category": async (req, res) => {
         const ip = jaul.network.getClientIP(req)
         const ipRange = settings.bunq.api.allowedCallbackIP
 

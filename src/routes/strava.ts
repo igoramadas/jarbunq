@@ -4,12 +4,12 @@ import strava = require("../strava")
 
 const stravaRoutes = {
     /** Redirect to Strava login. */
-    "get/strava/auth": async (_req, res) => {
+    "get:strava/auth": async (_req, res) => {
         res.redirect(strava.authUrl)
     },
 
     /** OAuth2 redirect to process the code and get an access token from Strava. */
-    "get/strava/auth/callback": async (req, res) => {
+    "get:strava/auth/callback": async (req, res) => {
         const code = req.query.code
 
         if (!code) {

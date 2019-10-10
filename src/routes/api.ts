@@ -11,12 +11,12 @@ const settings = require("setmeup").settings
 
 const apiRoutes = {
     /** Get settings. */
-    "get/api/settings": async (req, res) => {
+    "get:api/settings": async (req, res) => {
         app.renderJson(req, res, settings)
     },
 
     /** Get bunq accounts. */
-    "get/api/bunq/accounts": async (req, res) => {
+    "get:api/bunq/accounts": async (req, res) => {
         try {
             const accounts = await bunq.getAccounts()
             app.renderJson(req, res, accounts)
@@ -26,7 +26,7 @@ const apiRoutes = {
     },
 
     /** Reverse a payment made by Jarbunq. */
-    "post/api/bunq/reverse-payment/:id/:date": async (req, res) => {
+    "post:api/bunq/reverse-payment/:id/:date": async (req, res) => {
         try {
             const paymentId = parseInt(req.params.id)
             let findPayment = database.get("payments").find({id: paymentId})
@@ -74,7 +74,7 @@ const apiRoutes = {
     },
 
     /** Get data from database. */
-    "get/api/*": async (req, res) => {
+    "get:api/*": async (req, res) => {
         const dbKey = req.params[0]
 
         if (!database.has(dbKey).value()) {

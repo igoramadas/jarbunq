@@ -11,17 +11,17 @@ const renderView = (req: any, res: any, view: string, options?: any) => {
 
 const viewsRoutes = {
     /** Homepage route. */
-    "get/login": async (req, res) => {
+    "get:login": async (req, res) => {
         renderView(req, res, "login.pug", {success: req.query.success})
     },
 
     /** Global error page, expects actual error message on the query "e". */
-    "get/error": async (req, res) => {
+    "get:error": async (req, res) => {
         renderView(req, res, "error.pug", {message: req.query.e})
     },
 
     /** Load Vue view / component template. */
-    "get/view/*": async (req, res) => {
+    "get:view/*": async (req, res) => {
         renderView(req, res, `components/${req.params[0]}.pug`)
     }
 }
