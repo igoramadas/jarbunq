@@ -171,7 +171,7 @@ class EmailManager extends require("./base-events") {
                     // Get actual account names.
                     try {
                         fromAccount = bunq.getAccountFromAlias(payment.fromAlias).description
-                        toAccount = bunq.getAccountFromAlias(payment.fromAlias).description
+                        toAccount = bunq.getAccountFromAlias(payment.toAlias).description
                     } catch (ex) {
                         logger.warn("EmailManager.sendWeeklySummary", ex)
                     }
