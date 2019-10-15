@@ -1,8 +1,13 @@
 {
     "name": "jarbunq",
-    "version": "19.42.114",
+    "version": "19.42.219",
     "description": "Automate your bunq account with email and Strava based actions!",
-    "keywords": ["bunq", "assistant", "automation", "bank"],
+    "keywords": [
+        "bunq",
+        "assistant",
+        "automation",
+        "bank"
+    ],
     "author": "Igor Ramadas <igor@devv.com>",
     "homepage": "https://jarbunq.devv.com",
     "subdomain": "jarbunq",
@@ -25,7 +30,7 @@
         "anyhow": "^1.4.1",
         "connect-assets": "^6.0.1",
         "eventemitter3": "^4.0.0",
-        "expresser": "^4.0.5",
+        "expresser": "^4.1.0",
         "imap": "^0.8.19",
         "jaul": "^1.1.2",
         "lodash": "^4.17.15",
