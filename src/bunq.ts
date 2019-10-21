@@ -719,6 +719,9 @@ class Bunq extends require("./base-events") {
         if (resError && resError.body) {
             resError = resError.body
         }
+        if (resError && resError.data) {
+            resError = resError.data
+        }
         if (resError && resError.Error) {
             resError = resError.Error
         }
@@ -729,9 +732,7 @@ class Bunq extends require("./base-events") {
             resError = resError[0].error_description
         }
 
-        if (resError) {
-            resError = resError.toString()
-        } else {
+        if (!resError) {
             resError = "Unkown API error"
         }
 
