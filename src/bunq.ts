@@ -469,7 +469,9 @@ class Bunq extends require("./base-events") {
                 options.amount = parseFloat(options.amount as string)
             }
 
+            // Make sure we round to 2 decimals.
             niceAmount = (options.amount as number).toFixed(2)
+            options.amount = parseFloat(niceAmount)
 
             // Currency defaults to EUR.
             if (options.currency == null) {
