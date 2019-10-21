@@ -103,7 +103,7 @@ class Notifications extends require("./base-events") {
                 appTitle: settings.app.title,
                 appUrl: settings.app.url,
                 owner: settings.app.owner ? settings.app.owner : "fellow bunqer",
-                message: options.message.replace(/\\n/gi, "<br>")
+                message: options.message
             }
 
             // Load template and replace keywords.

@@ -203,7 +203,7 @@ class Bunq extends require("./base-events") {
                 try {
                     const subject = `Jarbunq token expires in ${days} days`
                     const message = `The authorization tokens used by Jarbunq to connect to your bunq accounts will expire in ${days} days!
-                                     \n\n
+                                     <br><br>
                                      Please open ${settings.app.url}bunq/auth on your browser to renew the tokens and avoid interruptions.`
 
                     notifications.send({subject: subject, message: message})
@@ -384,9 +384,11 @@ class Bunq extends require("./base-events") {
 
     /**
      * Get the account details for the specified alias.
+     * If second parameter is true, it won't throw exception for account not found.
      * @param alias The email, phone or IBAN of the owner's account.
+     * @param returnAsName If true, will return the account name or the passed alias if account not found.
      */
-    getAccountFromAlias = (alias: string | number) => {
+    getAccountFromAlias = (alias: string | number, returnAsName?: boolean) => {
         logger.debug("Bunq.getAccountFromAlias", alias)
 
         try {
@@ -399,13 +401,26 @@ class Bunq extends require("./base-events") {
             })
 
             if (!acc) {
-                throw new Error(`Account ${alias} not found.`)
+                if (returnAsName) {
+                    return alias
+                } else {
+                    throw new Error(`Account ${alias} not found.`)
+                }
             }
 
-            return acc
+            if (returnAsName) {
+                return acc.description
+            } else {
+                return acc
+            }
         } catch (ex) {
             logger.error("Bunq.getAccountFromAlias", alias, ex)
-            throw ex
+
+            if (returnAsName) {
+                return alias
+            } else {
+                throw ex
+            }
         }
     }
 
@@ -614,7 +629,7 @@ class Bunq extends require("./base-events") {
                     const subject = `Payment ${niceAmount} to ${options.toAlias}`
                     const message = `Payment of ${niceAmount} ${options.currency}
                                     from account ${options.fromAlias} to ${options.toAlias} successful.
-                                    \n
+                                    <br>
                                     Description: ${options.description}`
 
                     notifications.send({subject: subject, message: message})
@@ -705,12 +720,15 @@ class Bunq extends require("./base-events") {
         if (resError && resError.Error) {
             resError = resError.Error
         }
-        if (resError && resError.length > 0) {
+        if (resError && resError.error) {
+            resError = resError.error
+        }
+        if (_.isArray(resError) && resError.length > 0) {
             resError = resError[0].error_description
         }
 
         if (resError) {
-            errorString += ` - ${resError}`
+            resError = resError.toString()
         } else {
             resError = "Unkown API error"
         }
@@ -724,14 +742,16 @@ class Bunq extends require("./base-events") {
                 errorString = "Error - " + errorString
             }
 
+            const fromAccount = this.getAccountFromAlias(options.fromAlias, true)
+            const toAccount = this.getAccountFromAlias(options.toAlias, true)
+
             const subject = `Payment ${amount} failed to ${options.toAlias}`
-            const message = `Payment of ${amount} ${options.currency}
-                            from account ${options.fromAlias} to ${options.toAlias} failed.
-                            \n
+            const message = `Payment of ${amount} ${options.currency} from account ${fromAccount} to ${toAccount} failed.
+                            <br>
                             Description: ${options.description}
-                            \n\n
+                            <br>
                             ${errorString}
-                            \n
+                            <br>
                             ${resError}`
 
             // Send notification of failed payment.
