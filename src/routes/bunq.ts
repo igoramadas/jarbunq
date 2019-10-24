@@ -11,7 +11,6 @@ const bunqRoutes = {
     },
 
     /** OAuth2 redirect to process the code and get an access token. */
-    // this comment was added because the screen was not looked
     "get:bunq/auth/callback": async (req, res) => {
         const code = req.query.code
 
