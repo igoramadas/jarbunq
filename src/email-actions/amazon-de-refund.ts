@@ -7,14 +7,14 @@ import logger = require("anyhow")
 const settings = require("setmeup").settings
 
 // Email parsing strings.
-const arrTotalText = ["Refund total:"]
-const arrItemText = ["Item details:"]
+const arrTotalText = ["Refund total:", "Item Refund:"]
+const arrItemText = ["Item details:", "Item:"]
 
 // Helper to cleanup amount text.
 const amountCleanup = function(value) {
-    value = value.replace("EUR", "").replace(":", "")
+    value = value.replace("EUR", "").replace("€", "")
     value = value.replace(".", "").replace(",", ".")
-    return value.trim()
+    return value.replace(":", "").trim()
 }
 
 // Exported function.
@@ -47,7 +47,7 @@ const EmailAction = async (message: any): Promise<any> => {
         partial = partial.substring(0, partial.indexOf("\n"))
 
         // Only proceed if order was made in euros.
-        if (!partial.includes("EUR")) {
+        if (!partial.includes("EUR") && !partial.includes("€")) {
             return {error: "Refund amount not in EUR"}
         }
 
@@ -73,8 +73,7 @@ const EmailAction = async (message: any): Promise<any> => {
 
                 if (itemIndex >= 0) {
                     partial = message.text.substring(itemIndex + itemText.length)
-                    partial = partial.substring(0, partial.indexOf("\n\n")).replace(":", "")
-                    partial = partial.replace("=20", "")
+                    partial = partial.substring(0, partial.indexOf("\n")).replace(":", "")
                     break
                 }
             }
