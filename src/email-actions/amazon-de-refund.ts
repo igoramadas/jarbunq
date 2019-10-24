@@ -106,9 +106,9 @@ const EmailAction = async (message: any): Promise<any> => {
 
 // Default rule for amazon-de-refund action.
 EmailAction.defaultRule = {
-    from: "rueckgabe@amazon.de",
-    subject: "Your refund",
-    body: "complete"
+    from: ["rueckgabe@amazon.de", "payments-messages@amazon.de"],
+    subject: ["Your refund", "Refund on order"],
+    body: ["complete", "processing your refund"]
 }
 
 // Exports...
