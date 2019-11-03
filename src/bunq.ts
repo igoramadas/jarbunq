@@ -225,8 +225,10 @@ class Bunq extends require("./base-events") {
      * work if Jarbunq is accessible from the internet!
      */
     setupNotificationFilters = async () => {
-        if (settings.app.url.indexOf("bunq.local") > 0) {
-            logger.error("Jarbunq.setupNotificationFilters", `Can't setup notifications from bunq using a local URL: ${settings.app.url}`)
+        const baseUrl = settings.app.webhookUrl || settings.app.url
+
+        if (baseUrl.indexOf("bunq.local") > 0) {
+            logger.error("Jarbunq.setupNotificationFilters", `Can't setup notifications from bunq using a local URL: ${baseUrl}`)
             return
         }
 
@@ -258,7 +260,7 @@ class Bunq extends require("./base-events") {
 
                 for (let category of ["PAYMENT", "DRAFT_PAYMENT", "CARD_TRANSACTION_SUCCESSFUL", "CARD_TRANSACTION_FAILED"]) {
                     try {
-                        const callback = `${settings.app.url}bunq/notification/${acc.id}/${category.toLowerCase()}`
+                        const callback = `${baseUrl}bunq/notification/${acc.id}/${category.toLowerCase()}`
 
                         let filters = {
                             notification_filters: [
@@ -280,6 +282,7 @@ class Bunq extends require("./base-events") {
                             const filter = {id: responseFilter.id, category: responseFilter.category, date: responseFilter.updated}
 
                             this.notificationFilters.push(filter)
+                            console.dir(response.Response[0])
                             filterIds.push(filter.id)
                         } else {
                             throw new Error(`The notification filter response is blank or invalid`)
