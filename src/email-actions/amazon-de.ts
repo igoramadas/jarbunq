@@ -107,7 +107,7 @@ const EmailAction = async (message: any): Promise<any> => {
         }
 
         // Get order number and description.
-        description = `Order ${orderNumber}, ${amount} EUR`
+        description = `Order ${orderNumber}, ${amount.toFixed(2)} EUR`
 
         // Set payment options.
         const paymentOptions: PaymentOptions = {
