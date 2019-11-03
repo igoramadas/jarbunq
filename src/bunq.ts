@@ -282,7 +282,6 @@ class Bunq extends require("./base-events") {
                             const filter = {id: responseFilter.id, category: responseFilter.category, date: responseFilter.updated}
 
                             this.notificationFilters.push(filter)
-                            console.dir(response.Response[0])
                             filterIds.push(filter.id)
                         } else {
                             throw new Error(`The notification filter response is blank or invalid`)
