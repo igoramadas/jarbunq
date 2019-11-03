@@ -1,6 +1,6 @@
 {
     "name": "jarbunq",
-    "version": "19.43.617",
+    "version": "19.44.718",
     "description": "Automate your bunq account with email and Strava based actions!",
     "keywords": [
         "bunq",
@@ -30,12 +30,12 @@
         "anyhow": "^1.4.1",
         "connect-assets": "^6.0.1",
         "eventemitter3": "^4.0.0",
-        "expresser": "^4.1.0",
+        "expresser": "^4.1.1",
         "imap": "^0.8.19",
-        "jaul": "^1.1.2",
+        "jaul": "^1.2.0",
         "lodash": "^4.17.15",
         "lowdb": "^1.0.0",
-        "mailparser": "^2.7.1",
+        "mailparser": "^2.7.5",
         "moment": "^2.24.0",
         "nodemailer": "^6.3.1",
         "pug": "^2.0.4",
@@ -45,8 +45,8 @@
         "stylus": "^0.54.7"
     },
     "devDependencies": {
-        "@types/express": "^4.17.1",
-        "@types/node": "^12.11.7",
+        "@types/express": "^4.17.2",
+        "@types/node": "^12.12.5",
         "axios-debug-log": "^0.6.2",
         "chalk": "^2.4.2",
         "typedoc": "^0.15.0",

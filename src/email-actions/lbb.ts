@@ -15,7 +15,7 @@ const totalText = "Den aktuellen Rechnungsbetrag von"
 const EmailAction = async (message: any): Promise<any> => {
     logger.debug("EmailAction.Lbb", message.messageId, message.from, message.subject, `To ${message.to}`)
 
-    let invoiceAmount, description, partial
+    let invoiceAmount, invoiceAmountString, description, partial
 
     try {
         // Find where the invoice amount is on the email text.
@@ -25,19 +25,20 @@ const EmailAction = async (message: any): Promise<any> => {
         partial = partial.replace(".", "")
         partial = partial.replace(",", ".")
         invoiceAmount = parseFloat(partial.trim())
+        invoiceAmountString = invoiceAmount.toString(2)
 
         let balance = await bunq.getAccountBalance(settings.bunq.accounts.amazon)
 
         // Check how much is available at the Amazon account.
         if (balance >= invoiceAmount) {
-            logger.info("EmailAction.Lbb", message.messageId, `Got invoice for ${invoiceAmount}, current account balance is ${balance}, all good`)
+            logger.info("EmailAction.Lbb", message.messageId, `Got invoice for ${invoiceAmountString}, current account balance is ${balance}, all good`)
             return null
         }
 
-        logger.info("EmailAction.Lbb", `Invoice ${invoiceAmount} is higher than current account balance ${balance}, will top-up`)
+        logger.info("EmailAction.Lbb", `Invoice ${invoiceAmountString} is higher than current account balance ${balance}, will top-up`)
 
         // Set payment description.
-        description = `Invoice top-up to ${invoiceAmount}`
+        description = `Invoice top-up to ${invoiceAmountString}`
 
         // How much top-up is needed?
         const diffAmount = ((invoiceAmount - balance) * settings.amazon.paymentMultiplier).toFixed(2)
