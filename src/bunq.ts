@@ -148,7 +148,12 @@ class Bunq extends require("./base-events") {
 
         // Setup notification filters?
         if (settings.bunq.notificationFilters) {
-            await this.setupNotificationFilters()
+            try {
+                await this.setupNotificationFilters()
+            } catch (ex) {
+                logger.error("Bunq.init", "Can't setup notification filters", ex)
+                return process.exit()
+            }
         }
 
         // Reminder to renew OAuth tokens.
@@ -251,50 +256,52 @@ class Bunq extends require("./base-events") {
         for (let acc of this.accounts) {
             const aliases = _.map(acc.alias, "value")
             const intersect = _.intersection(aliases, aliasesFromSettings)
-            const logAccount = intersect.length > 0 ? intersect[0] : acc.id
 
             if (intersect.length == 0) {
-                logger.debug("Jarbunq.setupNotificationFilters", `Account ${logAccount} has no matching aliases on settings.bunq.accounts`, "Skip!")
+                logger.debug("Jarbunq.setupNotificationFilters", `Account ${acc.id} has no matching aliases on settings.bunq.accounts`, "Skip!")
             } else {
+                const logAccount = this.getAccountFromAlias(intersect[0], true)
                 const filterIds = []
 
-                for (let category of ["PAYMENT", "DRAFT_PAYMENT", "CARD_TRANSACTION_SUCCESSFUL", "CARD_TRANSACTION_FAILED"]) {
-                    try {
-                        const callback = `${baseUrl}bunq/notification/${acc.id}/${category.toLowerCase()}`
-
-                        let filters = {
-                            notification_filters: [
-                                {
-                                    category: category,
-                                    notification_target: callback
-                                }
-                            ]
-                        }
-
-                        // Response limiter taken directly from the bunqJSClient.
-                        const response = await limiter.run(async axiosClient =>
-                            bunqClient.ApiAdapter.post(`/v1/user/${userId}/monetary-account/${acc.id}/notification-filter-url`, filters, {}, {}, axiosClient)
-                        )
-
-                        // Valid response? Add the result to the notificationFilters list.
-                        if (response.Response && response.Response.length > 0 && response.Response[0].NotificationFilterUrl) {
-                            const responseFilter = response.Response[0].NotificationFilterUrl
-                            const filter = {id: responseFilter.id, category: responseFilter.category, date: responseFilter.updated}
-
-                            this.notificationFilters.push(filter)
-                            filterIds.push(filter.id)
-                        } else {
-                            throw new Error(`The notification filter response is blank or invalid`)
-                        }
-                    } catch (ex) {
-                        logger.error("Jarbunq.setupNotificationFilters", logAccount, ex)
+                try {
+                    let filters = {
+                        notification_filters: []
                     }
+
+                    // Build the notification filters object.
+                    for (let category of ["PAYMENT", "DRAFT_PAYMENT", "CARD_TRANSACTION_SUCCESSFUL", "CARD_TRANSACTION_FAILED"]) {
+                        filters.notification_filters.push({
+                            category: category,
+                            notification_target: `${baseUrl}bunq/notification/${acc.id}/${category.toLowerCase()}`
+                        })
+                    }
+
+                    // Response limiter taken directly from the bunqJSClient.
+                    const response = await limiter.run(async axiosClient =>
+                        bunqClient.ApiAdapter.post(`/v1/user/${userId}/monetary-account/${acc.id}/notification-filter-url`, filters, {}, {}, axiosClient)
+                    )
+
+                    // Valid response? Add the result to the notificationFilters list.
+                    if (response.Response && response.Response.length > 0 && response.Response[0].NotificationFilterUrl) {
+                        const responseFilter = response.Response[0].NotificationFilterUrl
+                        const filter = {id: responseFilter.id, category: responseFilter.category, date: responseFilter.updated}
+
+                        this.notificationFilters.push(filter)
+                        filterIds.push(filter.id)
+                    } else {
+                        throw new Error(`The notification filter response is blank or invalid`)
+                    }
+                } catch (ex) {
+                    logger.error("Jarbunq.setupNotificationFilters", logAccount, ex)
                 }
 
                 const logFilterIds = filterIds.join(", ")
-                logger.info("Jarbunq.setupNotificationFilters", logAccount, `Created: ${logFilterIds}`)
+                logger.info("Jarbunq.setupNotificationFilters", `For account ${logAccount}: ${logFilterIds}`)
             }
         }
+
+        // Setup notification filters every 12 hours.
+        setTimeout(this.setupNotificationFilters, 1000 * 60 * 60 * 12)
     }
 
     // MAIN METHODS
@@ -391,7 +398,7 @@ class Bunq extends require("./base-events") {
      * @param returnAsName If true, will return the account name or the passed alias if account not found.
      */
     getAccountFromAlias = (alias: string | number, returnAsName?: boolean) => {
-        logger.debug("Bunq.getAccountFromAlias", alias)
+        logger.debug("Bunq.getAccountFromAlias", alias, returnAsName)
 
         try {
             if (!this.authenticated) {
