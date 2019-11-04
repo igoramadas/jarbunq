@@ -83,7 +83,7 @@ class Strava extends require("./base-events") {
                     logger.info("Strava.init", `Missed today's payment at ${settings.strava.payments.time}, will execute it now`)
                     this.payForActivities()
                 } else {
-                    logger.info("Strava.init", `Today's payment was already processed, ID ${existingPayment.payment.ID}`)
+                    logger.info("Strava.init", `Today's payment was already processed, ID ${existingPayment.payment.id}`)
                 }
             }
 
