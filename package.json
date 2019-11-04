@@ -1,6 +1,6 @@
 {
     "name": "jarbunq",
-    "version": "19.44.720",
+    "version": "19.45.116",
     "description": "Automate your bunq account with email and Strava based actions!",
     "keywords": [
         "bunq",
@@ -40,7 +40,7 @@
         "nodemailer": "^6.3.1",
         "pug": "^2.0.4",
         "request": "^2.88.0",
-        "request-promise-native": "^1.0.7",
+        "request-promise-native": "^1.0.8",
         "setmeup": "^1.3.1",
         "stylus": "^0.54.7"
     },
