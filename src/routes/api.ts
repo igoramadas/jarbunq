@@ -73,6 +73,16 @@ const apiRoutes = {
         }
     },
 
+    /** Get list of registered notification filters at bunq. */
+    "get:api/bunq/notification-filters": async (req, res) => {
+        try {
+            const result = await bunq.getNotificationFilters()
+            app.renderJson(req, res, result)
+        } catch (ex) {
+            return app.renderError(req, res, ex)
+        }
+    },
+
     /** Get data from database. */
     "get:api/*": async (req, res) => {
         const dbKey = req.params[0]
