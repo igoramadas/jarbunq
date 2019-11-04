@@ -1,8 +1,11 @@
 // bunq Routes
+// These routes are exclusively triggered by bunq, hence they are not
+// under the default /api scope.
 
 import bunq = require("../bunq")
 import jaul = require("jaul")
 import logger = require("anyhow")
+const app = require("expresser").app
 const settings = require("setmeup").settings
 
 const bunqRoutes = {
@@ -42,6 +45,8 @@ const bunqRoutes = {
 
         logger.info(`Routes.bunqNotification.${category}`, req.params.accountId, req.body)
         this.events.emit(`bunqNotification.${category}`, req.params.accountId, req.body)
+
+        app.renderJson(req, res, {ok: true})
     }
 }
 

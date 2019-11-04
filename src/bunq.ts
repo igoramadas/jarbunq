@@ -304,6 +304,51 @@ class Bunq extends require("./base-events") {
         setTimeout(this.setupNotificationFilters, 1000 * 60 * 60 * 12)
     }
 
+    /**
+     * Get list of registered notification filters at bunq.
+     */
+    getNotificationFilters = async () => {
+        const aliasesFromSettings = Object.values(settings.bunq.accounts)
+        let userId, limiter
+
+        try {
+            userId = this.user.id
+            limiter = bunqClient.ApiAdapter.RequestLimitFactory.create("/monetary-account", "POST")
+        } catch (ex) {
+            logger.error("Jarbunq.getNotificationFilters", ex)
+            return
+        }
+
+        let result: any = {}
+
+        // Iterate accounts to create individual notification filters, but only for accounts
+        // that are listed on settings.bunq.accounts.
+        for (let acc of this.accounts) {
+            const aliases = _.map(acc.alias, "value")
+            const intersect = _.intersection(aliases, aliasesFromSettings)
+
+            if (intersect.length == 0) {
+                logger.debug("Jarbunq.getNotificationFilters", `Account ${acc.id} has no matching aliases on settings.bunq.accounts`, "Skip!")
+            } else {
+                const logAccount = this.getAccountFromAlias(intersect[0], true)
+
+                try {
+                    const response = await limiter.run(async axiosClient => bunqClient.ApiAdapter.get(`/v1/user/${userId}/monetary-account/${acc.id}/notification-filter-url`, {}, {}, axiosClient))
+
+                    // Valid response? Add the result to the notificationFilters list.
+                    if (response.Response && response.Response.length > 0) {
+                        result[intersect[0]] = response.Response
+                    }
+                } catch (ex) {
+                    logger.error("Jarbunq.getNotificationFilters", logAccount, ex)
+                }
+            }
+        }
+
+        // Return notification filters.
+        return result
+    }
+
     // MAIN METHODS
     // --------------------------------------------------------------------------
 
@@ -370,6 +415,8 @@ class Bunq extends require("./base-events") {
                 throw new Error("Got 0 accounts, expected at least 1")
             }
 
+            // Get changes to account names and reset accounts cache.
+            const diffAccounts = _.differenceBy(this.accounts || [], accounts, "description")
             this.accounts = []
 
             // Iterate and populate account list. This will also append
@@ -380,7 +427,8 @@ class Bunq extends require("./base-events") {
                 this.accounts.push(acc[firstKey])
             }
 
-            logger.info("Bunq.getAccounts", `Got ${accounts.length} accounts`, _.map(this.accounts, "description").join(", "))
+            const logChangedAccounts = diffAccounts.length > 0 ? "Changed: " + _.map(diffAccounts, "description").join(", ") : "No changes"
+            logger.info("Bunq.getAccounts", `Got ${accounts.length} accounts`, logChangedAccounts)
             this.events.emit("getAccounts", this.accounts)
 
             return this.accounts
