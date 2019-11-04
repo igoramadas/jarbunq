@@ -17,4 +17,4 @@
                     tr(v-for="s in stravaPayments")
                         td.date {{ moment(s.date).format(jarbunq.shortDateTimeFormat) }}
                         td.km {{ s.totalKm }} KM
-                        td.amount.has-text-right {{ s.payment.amount }} EUR
+                        td.amount.has-text-right {{ s.payment.amount.toFixed(2) }} EUR

@@ -18,4 +18,4 @@
                             .date {{ moment(p.date).format(jarbunq.shortDateTimeFormat) }}
                             .accounts {{ jarbunq.getAccountFromAlias(p.fromAlias) }} to {{ jarbunq.getAccountFromAlias(p.toAlias) }}
                             .description.is-size-7 {{ p.description }}
-                        td.amount.has-text-right {{ p.amount }} {{ p.currency }}
+                        td.amount.has-text-right {{ p.amount.toFixed(2) }} {{ p.currency }}

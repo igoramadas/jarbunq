@@ -8,11 +8,11 @@
                 tbody
                     tr(v-for="p in recentPayments")
                         td.has-text-left
-                            .amount.is-pulled-right.is-hidden-desktop {{ p.amount }} {{ p.currency }}
+                            .amount.is-pulled-right.is-hidden-desktop {{ p.amount.toFixed(2) }} {{ p.currency }}
                             .date {{ moment(p.date).format(jarbunq.shortDateTimeFormat) }} to {{ jarbunq.getAccountFromAlias(p.toAlias) }}
                             .description.is-size-7.is-hidden-desktop {{ p.description }}
                         td.description.is-hidden-touch {{ p.description }}
-                        td.has-text-right.is-hidden-touch {{ p.amount }} {{ p.currency }}
+                        td.has-text-right.is-hidden-touch {{ p.amount.toFixed(2) }} {{ p.currency }}
 
 
         .container
