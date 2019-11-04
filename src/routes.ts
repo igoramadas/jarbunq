@@ -111,7 +111,7 @@ class Routes extends require("./base-events") {
     sendAccessDenied = (req, res) => {
         const ip = jaul.network.getClientIP(req)
         logger.error("Route", "Access denied", req.method, req.url, `From ${ip}`)
-        return res.status(401).json({error: "Access denied"})
+        return res.status(401).json({error: `Access denied (${ip})`})
     }
 }
 
