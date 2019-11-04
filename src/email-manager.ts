@@ -79,9 +79,10 @@ class EmailManager extends require("./base-events") {
             const day = now.isoWeekday()
             let interval = 0
 
-            // If Monday send straight away, otherwise calculate correct schedule for next Monday.
+            // If Monday between 6 and 7 AM send straight away,
+            // otherwise calculate correct schedule for next Monday.
             if (day == 1) {
-                if (now.isAfter(target)) {
+                if (now.isAfter(target) && now.hours() < 8) {
                     this.sendWeeklyReport()
                 } else {
                     interval = target.diff(now)
@@ -179,7 +180,8 @@ class EmailManager extends require("./base-events") {
                     // Create payment HTML string.
                     let msg = `<div><strong>${payment.description}</strong>
                                <br>
-                               ${parseFloat(payment.amount as any).toFixed(2)} ${payment.currency} from ${fromAccount} to ${toAccount}
+                               <strong>${parseFloat(payment.amount as any).toFixed(2)} ${payment.currency}</strong>
+                               from ${fromAccount} to ${toAccount}
                                ${notes}
                                <br>
                                <small>${paymentTitle} ${payment.id}</small>
