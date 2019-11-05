@@ -8,7 +8,7 @@ import logger = require("anyhow")
 const settings = require("setmeup").settings
 
 // Email parsing strings.
-const totalText = "Den aktuellen Rechnungsbetrag von"
+const totalText = "aktuellen Rechnungsbetrag von"
 
 // Exported function. Will return false if Amazon account has enough funds
 // to pay the bills (consider this a good thing!), otherwise true.
@@ -21,11 +21,11 @@ const EmailAction = async (message: any): Promise<any> => {
         // Find where the invoice amount is on the email text.
         let totalIndex = message.text.indexOf(totalText)
         partial = message.text.substring(totalIndex + totalText.length + 1)
-        partial = partial.substring(0, partial.indexOf(" "))
+        partial = partial.trim().substring(0, partial.indexOf(" "))
         partial = partial.replace(".", "")
         partial = partial.replace(",", ".")
         invoiceAmount = parseFloat(partial.trim())
-        invoiceAmountString = invoiceAmount.toString(2)
+        invoiceAmountString = invoiceAmount.toFixed(2)
 
         let balance = await bunq.getAccountBalance(settings.bunq.accounts.amazon)
 
