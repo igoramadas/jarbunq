@@ -415,20 +415,25 @@ class Bunq extends require("./base-events") {
                 throw new Error("Got 0 accounts, expected at least 1")
             }
 
-            // Get changes to account names and reset accounts cache.
-            const noAccounts = !this.accounts || this.accounts.length == 0
-            const diffAccounts = noAccounts ? accounts : _.differenceBy(accounts, this.accounts, "description")
-            this.accounts = []
+            const updatedAccounts = []
+            const diffAccountNames = []
 
             // Iterate and populate account list. This will also append
             // a "type" to the account properties.
             for (let acc of accounts) {
                 let firstKey = Object.keys(acc)[0]
                 acc[firstKey].type = firstKey.replace("MonetaryAccount", "")
-                this.accounts.push(acc[firstKey])
+                updatedAccounts.push(acc[firstKey])
+
+                // New account description?
+                if (!this.accounts || !_.find(this.accounts, {description: acc[firstKey].description})) {
+                    diffAccountNames.push(acc[firstKey].description)
+                }
             }
 
-            const logChangedAccounts = diffAccounts.length > 0 ? "Changed: " + _.map(diffAccounts, "description").join(", ") : "No changes"
+            this.accounts = updatedAccounts
+
+            const logChangedAccounts = diffAccountNames.length > 0 ? "Changed: " + diffAccountNames.join(", ") : "No changes"
             logger.info("Bunq.getAccounts", `Got ${accounts.length} accounts`, logChangedAccounts)
             this.events.emit("getAccounts", this.accounts)
 
