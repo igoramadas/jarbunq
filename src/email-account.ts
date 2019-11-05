@@ -357,34 +357,43 @@ class EmailAccount extends require("./base-events") {
             // Action!
             try {
                 const actionResult = await actionModule(message, rule)
+
+                // Action was not processed?
+                if (actionResult == null) {
+                    processedEmail.actions[rule.action] = false
+                    logger.info("EmailAccount.processEmail", this.id, logRule.join(", "), message.messageId, message.subject, "Result null")
+                    continue
+                }
+
                 const resultError = actionResult.error
 
                 // Action returned an error? Log and stop.
                 if (resultError) {
                     processedEmail.actions[rule.action] = resultError
                     logger.error("EmailAccount.processEmail", this.id, logRule.join(", "), message.messageId, message.subject, resultError)
-                } else {
-                    // Action returned payment options? Add default notes and proceed with payment.
-                    if (actionResult.amount && actionResult.toAlias && actionResult.description) {
-                        if (!actionResult.notes) {
-                            actionResult.notes = []
-                        }
+                    continue
+                }
 
-                        actionResult.notes.unshift(message.subject)
-                        actionResult.notes.unshift(`Email action: ${rule.action}`)
-                        actionResult.reference = `${rule.action}-${message.messageId}`
-
-                        // Pay!
-                        const payment = await bunq.makePayment(actionResult)
-                        logger.info("EmailAccount.processEmail", this.id, logRule.join(", "), message.messageId, message.subject, `Payment ID: ${payment.id}`)
-                    } else if (_.isString(actionResult)) {
-                        logger.info("EmailAccount.processEmail", this.id, logRule.join(", "), message.messageId, message.subject, actionResult)
-                    } else {
-                        logger.info("EmailAccount.processEmail", this.id, logRule.join(", "), message.messageId, message.subject, "Processed")
+                // Action returned payment options? Add default notes and proceed with payment.
+                if (actionResult.amount && actionResult.toAlias && actionResult.description) {
+                    if (!actionResult.notes) {
+                        actionResult.notes = []
                     }
 
-                    processedEmail.actions[rule.action] = true
+                    actionResult.notes.unshift(message.subject)
+                    actionResult.notes.unshift(`Email action: ${rule.action}`)
+                    actionResult.reference = `${rule.action}-${message.messageId}`
+
+                    // Pay!
+                    const payment = await bunq.makePayment(actionResult)
+                    logger.info("EmailAccount.processEmail", this.id, logRule.join(", "), message.messageId, message.subject, `Payment ID: ${payment.id}`)
+                } else if (_.isString(actionResult)) {
+                    logger.info("EmailAccount.processEmail", this.id, logRule.join(", "), message.messageId, message.subject, actionResult)
+                } else {
+                    logger.info("EmailAccount.processEmail", this.id, logRule.join(", "), message.messageId, message.subject, "Processed")
                 }
+
+                processedEmail.actions[rule.action] = true
             } catch (ex) {
                 logger.error("EmailAccount.processEmail", this.id, logRule.join(", "), message.messageId, message.subject, ex)
                 processedEmail.actions[rule.action] = ex.toString()
