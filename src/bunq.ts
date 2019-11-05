@@ -416,7 +416,8 @@ class Bunq extends require("./base-events") {
             }
 
             // Get changes to account names and reset accounts cache.
-            const diffAccounts = !this.accounts ? accounts : _.differenceBy(accounts, this.accounts || [], "description")
+            const noAccounts = !this.accounts || this.accounts.length == 0
+            const diffAccounts = noAccounts ? accounts : _.differenceBy(accounts, this.accounts, "description")
             this.accounts = []
 
             // Iterate and populate account list. This will also append
