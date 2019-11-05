@@ -1,6 +1,6 @@
 {
     "name": "jarbunq",
-    "version": "19.45.116",
+    "version": "19.45.220",
     "description": "Automate your bunq account with email and Strava based actions!",
     "keywords": [
         "bunq",
@@ -35,7 +35,7 @@
         "jaul": "^1.2.0",
         "lodash": "^4.17.15",
         "lowdb": "^1.0.0",
-        "mailparser": "^2.7.5",
+        "mailparser": "^2.7.6",
         "moment": "^2.24.0",
         "nodemailer": "^6.3.1",
         "pug": "^2.0.4",
@@ -50,7 +50,7 @@
         "axios-debug-log": "^0.6.2",
         "chalk": "^2.4.2",
         "typedoc": "^0.15.0",
-        "typescript": "^3.6.4"
+        "typescript": "^3.7.2"
     },
     "pkg": {
         "scripts": "lib/**/*.js",
