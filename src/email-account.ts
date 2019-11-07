@@ -54,7 +54,7 @@ class EmailAccount extends require("./base-events") {
         this.client = new imap(this.config)
         this.openBox(true)
 
-        this.emit("start")
+        this.events.emit("start")
     }
 
     /**
@@ -70,7 +70,7 @@ class EmailAccount extends require("./base-events") {
             logger.error("EmailAccount.stop", this.id, ex)
         }
 
-        this.emit("stop")
+        this.events.emit("stop")
     }
 
     // METHODS
@@ -402,7 +402,7 @@ class EmailAccount extends require("./base-events") {
         // Add to database in case email had any action.
         if (processedEmail != null) {
             database.insert("processedEmails", processedEmail)
-            this.emit("processEmail", processedEmail)
+            this.events.emit("processEmail", processedEmail)
 
             // Mark message as read?
             if (settings.email.markAsRead && message.uid) {

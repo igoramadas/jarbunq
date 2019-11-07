@@ -357,7 +357,7 @@ class Bunq extends require("./base-events") {
     processNotification = async (notification: BunqNotification) => {
         try {
             logger.info("Bunq.processNotification", notification.category, notification.id, notification.description)
-            this.emit(`notification.${notification.category}`, notification)
+            this.events.emit(`notification.${notification.category}`, notification)
         } catch (ex) {
             logger.error("Bunq.processNotification", notification.category, notification.id, ex)
         }
@@ -449,7 +449,7 @@ class Bunq extends require("./base-events") {
 
             const logChangedAccounts = diffAccountNames.length > 0 ? "Changed: " + diffAccountNames.join(", ") : "No changes"
             logger.info("Bunq.getAccounts", `Got ${accounts.length} accounts`, logChangedAccounts)
-            this.emit("getAccounts", this.accounts)
+            this.events.emit("getAccounts", this.accounts)
 
             return this.accounts
         } catch (ex) {
@@ -699,7 +699,7 @@ class Bunq extends require("./base-events") {
                 paymentRecord.date = now.toDate()
 
                 database.insert("payments", paymentRecord)
-                this.emit("makePayment", paymentRecord)
+                this.events.emit("makePayment", paymentRecord)
 
                 logger.info("Bunq.makePayment", logDraft, `ID ${paymentId}`, logFromTo, options.description)
 

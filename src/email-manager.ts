@@ -100,7 +100,7 @@ class EmailManager extends require("./base-events") {
 
         // Dispatch start event.
         const accountIds = _.map(this.accounts, "id")
-        this.emit("start", accountIds)
+        this.events.emit("start", accountIds)
     }
 
     /**
@@ -120,7 +120,7 @@ class EmailManager extends require("./base-events") {
         }
 
         this.accounts = []
-        this.emit("stop", accountIds)
+        this.events.emit("stop", accountIds)
     }
 
     // WEEKLY PAYMENTS NOTIFICATION
@@ -201,7 +201,7 @@ class EmailManager extends require("./base-events") {
 
             //Send email!
             notifications.toEmail({subject: subject, message: message})
-            this.emit("sendWeeklyReport", payments)
+            this.events.emit("sendWeeklyReport", payments)
         } catch (ex) {
             logger.error("EmailManager.sendWeeklySummary", ex)
         }

@@ -66,7 +66,7 @@ class Notifications extends require("./base-events") {
         }
 
         // You can also write your own notification handler by listening to the `send` event.
-        this.emit("send", options)
+        this.events.emit("send", options)
     }
 
     /**
