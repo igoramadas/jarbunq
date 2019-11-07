@@ -300,8 +300,8 @@ class Bunq extends require("./base-events") {
             }
         }
 
-        // Setup notification filters every 12 hours.
-        setTimeout(this.setupNotificationFilters, 1000 * 60 * 60 * 12)
+        // Setup notification filters every few hour(s).
+        setTimeout(this.setupNotificationFilters, 1000 * 60 * settings.bunq.refreshMinutes * 2)
     }
 
     /**
