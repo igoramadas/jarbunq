@@ -216,7 +216,7 @@ class Bunq extends require("./base-events") {
                     logger.error("Bunq.remindOAuthRenew", `${days} days`, ex)
                 }
             } else {
-                days = logger.info("Bunq.remindOAuthRenew", `Token needs to be renewd in ${days} days`)
+                days = logger.info("Bunq.remindOAuthRenew", `Token needs to be renewed in ${days} days`)
             }
         }
 
