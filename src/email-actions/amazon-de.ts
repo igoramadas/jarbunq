@@ -2,7 +2,6 @@
 // This will process orders from Amazon.de and automatically transfer the
 // necessary money to the Amazon Card account.
 
-import {PaymentOptions} from "../types"
 import logger = require("anyhow")
 const settings = require("setmeup").settings
 

@@ -2,7 +2,6 @@
 // This will process invoices sent by LBB via email and make sure there
 // are enough funds on the Amazon account for the direct debit.
 
-import {PaymentOptions} from "../types"
 import bunq = require("../bunq")
 import logger = require("anyhow")
 const settings = require("setmeup").settings

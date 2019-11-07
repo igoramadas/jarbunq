@@ -5,6 +5,8 @@
 import bunq = require("../bunq")
 import jaul = require("jaul")
 import logger = require("anyhow")
+import moment = require("moment")
+
 const app = require("expresser").app
 const settings = require("setmeup").settings
 
@@ -34,6 +36,7 @@ const bunqRoutes = {
     "post:bunq/notification/:accountId/:category": async (req, res) => {
         const ip = jaul.network.getClientIP(req)
         const ipRange = settings.bunq.api.allowedCallbackIP
+        const category = req.params.category
 
         // Check if sender is really bunq.
         if (ipRange && !jaul.network.ipInRange(ip, ipRange)) {
@@ -41,10 +44,55 @@ const bunqRoutes = {
             return res.status(401).json({error: "Access denied"})
         }
 
-        const category = req.params.category
+        // Process notification.
+        try {
+            const data = req.body.NotificationUrl
+            data.category = data.category.toLowerCase()
 
-        logger.info(`Routes.bunqNotification.${category}`, req.params.accountId, req.body)
-        this.events.emit(`bunqNotification.${category}`, req.params.accountId, req.body)
+            const eventType = Object.keys(data.object)[0]
+            const objectData = data.object[eventType]
+
+            // Confirm if notification category was the same as the provided via URL.
+            if (category != data.category) {
+                logger.warn(`Routes.bunqNotification.${category}`, req.params.accountId, eventType, `Notification body has a different category: ${data.category}`)
+            }
+
+            // Get correct amounts.
+            const amount = objectData.amount_billing ? objectData.amount_billing : objectData.amount_converted
+            const originalAmount = objectData.amount_original_local ? objectData.amount_original_local : objectData.amount_local
+
+            // Create notification object.
+            const notification: BunqNotification = {
+                id: objectData.id,
+                category: category,
+                description: objectData.description,
+                amount: amount.value,
+                currency: amount.currency,
+                date: moment(objectData.updated).toDate()
+            }
+
+            // Check for additional fields.
+            if (originalAmount) {
+                notification.originalAmount = originalAmount.value
+                notification.originalCurrency = originalAmount.currency
+            }
+            if (data.event_type) {
+                notification.eventType = data.event_type
+            }
+            if (objectData.monetary_account_id) {
+                notification.accountId = objectData.monetary_account_id
+            }
+            if (objectData.auto_save_entry && objectData.auto_save_entry.payment_savings) {
+                notification.autoSavePaymentId = objectData.auto_save_entry.payment_savings.id
+            }
+            if (objectData.city) {
+                notification.city = objectData.city
+            }
+
+            bunq.processNotification(notification)
+        } catch (ex) {
+            logger.error(`Routes.bunqNotification.${category}`, ex)
+        }
 
         app.renderJson(req, res, {ok: true})
     }

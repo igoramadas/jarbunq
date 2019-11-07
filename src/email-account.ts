@@ -1,6 +1,5 @@
 // EmailAccount
 
-import {EmailActionRule, ProcessedEmail} from "./types"
 import _ = require("lodash")
 import bunq = require("./bunq")
 import database = require("./database")
@@ -55,7 +54,7 @@ class EmailAccount extends require("./base-events") {
         this.client = new imap(this.config)
         this.openBox(true)
 
-        this.events.emit("start")
+        this.emit("start")
     }
 
     /**
@@ -71,7 +70,7 @@ class EmailAccount extends require("./base-events") {
             logger.error("EmailAccount.stop", this.id, ex)
         }
 
-        this.events.emit("stop")
+        this.emit("stop")
     }
 
     // METHODS
@@ -403,7 +402,7 @@ class EmailAccount extends require("./base-events") {
         // Add to database in case email had any action.
         if (processedEmail != null) {
             database.insert("processedEmails", processedEmail)
-            this.events.emit("processEmail", processedEmail)
+            this.emit("processEmail", processedEmail)
 
             // Mark message as read?
             if (settings.email.markAsRead && message.uid) {

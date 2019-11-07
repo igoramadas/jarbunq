@@ -1,6 +1,5 @@
 // Bunq
 
-import {PaymentOptions, Payment, NotificationFilterUrl} from "./types"
 import BunqJSClient from "@bunq-community/bunq-js-client"
 import _ = require("lodash")
 import crypto = require("crypto")
@@ -224,6 +223,9 @@ class Bunq extends require("./base-events") {
         _.delay(this.remindOAuthRenew, msDay)
     }
 
+    // NOTIFICATION FILTERS
+    // --------------------------------------------------------------------------
+
     /**
      * Setup the notification callbacks so bunq will dispatch events related
      * to the user's accounts to Jarbunq. Please note that this will only
@@ -349,6 +351,17 @@ class Bunq extends require("./base-events") {
         return result
     }
 
+    /**
+     * Process a notification (callback) from bunq.
+     */
+    processNotification = async (notification: BunqNotification) => {
+        try {
+            this.emit(`notification.${notification.category}`, notification)
+        } catch (ex) {
+            logger.error("Bunq.processNotification", ex)
+        }
+    }
+
     // MAIN METHODS
     // --------------------------------------------------------------------------
 
@@ -435,7 +448,7 @@ class Bunq extends require("./base-events") {
 
             const logChangedAccounts = diffAccountNames.length > 0 ? "Changed: " + diffAccountNames.join(", ") : "No changes"
             logger.info("Bunq.getAccounts", `Got ${accounts.length} accounts`, logChangedAccounts)
-            this.events.emit("getAccounts", this.accounts)
+            this.emit("getAccounts", this.accounts)
 
             return this.accounts
         } catch (ex) {
@@ -685,7 +698,7 @@ class Bunq extends require("./base-events") {
                 paymentRecord.date = now.toDate()
 
                 database.insert("payments", paymentRecord)
-                this.events.emit("makePayment", paymentRecord)
+                this.emit("makePayment", paymentRecord)
 
                 logger.info("Bunq.makePayment", logDraft, `ID ${paymentId}`, logFromTo, options.description)
 

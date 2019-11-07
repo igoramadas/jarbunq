@@ -1,6 +1,5 @@
 // API Routes
 
-import {PaymentOptions, Payment} from "src/types"
 import _ = require("lodash")
 import bunq = require("../bunq")
 import database = require("../database")

@@ -1,7 +1,7 @@
 /**
  * Defines an activity from Strava.
  */
-export interface Activity {
+interface Activity {
     /** Name of the strava activity. */
     name: string
     /** Date and time when it started. */
@@ -21,7 +21,7 @@ export interface Activity {
 /**
  * Defines a rule to trigger an email action.
  */
-export interface EmailActionRule {
+interface EmailActionRule {
     /** ID of the action to be executed. */
     action: string
     /** The from field must contain any of these values.  */
@@ -41,7 +41,7 @@ export interface EmailActionRule {
 /**
  * Defines an email notification.
  */
-export interface EmailNotificationOptions extends NotificationOptions {
+interface EmailNotificationOptions extends NotificationOptions {
     /** The sender email address. If unspecified, will use defaul from settings. */
     from?: string
     /** The target email address. */
@@ -53,7 +53,7 @@ export interface EmailNotificationOptions extends NotificationOptions {
 /**
  * Defines a generic notification from Jarbunq to the user.
  */
-export interface NotificationOptions {
+interface NotificationOptions {
     /** The notification subject. */
     subject: string
     /** The actual message to be sent. */
@@ -63,7 +63,7 @@ export interface NotificationOptions {
 /**
  * Defines a notification filter URL (channel) opened with bunq.
  */
-export interface NotificationFilterUrl {
+interface NotificationFilterUrl {
     /** The URL id. */
     id: number
     /** The category, can be PAYMENT, DRAFT_PAYMENT, CARD_TRANSACTION_SUCCESSFUL, CARD_TRANSACTION_FAILED. */
@@ -75,7 +75,7 @@ export interface NotificationFilterUrl {
 /**
  * Defines payment options.
  */
-export interface PaymentOptions {
+interface PaymentOptions {
     /** The source account alias can be an email or phone. */
     fromAlias?: number | string
     /** Target account alias can be an email, phone or IBAN. */
@@ -99,7 +99,7 @@ export interface PaymentOptions {
 /**
  * Defines a payment on bunq.
  */
-export interface Payment extends PaymentOptions {
+interface Payment extends PaymentOptions {
     /** ID of the payment. */
     id: number
     /** Date and time of payment. */
@@ -113,7 +113,7 @@ export interface Payment extends PaymentOptions {
 /**
  * Defines an email message that was processed by actions.
  */
-export interface ProcessedEmail {
+interface ProcessedEmail {
     /** Date of the email. */
     date: Date
     /** Email message ID. */
@@ -129,7 +129,7 @@ export interface ProcessedEmail {
 /**
  * Defines a payment made for activity mileage.
  */
-export interface StravaPayment {
+interface StravaPayment {
     payment: {
         /** ID of the payment. */
         id: number
@@ -142,4 +142,34 @@ export interface StravaPayment {
     totalKm: number
     /** How many activities. */
     activityCount: number
+}
+
+/**
+ * Defines a notification (callback) sent from bunq.
+ */
+interface BunqNotification {
+    /** Notification event ID. */
+    id: number
+    /** Notification category (lowercased). */
+    category: string
+    /** Notification description. */
+    description: string
+    /** Date and time of the event. */
+    date: Date
+    /** Billed amount. */
+    amount: number
+    /** Billed currency. */
+    currency: string
+    /** Original / local amount. */
+    originalAmount?: number
+    /** Original / local currency. */
+    originalCurrency?: string
+    /** Event type. */
+    eventType?: string
+    /** Account ID. */
+    accountId?: number
+    /** Auto save amount. */
+    autoSavePaymentId?: number
+    /** City where event happened. */
+    city?: string
 }

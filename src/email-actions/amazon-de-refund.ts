@@ -2,7 +2,6 @@
 // This will process refunds from Amazon.de and automatically transfer the
 // money from the Amazon Card to the Main account.
 
-import {PaymentOptions} from "../types"
 import logger = require("anyhow")
 const settings = require("setmeup").settings
 

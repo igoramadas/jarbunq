@@ -1,0 +1,161 @@
+{
+    "NotificationUrl": {
+        "target_url": "https://jarbunq.home.devv.com/bunq/notification/1403448/card_transaction_successful",
+        "category": "CARD_TRANSACTION_SUCCESSFUL",
+        "event_type": "CARD_PAYMENT_ALLOWED",
+        "object": {
+            "MasterCardAction": {
+                "id": 40272749,
+                "created": "2019-11-07 13:19:44.439378",
+                "updated": "2019-11-07 13:19:44.648995",
+                "monetary_account_id": 1403448,
+                "card_id": 733862,
+                "card_authorisation_id_response": "TFC5D7",
+                "amount_local": {"currency": "EUR", "value": "7.35"},
+                "amount_converted": {"currency": "EUR", "value": "7.35"},
+                "amount_billing": {"currency": "EUR", "value": "7.35"},
+                "amount_original_local": {"currency": "EUR", "value": "7.35"},
+                "amount_original_billing": {"currency": "EUR", "value": "7.35"},
+                "amount_fee": {"currency": "EUR", "value": "0.00"},
+                "decision": "ALLOWED",
+                "decision_description": "",
+                "decision_description_translated": "",
+                "description": "DM Drogerie Markt Berlin, DE\n",
+                "authorisation_status": "AUTHORISED",
+                "authorisation_type": "NORMAL_AUTHORISATION",
+                "settlement_status": "OPEN",
+                "clearing_status": "PENDING",
+                "maturity_date": "2019-12-01",
+                "city": "Berlin",
+                "alias": {
+                    "iban": "NL97BUNQ2036284205",
+                    "is_light": false,
+                    "display_name": "Igor Ramadas Leite Nogueira",
+                    "avatar": {
+                        "uuid": "ac0e7417-b6d3-4f8e-a833-0ddcf429af35",
+                        "image": [{"attachment_public_uuid": "...", "height": "...", "width": "...", "content_type": "..."}],
+                        "anchor_uuid": null
+                    },
+                    "label_user": {
+                        "uuid": "5a1fdbc8-bbfa-423e-9a89-04e5a8c672ac",
+                        "display_name": "Igor Ramadas Leite Nogueira",
+                        "country": "NL",
+                        "avatar": {"uuid": "...", "image": "...", "anchor_uuid": "..."},
+                        "public_nick_name": "Igor"
+                    },
+                    "country": "NL"
+                },
+                "counterparty_alias": {
+                    "iban": null,
+                    "is_light": null,
+                    "display_name": "DM Drogerie Markt",
+                    "avatar": {
+                        "uuid": "68c11b97-df67-47b1-b774-bbcfcb8cb46c",
+                        "image": [{"attachment_public_uuid": "...", "height": "...", "width": "...", "content_type": "..."}],
+                        "anchor_uuid": null
+                    },
+                    "label_user": {"uuid": null, "display_name": "DM Drogerie Markt", "country": "DE", "avatar": null, "public_nick_name": "DM Drogerie Markt"},
+                    "country": "DE",
+                    "merchant_category_code": "5912"
+                },
+                "label_card": {
+                    "uuid": "65bee833-13e5-44a0-bdac-b20d13ca40d8",
+                    "type": "MASTERCARD",
+                    "second_line": "Bike. Every. Day.",
+                    "expiry_date": "2023-08-31",
+                    "status": "ACTIVE",
+                    "label_user": {
+                        "uuid": "5a1fdbc8-bbfa-423e-9a89-04e5a8c672ac",
+                        "display_name": "Igor Ramadas Leite Nogueira",
+                        "country": "NL",
+                        "avatar": {"uuid": "...", "image": "...", "anchor_uuid": "..."},
+                        "public_nick_name": "Igor"
+                    },
+                    "label_primary_account_number": {"uuid": "90f597bc-40b3-4b2f-89a2-fe465b43c9b2", "description": "Credit", "last_four_digit": "3895", "mastercard_product": "MCS"}
+                },
+                "token_status": null,
+                "reservation_expiry_time": null,
+                "clearing_expiry_time": "2019-11-14 13:19:44.648916",
+                "conversation": null,
+                "allow_chat": false,
+                "pan_entry_mode_user": "ICC",
+                "secure_code_id": null,
+                "wallet_provider_id": "216",
+                "request_reference_split_the_bill": [],
+                "auto_save_entry": {
+                    "id": 8322321,
+                    "created": "2019-11-07 13:19:44.928825",
+                    "updated": "2019-11-07 13:19:44.928825",
+                    "payment_savings": {
+                        "id": 212805646,
+                        "created": "2019-11-07 13:19:44.771225",
+                        "updated": "2019-11-07 13:19:44.771225",
+                        "monetary_account_id": 1403448,
+                        "amount": {"currency": "...", "value": "..."},
+                        "description": "",
+                        "type": "SAVINGS",
+                        "merchant_reference": null,
+                        "maturity_date": "2019-11-07",
+                        "alias": {"iban": "...", "is_light": "...", "display_name": "...", "avatar": "...", "label_user": "...", "country": "..."},
+                        "counterparty_alias": {"iban": "...", "is_light": "...", "display_name": "...", "avatar": "...", "label_user": "...", "country": "..."},
+                        "attachment": [],
+                        "geolocation": null,
+                        "batch_id": null,
+                        "conversation": null,
+                        "allow_chat": false,
+                        "scheduled_id": null,
+                        "address_billing": null,
+                        "address_shipping": null,
+                        "sub_type": "PAYMENT",
+                        "status": "SETTLED",
+                        "request_reference_split_the_bill": [],
+                        "balance_after_mutation": {"currency": "...", "value": "..."},
+                        "auto_save_entry": null,
+                        "all_auto_save_entry": []
+                    },
+                    "payment_original_event_id": 192272470,
+                    "savings_auto_save_type": "AUTO_SAVE"
+                },
+                "all_auto_save_entry": [
+                    {
+                        "id": 8322321,
+                        "created": "2019-11-07 13:19:44.928825",
+                        "updated": "2019-11-07 13:19:44.928825",
+                        "payment_savings": {
+                            "id": 212805646,
+                            "created": "2019-11-07 13:19:44.771225",
+                            "updated": "2019-11-07 13:19:44.771225",
+                            "monetary_account_id": 1403448,
+                            "amount": {"currency": "...", "value": "..."},
+                            "description": "",
+                            "type": "SAVINGS",
+                            "merchant_reference": null,
+                            "maturity_date": "2019-11-07",
+                            "alias": {"iban": "...", "is_light": "...", "display_name": "...", "avatar": "...", "label_user": "...", "country": "..."},
+                            "counterparty_alias": {"iban": "...", "is_light": "...", "display_name": "...", "avatar": "...", "label_user": "...", "country": "..."},
+                            "attachment": [],
+                            "geolocation": null,
+                            "batch_id": null,
+                            "conversation": null,
+                            "allow_chat": false,
+                            "scheduled_id": null,
+                            "address_billing": null,
+                            "address_shipping": null,
+                            "sub_type": "PAYMENT",
+                            "status": "SETTLED",
+                            "request_reference_split_the_bill": [],
+                            "balance_after_mutation": {"currency": "...", "value": "..."},
+                            "auto_save_entry": null,
+                            "all_auto_save_entry": []
+                        },
+                        "payment_original_event_id": 192272470,
+                        "savings_auto_save_type": "AUTO_SAVE"
+                    }
+                ],
+                "registry_entry_type": null,
+                "all_mastercard_action_refund": [],
+                "applied_limit": "CARD_LIMIT_POS_ICC"
+            }
+        }
+    }
+}

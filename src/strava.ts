@@ -1,6 +1,5 @@
 // Strava
 
-import {Activity, StravaPayment} from "./types"
 import _ = require("lodash")
 import bunq = require("./bunq")
 import database = require("./database")
@@ -191,7 +190,7 @@ class Strava extends require("./base-events") {
                 refreshToken: res.body.refresh_token
             }
             database.set("strava", stravaData).write()
-            this.events.emit("refreshTokens")
+            this.emit("refreshTokens")
 
             // Schedule next refresh based on the expiry date, 10 minutes before.
             const interval = moment.unix(res.body.expires_at).diff(moment()) - 600000
@@ -418,7 +417,7 @@ Please open ${settings.app.url + "strava/auth"} on your browser
 
             // Save to database and emit to listeners.
             database.insert("stravaPayments", stravaPayment)
-            this.events.emit("payForActivities", stravaPayment)
+            this.emit("payForActivities", stravaPayment)
 
             // Get interval to next payment.
             let interval

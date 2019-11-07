@@ -1,6 +1,5 @@
 // Notifications
 
-import {NotificationOptions, EmailNotificationOptions} from "./types"
 import fs = require("fs")
 import logger = require("anyhow")
 import nodemailer = require("nodemailer")
@@ -67,7 +66,7 @@ class Notifications extends require("./base-events") {
         }
 
         // You can also write your own notification handler by listening to the `send` event.
-        this.events.emit("send", options)
+        this.emit("send", options)
     }
 
     /**

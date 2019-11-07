@@ -1,6 +1,5 @@
 // EmailManager
 
-import {Payment} from "./types"
 import _ = require("lodash")
 import bunq = require("./bunq")
 import database = require("./database")
@@ -101,7 +100,7 @@ class EmailManager extends require("./base-events") {
 
         // Dispatch start event.
         const accountIds = _.map(this.accounts, "id")
-        this.events.emit("start", accountIds)
+        this.emit("start", accountIds)
     }
 
     /**
@@ -121,7 +120,7 @@ class EmailManager extends require("./base-events") {
         }
 
         this.accounts = []
-        this.events.emit("stop", accountIds)
+        this.emit("stop", accountIds)
     }
 
     // WEEKLY PAYMENTS NOTIFICATION
@@ -202,7 +201,7 @@ class EmailManager extends require("./base-events") {
 
             //Send email!
             notifications.toEmail({subject: subject, message: message})
-            this.events.emit("sendWeeklyReport", payments)
+            this.emit("sendWeeklyReport", payments)
         } catch (ex) {
             logger.error("EmailManager.sendWeeklySummary", ex)
         }
