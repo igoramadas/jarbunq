@@ -201,6 +201,7 @@ class EmailAccount extends require("./base-events") {
     /**
      * Process the specified message against the rules defined on the settings.
      * @param message The downloaded email message
+     * @event processEmail
      */
     processEmail = async (message: any): Promise<void> => {
         logger.debug("EmailAccount.processEmail", message.messageId, message.from, message.subject, `To ${message.to}`)

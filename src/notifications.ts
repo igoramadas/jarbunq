@@ -117,6 +117,7 @@ class Notifications extends require("./base-events") {
             await this.smtp.sendMail(options)
 
             logger.info("Notifications.toEmail", options.to, options.subject)
+            this.events.emit("toEmail", options)
         } catch (ex) {
             // Notifications should never throw / reject, so we just log it here.
             logger.error("Notifications.toEmail", options.to, options.subject, ex)

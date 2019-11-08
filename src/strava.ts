@@ -151,6 +151,7 @@ class Strava extends require("./base-events") {
 
     /**
      * Refresh OAuth2 tokens from Strava.
+     * @event refreshToken
      */
     refreshToken = async () => {
         try {
@@ -190,7 +191,8 @@ class Strava extends require("./base-events") {
                 refreshToken: res.body.refresh_token
             }
             database.set("strava", stravaData).write()
-            this.events.emit("refreshTokens")
+
+            this.events.emit("refreshToken")
 
             // Schedule next refresh based on the expiry date, 10 minutes before.
             const interval = moment.unix(res.body.expires_at).diff(moment()) - 600000
@@ -373,6 +375,7 @@ Please open ${settings.app.url + "strava/auth"} on your browser
 
     /**
      * Make a payment regarding the mileage of recent activities.
+     * @event payForActivities
      */
     payForActivities = async () => {
         try {

@@ -128,6 +128,7 @@ class EmailManager extends require("./base-events") {
 
     /**
      * Send a weekly summary report of payments to the account owner.
+     * @event sendWeeklyReport
      */
     sendWeeklyReport = () => {
         try {

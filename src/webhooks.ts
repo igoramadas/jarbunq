@@ -42,7 +42,11 @@ class Webhooks {
             logger.info("Webhooks.load", `Stopping ${this.listeners.length} registered webhooks before reload`)
 
             for (let cb of this.listeners) {
-                require(`./${cb.module}`).off(cb.key, cb.method)
+                try {
+                    require(`./${cb.module}`).off(cb.key, cb.method)
+                } catch (ex) {
+                    logger.error("Webhooks.load", cb.module, cb.key, "Can't unbind", ex)
+                }
             }
         }
 

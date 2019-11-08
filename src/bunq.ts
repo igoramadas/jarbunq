@@ -4,6 +4,7 @@ import BunqJSClient from "@bunq-community/bunq-js-client"
 import _ = require("lodash")
 import crypto = require("crypto")
 import database = require("./database")
+
 import logger = require("anyhow")
 import moment = require("moment")
 import notifications = require("./notifications")
@@ -51,6 +52,9 @@ class Bunq extends require("./base-events") {
 
     /** List of notification channels opened on bunq. */
     notificationFilters: NotificationFilterUrl[]
+
+    /** Token used on the notification channels above. */
+    notificationUrlTokens: string[]
 
     /** Timer to auto refresh user data and accounts. */
     timerRefresh: any
@@ -230,6 +234,7 @@ class Bunq extends require("./base-events") {
      * Setup the notification callbacks so bunq will dispatch events related
      * to the user's accounts to Jarbunq. Please note that this will only
      * work if Jarbunq is accessible from the internet!
+     * @event setupNotificationFilters
      */
     setupNotificationFilters = async () => {
         const baseUrl = settings.app.webhookUrl || settings.app.url
@@ -249,6 +254,16 @@ class Bunq extends require("./base-events") {
             logger.error("Jarbunq.setupNotificationFilters", ex)
             return
         }
+
+        // Update notification token used on URLs.
+        const newToken = crypto.randomBytes(4).toString("hex")
+        this.notificationUrlTokens.push(newToken)
+
+        // Remove previous token after 1 minute.
+        const removeOldToken = () => {
+            this.notificationUrlTokens.shift()
+        }
+        setTimeout(removeOldToken, 60000)
 
         // Reset list of registered filters.
         this.notificationFilters = []
@@ -274,7 +289,7 @@ class Bunq extends require("./base-events") {
                     for (let category of ["PAYMENT", "DRAFT_PAYMENT", "CARD_TRANSACTION_SUCCESSFUL", "CARD_TRANSACTION_FAILED"]) {
                         filters.notification_filters.push({
                             category: category,
-                            notification_target: `${baseUrl}bunq/notification/${acc.id}/${category.toLowerCase()}`
+                            notification_target: `${baseUrl}bunq/notification/${acc.id}/${newToken}`
                         })
                     }
 
@@ -301,6 +316,8 @@ class Bunq extends require("./base-events") {
                 logger.info("Jarbunq.setupNotificationFilters", `For account ${logAccount}: ${logFilterIds}`)
             }
         }
+
+        this.events.emit("setupNotificationFilters", this.notificationFilters)
 
         // Setup notification filters every few hour(s).
         setTimeout(this.setupNotificationFilters, 1000 * 60 * settings.bunq.refreshMinutes * 2)
@@ -352,14 +369,15 @@ class Bunq extends require("./base-events") {
     }
 
     /**
-     * Process a notification (callback) from bunq.
+     * Process a notification (callback) sent by bunq.
+     * @event notification
      */
-    processNotification = async (notification: BunqNotification) => {
+    notification = async (notification: BunqNotification) => {
         try {
-            logger.info("Bunq.processNotification", notification.category, notification.id, notification.description)
-            this.events.emit(`notification.${notification.category}`, notification)
+            logger.info("Bunq.notification", notification.id, notification.category, notification.description)
+            this.events.emit(`notification`, notification)
         } catch (ex) {
-            logger.error("Bunq.processNotification", notification.category, notification.id, ex)
+            logger.error("Bunq.notification", notification.id, notification.category, notification.description, ex)
         }
     }
 
