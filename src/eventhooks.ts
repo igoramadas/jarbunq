@@ -1,7 +1,6 @@
 // Eventhooks
 
 import logger = require("anyhow")
-import request = require("request-promise-native")
 const settings = require("setmeup").settings
 
 /**
