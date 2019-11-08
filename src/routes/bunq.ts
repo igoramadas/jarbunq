@@ -46,18 +46,19 @@ const bunqRoutes = {
         }
 
         try {
-            const eventType = Object.keys(data.object)[0]
-            const objectData = data.object[eventType]
+            const notificationType = Object.keys(data.object)[0]
+            const objectData = data.object[notificationType]
 
-            // Get correct amounts.
-            const amount = objectData.amount_billing ? objectData.amount_billing : objectData.amount_converted
-            const originalAmount = objectData.amount_original_local ? objectData.amount_original_local : objectData.amount_local
+            // Get transaction amounts and description.
+            const amount = objectData.amount_billing || objectData.amount
+            const originalAmount = objectData.amount_original_local || objectData.amount_local
+            const description = objectData.description || objectData.merchant_reference
 
             // Create notification object.
             const notification: BunqNotification = {
                 id: objectData.id,
                 category: data.category,
-                description: objectData.description,
+                description: description,
                 amount: amount.value,
                 currency: amount.currency,
                 date: moment(objectData.updated).toDate()

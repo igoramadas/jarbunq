@@ -7,6 +7,8 @@ const settings = require("setmeup").settings
 
 /**
  * Used to send notifications to users. Right now only email is supported.
+ * Not to be confused with bunq notification filers, which are handled
+ * directly on the Bunq class (bunq.ts).
  */
 class Notifications extends require("./base-events") {
     private static _instance: Notifications

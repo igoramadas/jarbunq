@@ -6,7 +6,6 @@ import logger = require("anyhow")
 import lowdb = require("lowdb")
 import path = require("path")
 import moment = require("moment")
-
 const env = process.env
 const settings = require("setmeup").settings
 

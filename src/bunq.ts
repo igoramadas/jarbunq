@@ -4,7 +4,6 @@ import BunqJSClient from "@bunq-community/bunq-js-client"
 import _ = require("lodash")
 import crypto = require("crypto")
 import database = require("./database")
-
 import logger = require("anyhow")
 import moment = require("moment")
 import notifications = require("./notifications")
