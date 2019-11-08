@@ -206,22 +206,29 @@ class EmailAccount extends require("./base-events") {
         logger.debug("EmailAccount.processEmail", message.messageId, message.from, message.subject, `To ${message.to}`)
 
         let processedEmail: ProcessedEmail = null
+        let from = null
 
-        // Check if message was processed before.
-        const findExisting = database.get("processedEmails").find({messageId: message.messageId})
-        const existingMessage = findExisting.value()
-        if (existingMessage != null) {
-            return logger.warn("EmailAccount.processEmail", message.messageId, message.from, message.subject, `Skip, was already processed at ${existingMessage.date}`)
+        try {
+            from = message.from.value[0].address.toLowerCase()
+
+            // Check if message was already processed.
+            const findExisting = database.get("processedEmails").find({messageId: message.messageId})
+            const existingMessage = findExisting.value()
+
+            if (existingMessage != null) {
+                return logger.warn("EmailAccount.processEmail", message.messageId, from, message.subject, `Skip, was already processed at ${existingMessage.date}`)
+            }
+        } catch (ex) {
+            logger.error("EmailAccount.processEmail", this.id, message.messageId, ex)
         }
 
         // Iterate rules.
         for (let r of settings.email.rules) {
             let rule = r as EmailActionRule
-            let actionModule, from
+            let actionModule
 
             try {
                 actionModule = require("./email-actions/" + rule.action)
-                from = message.from.value[0].address.toLowerCase()
 
                 // Get default rule from action.
                 if (actionModule.defaultRule != null) {
