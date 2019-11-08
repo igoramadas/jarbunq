@@ -26,20 +26,63 @@ class Routes extends require("./base-events") {
      * Init the routes on the express app.
      */
     init = () => {
-        app.expressApp.use((req, res, next) => {
-            const ext = req.url.substring(req.url.lengrh - 4)
-            const ip = jaul.network.getClientIP(req)
-            let allowedIP = settings.app.allowedIP || []
-            allowedIP = _.cloneDeep(allowedIP)
+        const ipWhitelistKeys = _.remove(Object.keys(settings.routes.ipWhitelist), "global")
 
-            // Bunq has its own allowed callback IPs?
-            if (settings.bunq.api.allowedCallbackIP) {
-                allowedIP.push(settings.bunq.api.allowedCallbackIP)
+        // Global logging and IP whitelist.
+        app.expressApp.use((req, res, next) => {
+            const ext = req.url.substring(req.url.length - 4)
+            const ip = jaul.network.getClientIP(req)
+            let allowedIP = settings.routes.ipWhitelist.global
+
+            // IP whitelist is set?
+            if (allowedIP) {
+                if (_.isString(allowedIP)) {
+                    allowedIP = [allowedIP]
+                }
+
+                // Check if client is whitelisted.
+                if (req.path.substring(0, 6) != "/error" && !jaul.network.ipInRange(ip, allowedIP)) {
+                    return this.sendAccessDenied(req, res)
+                }
             }
 
-            // Check if client is whitelisted.
-            if (req.path.substring(0, 6) != "/error" && settings.app.allowedIP.length > 0 && !jaul.network.ipInRange(ip, allowedIP)) {
-                return this.sendAccessDenied(req, res)
+            // DEPRECATED! Password now must be set on settings.app.auth.password.
+            if (settings.app.adminPassword) {
+                logger.warn("Routes.init", "DEPRECATED: settingss.app.adminPassword", "Please use settings.app.auth.password instead")
+
+                // Make sure auth object is present on settings.
+                if (settings.app.auth == null) {
+                    settings.app.auth = {}
+                }
+                if (!settings.app.auth.password) {
+                    settings.app.auth.password = settings.app.adminPassword
+                }
+            }
+
+            // Password protect admin pages?
+            if (settings.app.auth && settings.app.auth.password) {
+                const arrPath = req.path.split("/")
+
+                // Home page and auth pages do not need to be password protected.
+                if (req.path != "/" && arrPath[1] == "auth") {
+                    return next()
+                }
+
+                const auth = {username: settings.app.auth.user || "admin", password: settings.app.auth.password}
+                const b64auth = (req.headers.authorization || "").split(" ")[1] || ""
+                const arrBuffer = Buffer.from(b64auth, "base64").toString()
+                const [username, password] = arrBuffer.split(":")
+
+                if (username && password && username == auth.username && password == auth.password) {
+                    return next()
+                }
+
+                // Send access denied if password didn't match.
+                logger.warn("Route", req.method, req.url, "Access denied, wrong password", `From ${ip}`)
+                res.set("WWW-Authenticate", 'Basic realm="401"')
+                return res.status(401).send("Authentication required.")
+            } else {
+                logger.warn("Routes.init", "No password set on settings.app.auth.password", "This is a security risk, please set the admin password!")
             }
 
             // Log requests (ignore assets that have extensions).
@@ -50,28 +93,25 @@ class Routes extends require("./base-events") {
             next()
         })
 
-        // Password protect pages?
-        if (settings.app.adminPassword) {
-            app.expressApp.use((req, res, next) => {
-                if (req.path != "/" && req.path.substring(0, 4) != "/api" && req.path.indexOf("/auth") < 0) {
-                    return next()
-                }
+        // IP whitelisting to specific routes.
+        if (ipWhitelistKeys.length > 0) {
+            for (let route of ipWhitelistKeys) {
+                app.expressApp.use(route, (req, res, next) => {
+                    const ip = jaul.network.getClientIP(req)
+                    let allowedIP = settings.routes.ipWhitelist[route]
 
-                const auth = {username: "admin", password: settings.app.adminPassword}
-                const b64auth = (req.headers.authorization || "").split(" ")[1] || ""
-                const [username, password] = new Buffer(b64auth, "base64").toString().split(":")
+                    if (_.isString(allowedIP)) {
+                        allowedIP = [allowedIP]
+                    }
 
-                if (username && password && username == auth.username && password == auth.password) {
-                    return next()
-                }
+                    // Check if client is whitelisted for that specific route.
+                    if (!jaul.network.ipInRange(ip, allowedIP)) {
+                        return this.sendAccessDenied(req, res)
+                    }
 
-                // Send access denied if password didn't match.
-                logger.warn("Route", req.method, req.url, "Access denied, wrong password")
-                res.set("WWW-Authenticate", 'Basic realm="401"')
-                res.status(401).send("Authentication required.")
-            })
-        } else {
-            logger.warn("Routes.init", "No password set on settings.app.adminPassword", "This is a security risk, please set the adminPassword!")
+                    next()
+                })
+            }
         }
 
         // Bind routes from /routes folder.
