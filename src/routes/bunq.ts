@@ -3,12 +3,9 @@
 // under the default /api scope.
 
 import bunq = require("../bunq")
-import jaul = require("jaul")
 import logger = require("anyhow")
 import moment = require("moment")
-
 const app = require("expresser").app
-const settings = require("setmeup").settings
 
 const bunqRoutes = {
     "get:bunq/auth": async (_req, res) => {
@@ -33,29 +30,24 @@ const bunqRoutes = {
     },
 
     /** OAuth2 redirect to process the code and get an access token. */
-    "post:bunq/notification/:accountId/:category": async (req, res) => {
-        const ip = jaul.network.getClientIP(req)
-        const ipRange = settings.bunq.api.allowedCallbackIP
-        const category = req.params.category
+    "post:bunq/notification/:accountId/:token": async (req, res) => {
+        const data = req.body.NotificationUrl
 
-        // Check if sender is really bunq.
-        if (ipRange && !jaul.network.ipInRange(ip, ipRange)) {
-            logger.error("Route", "Access denied", req.method, req.url, `From ${ip}`)
-            return res.status(401).json({error: "Access denied"})
+        // Check if valid data was passed.
+        if (!data) {
+            logger.error(`Routes.bunqNotification`, req.params.accountId, "Invalid data")
+            return app.renderError(req, res, {error: "Invalid data"}, 400)
         }
 
-        // Process notification.
-        try {
-            const data = req.body.NotificationUrl
-            data.category = data.category.toLowerCase()
+        // Check if pased token is valid.
+        if (bunq.notificationUrlTokens.indexOf(req.params.token) < 0) {
+            logger.error(`Routes.bunqNotification`, req.params.accountId, data.category, `Invalid URL token: ${req.params.token}`)
+            return app.renderError(req, res, {error: "Invalid URL token"}, 401)
+        }
 
+        try {
             const eventType = Object.keys(data.object)[0]
             const objectData = data.object[eventType]
-
-            // Confirm if notification category was the same as the provided via URL.
-            if (category != data.category) {
-                logger.warn(`Routes.bunqNotification.${category}`, req.params.accountId, eventType, `Notification body has a different category: ${data.category}`)
-            }
 
             // Get correct amounts.
             const amount = objectData.amount_billing ? objectData.amount_billing : objectData.amount_converted
@@ -64,7 +56,7 @@ const bunqRoutes = {
             // Create notification object.
             const notification: BunqNotification = {
                 id: objectData.id,
-                category: category,
+                category: data.category,
                 description: objectData.description,
                 amount: amount.value,
                 currency: amount.currency,
@@ -89,9 +81,9 @@ const bunqRoutes = {
                 notification.city = objectData.city
             }
 
-            bunq.processNotification(notification)
+            bunq.notification(notification)
         } catch (ex) {
-            logger.error(`Routes.bunqNotification.${category}`, ex)
+            logger.error(`Routes.bunqNotification.${req.params.accountId}`, ex)
         }
 
         app.renderJson(req, res, {ok: true})
