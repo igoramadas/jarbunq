@@ -298,7 +298,7 @@ class EmailAccount extends require("./base-events") {
             }
 
             // Extra validation on incoming messages. Must have
-            // at least 3 out of 7 possible security features.
+            // at least 4 out of 7 possible security features.
             if (settings.email.checkSecurity) {
                 let securityCount = 0
 
@@ -336,7 +336,7 @@ class EmailAccount extends require("./base-events") {
                 }
 
                 // Less than 3 security features? Quit processing here.
-                if (securityCount < 3) {
+                if (securityCount < 4) {
                     return logger.error("EmailAccount", this.id, message.messageId, message.subject, "Message did not pass the security checks")
                 }
             }
