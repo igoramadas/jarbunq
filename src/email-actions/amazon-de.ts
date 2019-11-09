@@ -110,7 +110,7 @@ const EmailAction = async (message: any): Promise<any> => {
 
         // Set payment options.
         const paymentOptions: PaymentOptions = {
-            amount: paymentAmount.toFixed(2),
+            amount: paymentAmount,
             description: description,
             toAlias: settings.bunq.accounts.amazon
         }

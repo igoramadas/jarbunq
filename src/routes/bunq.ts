@@ -23,6 +23,7 @@ const bunqRoutes = {
         const ok = await bunq.getOAuthToken(code)
 
         if (ok) {
+            await bunq.refreshUserData()
             res.redirect("/login?success=1")
         } else {
             res.redirect("/error?e=OAuth2 flow failed")

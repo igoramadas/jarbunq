@@ -40,7 +40,8 @@ class Bunq extends require("./base-events") {
     /** The authentication URL used to start the OAuth2 flow. */
     get authUrl(): string {
         const redirect = settings.app.url + "bunq/auth/callback"
-        return bunqClient.formatOAuthAuthorizationRequestUrl(settings.bunq.api.clientId, redirect, false, false)
+        const sandbox = settings.bunq.api.environment == "SANDBOX"
+        return bunqClient.formatOAuthAuthorizationRequestUrl(settings.bunq.api.clientId, redirect, false, sandbox)
     }
 
     /** The main user data. */
@@ -53,7 +54,7 @@ class Bunq extends require("./base-events") {
     notificationFilters: NotificationFilterUrl[]
 
     /** Token used on the notification channels above. */
-    notificationUrlTokens: string[]
+    notificationUrlTokens: string[] = []
 
     /** Timer to auto refresh user data and accounts. */
     timerRefresh: any
@@ -171,7 +172,8 @@ class Bunq extends require("./base-events") {
         const redirect = settings.app.url + "bunq/auth/callback"
 
         try {
-            const token = await bunqClient.exchangeOAuthToken(settings.bunq.api.clientId, settings.bunq.api.clientSecret, redirect, code, false, false, "authorization_code")
+            const sandbox = settings.bunq.api.environment == "SANDBOX"
+            const token = await bunqClient.exchangeOAuthToken(settings.bunq.api.clientId, settings.bunq.api.clientSecret, redirect, code, false, sandbox, "authorization_code")
 
             if (!token) {
                 throw new Error("Invalid access token")
@@ -372,11 +374,16 @@ class Bunq extends require("./base-events") {
      * @event notification
      */
     notification = async (notification: BunqNotification) => {
+        let account
+        let accountName
+
         try {
-            logger.info("Bunq.notification", notification.id, notification.category, notification.description)
+            account = _.find(this.accounts, {id: notification.accountId})
+            accountName = account ? account.description : notification.accountId || "unknown"
+            logger.info("Bunq.notification", notification.id, notification.category, `Account: ${accountName}`, notification.description)
             this.events.emit(`notification`, notification)
         } catch (ex) {
-            logger.error("Bunq.notification", notification.id, notification.category, notification.description, ex)
+            logger.error("Bunq.notification", notification.id, notification.category, `Account: ${accountName}`, notification.description, ex)
         }
     }
 
@@ -560,12 +567,12 @@ class Bunq extends require("./base-events") {
 
         try {
             if (_.isString(options.amount)) {
-                options.amount = parseFloat(options.amount as string)
+                options.amount = parseFloat(options.amount as any)
             }
 
             // Make sure we round to 2 decimals.
-            niceAmount = (options.amount as number).toFixed(2)
-            options.amount = parseFloat(niceAmount)
+            options.amount += 0.0001
+            options.amount = Math.round(options.amount * 100) / 100
 
             // Currency defaults to EUR.
             if (options.currency == null) {
@@ -805,7 +812,7 @@ class Bunq extends require("./base-events") {
      * @param step The payment step (preparing or processing)
      */
     private failedPayment = (options: PaymentOptions, err: any, step: string) => {
-        let amount = (options.amount as number).toFixed(2)
+        const amount = options.amount.toFixed(2)
         let errorString = err.toString()
         let resError = err.response
 

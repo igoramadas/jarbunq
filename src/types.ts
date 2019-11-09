@@ -19,6 +19,36 @@ interface Activity {
 }
 
 /**
+ * Defines a notification (callback) sent from bunq.
+ */
+interface BunqNotification {
+    /** Notification event ID. */
+    id: number
+    /** Notification category (lowercased). */
+    category: string
+    /** Notification description. */
+    description: string
+    /** Date and time of the event. */
+    date: Date
+    /** Billed amount. */
+    amount: number
+    /** Billed currency. */
+    currency: string
+    /** Original / local amount. */
+    originalAmount?: number
+    /** Original / local currency. */
+    originalCurrency?: string
+    /** Event type. */
+    eventType?: string
+    /** Account ID. */
+    accountId?: number
+    /** Auto save amount. */
+    autoSavePaymentId?: number
+    /** City where event happened. */
+    city?: string
+}
+
+/**
  * Defines a rule to trigger an email action.
  */
 interface EmailActionRule {
@@ -51,13 +81,13 @@ interface EmailNotificationOptions extends NotificationOptions {
 }
 
 /**
- * Defines a generic notification from Jarbunq to the user.
+ * Specifications for an eventhook definition.
  */
-interface NotificationOptions {
-    /** The notification subject. */
-    subject: string
-    /** The actual message to be sent. */
-    message: string
+interface EventhookOptions {
+    /** The data received by the event. */
+    data: any
+    /** The action(s) to be taken. */
+    actions: any
 }
 
 /**
@@ -73,6 +103,16 @@ interface NotificationFilterUrl {
 }
 
 /**
+ * Defines a generic notification from Jarbunq to the user.
+ */
+interface NotificationOptions {
+    /** The notification subject. */
+    subject: string
+    /** The actual message to be sent. */
+    message: string
+}
+
+/**
  * Defines payment options.
  */
 interface PaymentOptions {
@@ -83,7 +123,7 @@ interface PaymentOptions {
     /** Payment description, only valid ASCII characters. */
     description: string
     /** Payment amount. */
-    amount: number | string
+    amount: number
     /** Payment currency, default is EUR. */
     currency?: string
     /** Set to true to make a draft payment (request) instead of regular (automatic). */
@@ -142,34 +182,4 @@ interface StravaPayment {
     totalKm: number
     /** How many activities. */
     activityCount: number
-}
-
-/**
- * Defines a notification (callback) sent from bunq.
- */
-interface BunqNotification {
-    /** Notification event ID. */
-    id: number
-    /** Notification category (lowercased). */
-    category: string
-    /** Notification description. */
-    description: string
-    /** Date and time of the event. */
-    date: Date
-    /** Billed amount. */
-    amount: number
-    /** Billed currency. */
-    currency: string
-    /** Original / local amount. */
-    originalAmount?: number
-    /** Original / local currency. */
-    originalCurrency?: string
-    /** Event type. */
-    eventType?: string
-    /** Account ID. */
-    accountId?: number
-    /** Auto save amount. */
-    autoSavePaymentId?: number
-    /** City where event happened. */
-    city?: string
 }

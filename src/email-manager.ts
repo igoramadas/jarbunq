@@ -180,7 +180,7 @@ class EmailManager extends require("./base-events") {
                     // Create payment HTML string.
                     let msg = `<div><strong>${payment.description}</strong>
                                <br>
-                               <strong>${parseFloat(payment.amount as any).toFixed(2)} ${payment.currency}</strong>
+                               <strong>${payment.amount.toFixed(2)} ${payment.currency}</strong>
                                from ${fromAccount} to ${toAccount}
                                ${notes}
                                <br>
