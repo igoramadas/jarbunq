@@ -63,9 +63,16 @@ class Eventhooks {
         for (let me of moduleEvents) {
             try {
                 const sep = me.indexOf(".")
-                const moduleId = me.substring(0, sep)
                 const eventName = me.substring(sep + 1)
+                let moduleId = me.substring(0, sep)
                 let eventhook: EventhookOptions
+
+                // Module ID might be specified as class names or filenames.
+                // In case of class names we must convert from PascalCase to dash-case.
+                const pascalReplacer = function(_x, y) {
+                    return "-" + y.toLowerCase()
+                }
+                moduleId = moduleId.replace(/\.?([A-Z]+)/g, pascalReplacer).replace(/^-/, "")
 
                 // Load the specified module.
                 let obj = require(`./${moduleId}`)

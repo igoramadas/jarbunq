@@ -590,6 +590,8 @@ class Bunq extends require("./base-events") {
                 options.fromAlias = settings.bunq.accounts.main
             }
 
+            niceAmount = options.amount.toFixed(2)
+
             // Always handle notes as array.
             if (options.notes != null && _.isString(options.notes)) {
                 options.notes = [options.notes as string]
@@ -599,7 +601,7 @@ class Bunq extends require("./base-events") {
             // that this is the internal database reference, do not confuse with
             // the payment description (called reference as well by some banks).
             if (!options.reference) {
-                options.reference = moment().format("YYYYMMDD") + "-" + niceAmount + "-" + options.description
+                options.reference = `${moment().format("YYMMDD")}-${niceAmount}-${options.toAlias}-${options.description.replace(/ /, "")}`
             }
 
             if (!this.authenticated) {
@@ -836,7 +838,7 @@ class Bunq extends require("./base-events") {
         }
 
         if (!resError) {
-            resError = "Unkown API error"
+            resError = _.isString(err) ? err : "Unkown API error"
         }
 
         logger.error("Bunq.failedPayment", `${step} payment`, `${amount} ${options.currency} to ${options.toAlias}`, err, resError)
