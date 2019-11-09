@@ -374,16 +374,17 @@ class Bunq extends require("./base-events") {
      * @event notification
      */
     notification = async (notification: BunqNotification) => {
-        let account
-        let accountName
+        let account, accountName, eventType
 
         try {
             account = _.find(this.accounts, {id: notification.accountId})
             accountName = account ? account.description : notification.accountId || "unknown"
-            logger.info("Bunq.notification", notification.id, notification.category, `Account: ${accountName}`, notification.description)
+            eventType = notification.eventType || notification.category
+
+            logger.info("Bunq.notification", notification.id, eventType, `Account: ${accountName}`, notification.description)
             this.events.emit(`notification`, notification)
         } catch (ex) {
-            logger.error("Bunq.notification", notification.id, notification.category, `Account: ${accountName}`, notification.description, ex)
+            logger.error("Bunq.notification", notification.id, eventType, `Account: ${accountName}`, notification.description, ex)
         }
     }
 
@@ -647,6 +648,7 @@ class Bunq extends require("./base-events") {
                 alias.type = "PHONE_NUMBER"
             } else {
                 alias.type = "IBAN"
+                alias.name = options.toName
             }
 
             // Make hash from reference.

@@ -74,7 +74,7 @@ class Eventhooks {
                 for (eventhook of settings.eventhooks[me]) {
                     const createCallback = (m, e, hook) => {
                         return async (...args) => {
-                            logger.debug("Eventhooks.load", m, e)
+                            logger.debug("Eventhooks.callback", m, e)
                             await this.processEvent(hook, args)
                         }
                     }
@@ -109,14 +109,36 @@ class Eventhooks {
      */
     processEvent = async (eventhook: EventhookOptions, args: any) => {
         for (let data of args) {
+            logger.debug("Eventhooks.processEvent", eventhook, data)
+
             for (let [key, value] of Object.entries(eventhook.data)) {
-                if (typeof data[key] == "undefined" || data[key].indexOf(value) < 0) {
+                try {
+                    if (typeof data[key] == "undefined" || (data[key] === null && value)) {
+                        data = null
+                        break
+                    }
+
+                    // Data has an exact match?
+                    if (data[key] === value) {
+                        continue
+                    }
+
+                    // Compare as strings and lower cased.
+
+                    const dataString = data[key].toString().toLowerCase()
+                    const valueString = value.toString().toLowerCase()
+
+                    if (dataString.indexOf(valueString) < 0) {
+                        data = null
+                        break
+                    }
+                } catch (ex) {
+                    logger.error("Eventhooks.processEvent", key, value, ex)
                     data = null
-                    continue
                 }
             }
 
-            // Stop here if no matches were found.
+            // Stop here if it wasn't a match.
             if (data == null) {
                 return
             }

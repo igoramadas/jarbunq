@@ -6,6 +6,7 @@ import bunq = require("../bunq")
 import logger = require("anyhow")
 import moment = require("moment")
 const app = require("expresser").app
+const settings = require("setmeup").settings
 
 const bunqRoutes = {
     "get:bunq/auth": async (_req, res) => {
@@ -40,10 +41,15 @@ const bunqRoutes = {
             return app.renderError(req, res, {error: "Invalid data"}, 400)
         }
 
-        // Check if pased token is valid.
+        // Check if pased token is valid. On sandbox it will continue but alert,
+        // on production it will return an error.
         if (bunq.notificationUrlTokens.indexOf(req.params.token) < 0) {
-            logger.error(`Routes.bunqNotification`, req.params.accountId, data.category, `Invalid URL token: ${req.params.token}`)
-            return app.renderError(req, res, {error: "Invalid URL token"}, 401)
+            if (settings.bunq.api.environment == "SANDBOX") {
+                logger.warn(`Routes.bunqNotification`, req.params.accountId, data.category, `Invalid URL token: ${req.params.token}`, "Will continue, running on sandbox")
+            } else {
+                logger.error(`Routes.bunqNotification`, req.params.accountId, data.category, `Invalid URL token: ${req.params.token}`)
+                return app.renderError(req, res, {error: "Invalid URL token"}, 401)
+            }
         }
 
         try {

@@ -120,6 +120,8 @@ interface PaymentOptions {
     fromAlias?: number | string
     /** Target account alias can be an email, phone or IBAN. */
     toAlias: number | string
+    /** Mandatory counterparty name when paying to a IBAN. */
+    toName?: string
     /** Payment description, only valid ASCII characters. */
     description: string
     /** Payment amount. */
