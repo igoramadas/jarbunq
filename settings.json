@@ -32,9 +32,7 @@
         "api": {
             // Default 16 bytes crypto hex key for API communication, it's strongly advised that you update
             // this value on yout settings.private.json file!
-            "cryptoKey": "13841C2E4529CFB112324B7DE0EDB781",
-            // If you wish to make some tests, please set this to "SANDBOX".
-            "environment": "PRODUCTION"
+            "cryptoKey": "13841C2E4529CFB112324B7DE0EDB781"
         },
         // Set to false to NOT add Jarbunq related notes to the payments. Default is true,
         // and it's highly recommended to keep it true :-)
@@ -85,6 +83,10 @@
         // Send weekly reports to the owner's email?
         "weeklyReports": true
     },
+    // Eventhooks must be defined on your settings.private.json file!
+    "eventhooks": {
+        // For detailed instructions, see https://github.com/igoramadas/jarbunq/wiki/Eventhooks
+    },
     "general": {
         // Use UTF8 as default encoding for files and streams.
         "encoding": "utf8"
@@ -106,11 +108,7 @@
             // IP whitelisting running in front of Jarbunq (your router if hosting at home, or
             // load balancer in the cloud). But you cal set the value below to an array of
             // valid IPs if you want to do this check directly on Jarbunq.
-            "global": null,
-            // Range of IP addresses that Jarbunq should accept callbacks from. This default value
-            // represents the range for PRODUCTION, if you change the environment above to SANDBOX
-            // please set the allowedCallbackIP to null to accept from any IP address.
-            "/bunq/notification/:accountId/:token": "185.40.108.0/22"
+            "global": null
         }
     },
     "strava": {
@@ -130,7 +128,5 @@
             // Time of the day in which payments are processed (24h, HH:MM format, local time).
             "time": "16:00"
         }
-    },
-    // Webhooks should be defined on the settings.private.json file.
-    "webhooks": {}
+    }
 }

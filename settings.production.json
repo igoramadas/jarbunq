@@ -7,6 +7,11 @@
             "enabled": false
         }
     },
+    "bunq": {
+        "api": {
+            "environment": "PRODUCTION"
+        }
+    },
     // Connect assets on production.
     "connectAssets": {
         "build": true,
@@ -16,5 +21,11 @@
     "general": {
         // Debugging should not be enabled on production.
         "debug": false
+    },
+    "routes": {
+        // IP whitelisting for bunq notifications on production.
+        "ipWhitelist": {
+            "/bunq/notification/:accountId/:token": "185.40.108.0/22"
+        }
     }
 }
