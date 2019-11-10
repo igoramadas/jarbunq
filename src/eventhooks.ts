@@ -193,13 +193,17 @@ class Eventhooks {
 
         for ([key, value] of Object.entries(result)) {
             try {
-                if (_.isString(value)) {
+                if (value == null) {
                     continue
                 }
 
-                // Value represents a field from the data passed with the event.
-                if (value.data) {
-                    result[key] = data[value.data]
+                // Check if value is pointing to a property from the data (starts with @@).
+                if (_.isString(value)) {
+                    if (value == "@@") {
+                        result[key] = JSON.stringify(value, null, 2)
+                    } else if (value.substring(0, 2) == "@@") {
+                        result[key] = data[value.substring(2)]
+                    }
                     continue
                 }
 
@@ -224,11 +228,13 @@ class Eventhooks {
         },
         // Send data to an URL. By default it will POST (if no method was specified).
         url: async (options: any) => {
-            if (!options.method) {
+            if (options.method == null) {
                 options.method = "POST"
             }
+            if (options.json !== false) {
+                options.json = true
+            }
 
-            options.json = true
             await request(options)
         },
         // Send an email. By default will send to the email specified on the settings.

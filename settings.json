@@ -41,6 +41,7 @@
         // Please note parts of the code can still force the options.draff.
         "draftPayment": false,
         // Safeguard to avoid automatic payments of large amounts, default is 800 EUR.
+        // Payments with value higher than that will automatically be set as draft payments.
         "maxPaymentAmount": 800,
         // Safeguard to avoid low balances on accounts, by default keep at least 1 EUR.
         "minBalance": 1,

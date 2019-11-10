@@ -260,11 +260,11 @@ class Bunq extends require("./base-events") {
         const newToken = crypto.randomBytes(4).toString("hex")
         this.notificationUrlTokens.push(newToken)
 
-        // Remove previous token after 1 minute.
+        // Remove previous token after 10 minutes.
         const removeOldToken = () => {
             this.notificationUrlTokens.shift()
         }
-        setTimeout(removeOldToken, 60000)
+        setTimeout(removeOldToken, 1000 * 60 * 10)
 
         // Reset list of registered filters.
         this.notificationFilters = []
@@ -597,13 +597,6 @@ class Bunq extends require("./base-events") {
                 options.notes = [options.notes as string]
             }
 
-            // Create a payment reference, if none was specified. Please note
-            // that this is the internal database reference, do not confuse with
-            // the payment description (called reference as well by some banks).
-            if (!options.reference) {
-                options.reference = `${moment().format("YYMMDD")}-${niceAmount}-${options.toAlias}-${options.description.replace(/ /, "")}`
-            }
-
             if (!this.authenticated) {
                 throw new Error("Not authenticated to bunq")
             }
@@ -611,11 +604,6 @@ class Bunq extends require("./base-events") {
             // Basic payment validation.
             if (options.amount <= 0) {
                 throw new Error("Payments must have an amount greater than 0.")
-            }
-
-            // Check if amount is under the maximum allowed.
-            if (options.amount > settings.bunq.maxPaymentAmount) {
-                throw new Error(`Payment amount ${niceAmount} is over the maximum allowed ${settings.bunq.maxPaymentAmount}.`)
             }
 
             // From account is an alias or an actual ID?
@@ -651,6 +639,20 @@ class Bunq extends require("./base-events") {
             } else {
                 alias.type = "IBAN"
                 alias.name = options.toName
+            }
+
+            // Create a payment reference, if none was specified. Please note
+            // that this is the internal database reference, do not confuse with
+            // the payment description (called reference as well by some banks).
+            if (!options.reference) {
+                const description = options.description ? options.description.toString().replace(/ /, "") : options.draft.toString()
+                options.reference = `${moment().format("YYMMDD")}-${niceAmount}-${options.toAlias}-${description}`
+            }
+
+            // Check if amount is under the maximum allowed.
+            if (!options.draft && options.amount > settings.bunq.maxPaymentAmount) {
+                logger.warn("Bunq.makePayment", options.reference, `Amount ${niceAmount} over the maximum ${settings.bunq.maxPaymentAmount}, automatically set as draft`)
+                options.draft = true
             }
 
             // Make hash from reference.

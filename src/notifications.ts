@@ -58,7 +58,7 @@ class Notifications extends require("./base-events") {
      * @param options Notification options with subject and message.
      * @event send
      */
-    send = async (options: NotificationOptions) => {
+    send = async (options: BaseNotificationOptions) => {
         logger.debug("Notifications.send", options)
 
         if (this.smtp) {
