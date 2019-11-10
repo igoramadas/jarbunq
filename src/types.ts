@@ -19,6 +19,16 @@ interface Activity {
 }
 
 /**
+ * Defines a generic notification from Jarbunq to the user.
+ */
+interface BaseNotificationOptions {
+    /** The notification subject. */
+    subject: string
+    /** The actual message to be sent. */
+    message: string
+}
+
+/**
  * Defines a notification (callback) sent from bunq.
  */
 interface BunqNotification {
@@ -69,18 +79,6 @@ interface EmailActionRule {
 }
 
 /**
- * Defines an email notification.
- */
-interface EmailNotificationOptions extends NotificationOptions {
-    /** The sender email address. If unspecified, will use defaul from settings. */
-    from?: string
-    /** The target email address. */
-    to?: string
-    /** The actual HTML to be sent out (usually filled automatically during send). */
-    html?: string
-}
-
-/**
  * Specifications for an eventhook definition.
  */
 interface EventhookOptions {
@@ -88,6 +86,18 @@ interface EventhookOptions {
     data: any
     /** The action(s) to be taken. */
     actions: any
+}
+
+/**
+ * Defines an email notification.
+ */
+interface EmailNotificationOptions extends BaseNotificationOptions {
+    /** The sender email address. If unspecified, will use defaul from settings. */
+    from?: string
+    /** The target email address. */
+    to?: string
+    /** The actual HTML to be sent out (usually filled automatically during send). */
+    html?: string
 }
 
 /**
@@ -100,16 +110,6 @@ interface NotificationFilterUrl {
     category: string
     /** Date of creation. */
     date: Date
-}
-
-/**
- * Defines a generic notification from Jarbunq to the user.
- */
-interface NotificationOptions {
-    /** The notification subject. */
-    subject: string
-    /** The actual message to be sent. */
-    message: string
 }
 
 /**
