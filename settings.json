@@ -31,8 +31,15 @@
     "bunq": {
         "api": {
             // Default 16 bytes crypto hex key for API communication, it's strongly advised that you update
-            // this value on yout settings.private.json file!
+            // this value on your settings.private.json file!
             "cryptoKey": "13841C2E4529CFB112324B7DE0EDB781"
+        },
+        // Enable callbacks (notification filters)? If so, bunq will push certain events from your bank
+        // accounts to Jarbunq (mostly payments and transactions), so it can act upon them.
+        "callbacks": {
+            "enabled": true,
+            // Save full body of incoming notifications from bunq on the database?
+            "save": false
         },
         // Set to false to NOT add Jarbunq related notes to the payments. Default is true,
         // and it's highly recommended to keep it true :-)
@@ -45,9 +52,6 @@
         "maxPaymentAmount": 800,
         // Safeguard to avoid low balances on accounts, by default keep at least 1 EUR.
         "minBalance": 1,
-        // Enable notification filters? If so, bunq will push certain events from your bank accounts
-        // to Jarbunq (mostly payments and transactions), so it can act upon them.
-        "notificationFilters": true,
         // Auto refresh user data automatically once per hour by default, value in minutes.
         "refreshMinutes": 60,
         // OAuth authorizations must be renewed at least once every 90 days.

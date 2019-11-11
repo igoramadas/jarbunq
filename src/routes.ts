@@ -61,7 +61,7 @@ class Routes extends require("./base-events") {
 
             // Password protect admin pages?
             if (settings.app.auth && settings.app.auth.password) {
-                const unprotectedPaths = ["/error", "/bunq/notification"]
+                const unprotectedPaths = ["/error", "/bunq/callback"]
 
                 // Home page and auth pages do not need to be password protected.
                 for (let p of unprotectedPaths) {

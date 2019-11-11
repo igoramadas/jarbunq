@@ -50,11 +50,8 @@ class Bunq extends require("./base-events") {
     /** List of bank accounts. */
     accounts: any[]
 
-    /** List of notification channels opened on bunq. */
-    notificationFilters: NotificationFilterUrl[]
-
-    /** Token used on the notification channels above. */
-    notificationUrlTokens: string[] = []
+    /** Token used on the callbacks URL. */
+    callbackUrlTokens: string[] = []
 
     /** Timer to auto refresh user data and accounts. */
     timerRefresh: any
@@ -75,6 +72,13 @@ class Bunq extends require("./base-events") {
         }
         if (!settings.bunq.api.clientId || !settings.bunq.api.clientSecret) {
             throw new Error("Missing a valid settings.bunq.api.clientId and settings.bunq.api.clientSecret combination.")
+        }
+
+        // DEPRECATED! The notificationFilters setting should be migrate to the callbacks.enabled property.
+        if (_.isBoolean(settings.bunq.notificationFilters)) {
+            logger.warn("Bunq.init", "Please use settings.bunq.callbacks.enabled instead of settings.bunq.notificationFilters only.")
+            settings.bunq.callbacks = {enabled: settings.bunq.notificationFilters}
+            delete settings.bunq.notificationFilters
         }
 
         authFailedCount = 0
@@ -149,12 +153,12 @@ class Bunq extends require("./base-events") {
             return process.exit()
         }
 
-        // Setup notification filters?
-        if (settings.bunq.notificationFilters) {
+        // Setup callbacks?
+        if (settings.bunq.callbacks.enabled) {
             try {
-                await this.setupNotificationFilters()
+                await this.setupCallbacks()
             } catch (ex) {
-                logger.error("Bunq.init", "Can't setup notification filters", ex)
+                logger.error("Bunq.init", "Can't setup callbacks", ex)
                 return process.exit()
             }
         }
@@ -228,20 +232,21 @@ class Bunq extends require("./base-events") {
         _.delay(this.remindOAuthRenew, msDay)
     }
 
-    // NOTIFICATION FILTERS
+    // CALLBACKS (NOTIFICATION FILTERS)
     // --------------------------------------------------------------------------
 
     /**
-     * Setup the notification callbacks so bunq will dispatch events related
-     * to the user's accounts to Jarbunq. Please note that this will only
-     * work if Jarbunq is accessible from the internet!
-     * @event setupNotificationFilters
+     * Setup the callbacks (notification filters) so bunq will dispatch events
+     * related to the user's accounts to Jarbunq. Please note that this will
+     * only work if Jarbunq is accessible from the internet!
+     * @event setupCallbacks
      */
-    setupNotificationFilters = async () => {
-        const baseUrl = settings.app.webhookUrl || settings.app.url
+    setupCallbacks = async () => {
+        const callbacks = []
+        const baseUrl = settings.app.url
 
         if (baseUrl.indexOf("bunq.local") > 0) {
-            logger.error("Jarbunq.setupNotificationFilters", `Can't setup notifications from bunq using a local URL: ${baseUrl}`)
+            logger.error("Jarbunq.setupCallbacks", `Can't setup callbacks from bunq using a local URL: ${baseUrl}`)
             return
         }
 
@@ -252,22 +257,19 @@ class Bunq extends require("./base-events") {
             userId = this.user.id
             limiter = bunqClient.ApiAdapter.RequestLimitFactory.create("/monetary-account", "POST")
         } catch (ex) {
-            logger.error("Jarbunq.setupNotificationFilters", ex)
+            logger.error("Jarbunq.setupCallbacks", ex)
             return
         }
 
         // Update notification token used on URLs.
         const newToken = crypto.randomBytes(4).toString("hex")
-        this.notificationUrlTokens.push(newToken)
+        this.callbackUrlTokens.push(newToken)
 
         // Remove previous token after 10 minutes.
         const removeOldToken = () => {
-            this.notificationUrlTokens.shift()
+            this.callbackUrlTokens.shift()
         }
         setTimeout(removeOldToken, 1000 * 60 * 10)
-
-        // Reset list of registered filters.
-        this.notificationFilters = []
 
         // Iterate accounts to create individual notification filters, but only for accounts
         // that are listed on settings.bunq.accounts.
@@ -276,7 +278,7 @@ class Bunq extends require("./base-events") {
             const intersect = _.intersection(aliases, aliasesFromSettings)
 
             if (intersect.length == 0) {
-                logger.debug("Jarbunq.setupNotificationFilters", `Account ${acc.id} has no matching aliases on settings.bunq.accounts`, "Skip!")
+                logger.debug("Jarbunq.setupCallbacks", `Account ${acc.id} has no matching aliases on settings.bunq.accounts`, "Skip!")
             } else {
                 const logAccount = this.getAccountFromAlias(intersect[0], true)
                 const filterIds = []
@@ -290,7 +292,7 @@ class Bunq extends require("./base-events") {
                     for (let category of ["PAYMENT", "DRAFT_PAYMENT", "CARD_TRANSACTION_SUCCESSFUL", "CARD_TRANSACTION_FAILED"]) {
                         filters.notification_filters.push({
                             category: category,
-                            notification_target: `${baseUrl}bunq/notification/${acc.id}/${newToken}`
+                            notification_target: `${baseUrl}bunq/callback/${acc.id}/${newToken}`
                         })
                     }
 
@@ -299,35 +301,35 @@ class Bunq extends require("./base-events") {
                         bunqClient.ApiAdapter.post(`/v1/user/${userId}/monetary-account/${acc.id}/notification-filter-url`, filters, {}, {}, axiosClient)
                     )
 
-                    // Valid response? Add the result to the notificationFilters list.
+                    // Valid response? Add the result to the callbacks list.
                     if (response.Response && response.Response.length > 0 && response.Response[0].NotificationFilterUrl) {
                         const responseFilter = response.Response[0].NotificationFilterUrl
                         const filter = {id: responseFilter.id, category: responseFilter.category, date: responseFilter.updated}
 
-                        this.notificationFilters.push(filter)
+                        callbacks.push(filter)
                         filterIds.push(filter.id)
                     } else {
                         throw new Error(`The notification filter response is blank or invalid`)
                     }
                 } catch (ex) {
-                    logger.error("Jarbunq.setupNotificationFilters", logAccount, ex)
+                    logger.error("Jarbunq.setupCallbacks", logAccount, ex)
                 }
 
                 const logFilterIds = filterIds.join(", ")
-                logger.info("Jarbunq.setupNotificationFilters", `For account ${logAccount}: ${logFilterIds}`)
+                logger.info("Jarbunq.setupCallbacks", `For account ${logAccount}: ${logFilterIds}`)
             }
         }
 
-        this.events.emit("setupNotificationFilters", this.notificationFilters)
+        this.events.emit("setupCallbacks", callbacks)
 
-        // Setup notification filters every few hour(s).
-        setTimeout(this.setupNotificationFilters, 1000 * 60 * settings.bunq.refreshMinutes * 2)
+        // Reset callbacks every few hour(s).
+        setTimeout(this.setupCallbacks, 1000 * 60 * settings.bunq.refreshMinutes * 2)
     }
 
     /**
-     * Get list of registered notification filters at bunq.
+     * Get list of registered callbacks (notification filters) at bunq.
      */
-    getNotificationFilters = async () => {
+    getCallbacks = async () => {
         const aliasesFromSettings = Object.values(settings.bunq.accounts)
         let userId, limiter
 
@@ -335,45 +337,45 @@ class Bunq extends require("./base-events") {
             userId = this.user.id
             limiter = bunqClient.ApiAdapter.RequestLimitFactory.create("/monetary-account", "POST")
         } catch (ex) {
-            logger.error("Jarbunq.getNotificationFilters", ex)
+            logger.error("Jarbunq.getCallbacks", ex)
             return
         }
 
         let result: any = {}
 
-        // Iterate accounts to create individual notification filters, but only for accounts
+        // Iterate accounts to create individual callbacks, but only for accounts
         // that are listed on settings.bunq.accounts.
         for (let acc of this.accounts) {
             const aliases = _.map(acc.alias, "value")
             const intersect = _.intersection(aliases, aliasesFromSettings)
 
             if (intersect.length == 0) {
-                logger.debug("Jarbunq.getNotificationFilters", `Account ${acc.id} has no matching aliases on settings.bunq.accounts`, "Skip!")
+                logger.debug("Jarbunq.getCallbacks", `Account ${acc.id} has no matching aliases on settings.bunq.accounts`, "Skip!")
             } else {
                 const logAccount = this.getAccountFromAlias(intersect[0], true)
 
                 try {
                     const response = await limiter.run(async axiosClient => bunqClient.ApiAdapter.get(`/v1/user/${userId}/monetary-account/${acc.id}/notification-filter-url`, {}, {}, axiosClient))
 
-                    // Valid response? Add the result to the notificationFilters list.
+                    // Valid response?
                     if (response.Response && response.Response.length > 0) {
                         result[intersect[0]] = response.Response
                     }
                 } catch (ex) {
-                    logger.error("Jarbunq.getNotificationFilters", logAccount, ex)
+                    logger.error("Jarbunq.getCallbacks", logAccount, ex)
                 }
             }
         }
 
-        // Return notification filters.
+        // Return callbacks.
         return result
     }
 
     /**
-     * Process a notification (callback) sent by bunq.
-     * @event notification
+     * Process a callback (notification) sent by bunq.
+     * @event callback
      */
-    notification = async (notification: BunqNotification) => {
+    callback = async (notification: BunqCallback) => {
         let account, accountName, eventType
 
         try {

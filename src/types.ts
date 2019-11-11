@@ -31,7 +31,7 @@ interface BaseNotificationOptions {
 /**
  * Defines a notification (callback) sent from bunq.
  */
-interface BunqNotification {
+interface BunqCallback {
     /** Notification event ID. */
     id: number
     /** Notification category (lowercased). */
@@ -101,7 +101,7 @@ interface EmailNotificationOptions extends BaseNotificationOptions {
 }
 
 /**
- * Defines a notification filter URL (channel) opened with bunq.
+ * Defines a notification filter URL (callback) opened with bunq.
  */
 interface NotificationFilterUrl {
     /** The URL id. */

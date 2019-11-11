@@ -3,6 +3,7 @@
 // under the default /api scope.
 
 import bunq = require("../bunq")
+import database = require("../database")
 import logger = require("anyhow")
 import moment = require("moment")
 const app = require("expresser").app
@@ -32,7 +33,7 @@ const bunqRoutes = {
     },
 
     /** OAuth2 redirect to process the code and get an access token. */
-    "post:bunq/notification/:accountId/:token": async (req, res) => {
+    "post:bunq/callback/:accountId/:token": async (req, res) => {
         const data = req.body.NotificationUrl
 
         // Check if valid data was passed.
@@ -43,7 +44,7 @@ const bunqRoutes = {
 
         // Check if pased token is valid. On sandbox it will continue but alert,
         // on production it will return an error.
-        if (bunq.notificationUrlTokens.indexOf(req.params.token) < 0) {
+        if (bunq.callbackUrlTokens.indexOf(req.params.token) < 0) {
             if (settings.bunq.api.environment == "SANDBOX") {
                 logger.warn(`Routes.bunqNotification`, req.params.accountId, data.category, `Invalid URL token: ${req.params.token}`, "Will continue, running on sandbox")
             } else {
@@ -56,13 +57,18 @@ const bunqRoutes = {
             const notificationType = Object.keys(data.object)[0]
             const objectData = data.object[notificationType]
 
+            // Save full body of incoming notifications to the database?
+            if (settings.bunq.callbacks.save) {
+                database.insert("callbacks", data.object)
+            }
+
             // Get transaction amounts and description.
             const amount = objectData.amount_billing || objectData.amount
             const originalAmount = objectData.amount_original_local || objectData.amount_local
             const description = objectData.description || objectData.merchant_reference
 
             // Create notification object.
-            const notification: BunqNotification = {
+            const notification: BunqCallback = {
                 id: objectData.id,
                 category: data.category,
                 description: description,
@@ -89,7 +95,7 @@ const bunqRoutes = {
                 notification.city = objectData.city
             }
 
-            bunq.notification(notification)
+            bunq.callback(notification)
         } catch (ex) {
             logger.error(`Routes.bunqNotification.${req.params.accountId}`, ex)
         }
