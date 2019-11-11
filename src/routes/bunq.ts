@@ -63,7 +63,7 @@ const bunqRoutes = {
             }
 
             // Get transaction amounts and description.
-            const amount = objectData.amount_billing || objectData.amount
+            const amount = objectData.amount_billing || objectData.amount_local || objectData.amount
             const originalAmount = objectData.amount_original_local || objectData.amount_local
             const description = objectData.description || objectData.merchant_reference
 
