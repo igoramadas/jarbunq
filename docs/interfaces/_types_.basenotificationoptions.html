@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>&quot;webhooks&quot; | Jarbunq</title>
+	<title>BaseNotificationOptions | Jarbunq</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -54,46 +54,84 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="_webhooks_.html">&quot;webhooks&quot;</a>
+					<a href="../modules/_types_.html">&quot;types&quot;</a>
+				</li>
+				<li>
+					<a href="_types_.basenotificationoptions.html">BaseNotificationOptions</a>
 				</li>
 			</ul>
-			<h1>External module &quot;webhooks&quot;</h1>
+			<h1>Interface BaseNotificationOptions</h1>
 		</div>
 	</div>
 </header>
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Defines a generic notification from Jarbunq to the user.</p>
+					</div>
+				</div>
+			</section>
+			<section class="tsd-panel tsd-hierarchy">
+				<h3>Hierarchy</h3>
+				<ul class="tsd-hierarchy">
+					<li>
+						<span class="target">BaseNotificationOptions</span>
+						<ul class="tsd-hierarchy">
+							<li>
+								<a href="_types_.emailnotificationoptions.html" class="tsd-signature-type">EmailNotificationOptions</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</section>
 			<section class="tsd-panel-group tsd-index-group">
 				<h2>Index</h2>
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
 						<section class="tsd-index-section tsd-is-not-exported">
-							<h3>Classes</h3>
+							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-class tsd-parent-kind-external-module tsd-is-not-exported"><a href="../classes/_webhooks_.webhooks.html" class="tsd-kind-icon">Webhooks</a></li>
-							</ul>
-						</section>
-						<section class="tsd-index-section tsd-is-not-exported">
-							<h3>Variables</h3>
-							<ul class="tsd-index-list">
-								<li class="tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported"><a href="_webhooks_.html#settings" class="tsd-kind-icon">settings</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported"><a href="_types_.basenotificationoptions.html#message" class="tsd-kind-icon">message</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported"><a href="_types_.basenotificationoptions.html#subject" class="tsd-kind-icon">subject</a></li>
 							</ul>
 						</section>
 					</div>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group tsd-is-not-exported">
-				<h2>Variables</h2>
-				<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
-					<a name="settings" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagConst">Const</span> settings</h3>
-					<div class="tsd-signature tsd-kind-icon">settings<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol"> =&nbsp;require(&quot;setmeup&quot;).settings</span></div>
+				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported">
+					<a name="message" class="tsd-anchor"></a>
+					<h3>message</h3>
+					<div class="tsd-signature tsd-kind-icon">message<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/1cdf05d/src/webhooks.ts#L6">webhooks.ts:6</a></li>
+							<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/0f3b372/src/types.ts#L28">types.ts:28</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The actual message to be sent.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported">
+					<a name="subject" class="tsd-anchor"></a>
+					<h3>subject</h3>
+					<div class="tsd-signature tsd-kind-icon">subject<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/0f3b372/src/types.ts#L26">types.ts:26</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The notification subject.</p>
+						</div>
+					</div>
 				</section>
 			</section>
 		</div>
@@ -104,83 +142,119 @@
 						<a href="../globals.html"><em>Globals</em></a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="_base_events_.html">"base-<wbr>events"</a>
+						<a href="../modules/_base_events_.html">"base-<wbr>events"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="_bunq_.html">"bunq"</a>
+						<a href="../modules/_bunq_.html">"bunq"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="_database_.html">"database"</a>
+						<a href="../modules/_database_.html">"database"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="_email_account_.html">"email-<wbr>account"</a>
+						<a href="../modules/_email_account_.html">"email-<wbr>account"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="_email_actions_amazon_de_.html">"email-<wbr>actions/amazon-<wbr>de"</a>
+						<a href="../modules/_email_actions_amazon_de_.html">"email-<wbr>actions/amazon-<wbr>de"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="_email_actions_amazon_de_refund_.html">"email-<wbr>actions/amazon-<wbr>de-<wbr>refund"</a>
+						<a href="../modules/_email_actions_amazon_de_refund_.html">"email-<wbr>actions/amazon-<wbr>de-<wbr>refund"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="_email_actions_generic_.html">"email-<wbr>actions/generic"</a>
+						<a href="../modules/_email_actions_generic_.html">"email-<wbr>actions/generic"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="_email_actions_lbb_.html">"email-<wbr>actions/lbb"</a>
+						<a href="../modules/_email_actions_lbb_.html">"email-<wbr>actions/lbb"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="_email_manager_.html">"email-<wbr>manager"</a>
+						<a href="../modules/_email_manager_.html">"email-<wbr>manager"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="_eventhooks_.html">"eventhooks"</a>
+						<a href="../modules/_eventhooks_.html">"eventhooks"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="_index_.html">"index"</a>
+						<a href="../modules/_index_.html">"index"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="_migrations_processed_email_actions_.html">"migrations/processed-<wbr>email-<wbr>actions"</a>
+						<a href="../modules/_migrations_processed_email_actions_.html">"migrations/processed-<wbr>email-<wbr>actions"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="_migrations_processed_emails_from_.html">"migrations/processed-<wbr>emails-<wbr>from"</a>
+						<a href="../modules/_migrations_processed_emails_from_.html">"migrations/processed-<wbr>emails-<wbr>from"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="_migrations_token_timestamp_.html">"migrations/token-<wbr>timestamp"</a>
+						<a href="../modules/_migrations_token_timestamp_.html">"migrations/token-<wbr>timestamp"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="_notifications_.html">"notifications"</a>
+						<a href="../modules/_notifications_.html">"notifications"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="_routes_.html">"routes"</a>
+						<a href="../modules/_routes_.html">"routes"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="_routes_api_.html">"routes/api"</a>
+						<a href="../modules/_routes_api_.html">"routes/api"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="_routes_bunq_.html">"routes/bunq"</a>
+						<a href="../modules/_routes_bunq_.html">"routes/bunq"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="_routes_strava_.html">"routes/strava"</a>
+						<a href="../modules/_routes_strava_.html">"routes/strava"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="_routes_views_.html">"routes/views"</a>
+						<a href="../modules/_routes_views_.html">"routes/views"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="_strava_.html">"strava"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="_types_.html">"types"</a>
+						<a href="../modules/_strava_.html">"strava"</a>
 					</li>
 					<li class="current tsd-kind-external-module">
-						<a href="_webhooks_.html">"webhooks"</a>
+						<a href="../modules/_types_.html">"types"</a>
 					</li>
 				</ul>
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
-					<li class=" tsd-kind-class tsd-parent-kind-external-module tsd-is-not-exported">
-						<a href="../classes/_webhooks_.webhooks.html" class="tsd-kind-icon">Webhooks</a>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-is-not-exported">
+						<a href="_types_.activity.html" class="tsd-kind-icon">Activity</a>
 					</li>
-					<li class=" tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
-						<a href="_webhooks_.html#settings" class="tsd-kind-icon">settings</a>
+				</ul>
+				<ul class="current">
+					<li class="current tsd-kind-interface tsd-parent-kind-external-module tsd-is-not-exported">
+						<a href="_types_.basenotificationoptions.html" class="tsd-kind-icon">Base<wbr>Notification<wbr>Options</a>
+						<ul>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported">
+								<a href="_types_.basenotificationoptions.html#message" class="tsd-kind-icon">message</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported">
+								<a href="_types_.basenotificationoptions.html#subject" class="tsd-kind-icon">subject</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+				<ul class="after-current">
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-is-not-exported">
+						<a href="_types_.bunqcallback.html" class="tsd-kind-icon">Bunq<wbr>Callback</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-is-not-exported">
+						<a href="_types_.emailactionrule.html" class="tsd-kind-icon">Email<wbr>Action<wbr>Rule</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-is-not-exported">
+						<a href="_types_.emailnotificationoptions.html" class="tsd-kind-icon">Email<wbr>Notification<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-is-not-exported">
+						<a href="_types_.eventhookoptions.html" class="tsd-kind-icon">Eventhook<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-is-not-exported">
+						<a href="_types_.notificationfilterurl.html" class="tsd-kind-icon">Notification<wbr>Filter<wbr>Url</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-is-not-exported">
+						<a href="_types_.payment.html" class="tsd-kind-icon">Payment</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-is-not-exported">
+						<a href="_types_.paymentoptions.html" class="tsd-kind-icon">Payment<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-is-not-exported">
+						<a href="_types_.processedemail.html" class="tsd-kind-icon">Processed<wbr>Email</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-is-not-exported">
+						<a href="_types_.stravapayment.html" class="tsd-kind-icon">Strava<wbr>Payment</a>
 					</li>
 				</ul>
 			</nav>

@@ -309,7 +309,7 @@ class Bunq extends require("./base-events") {
                         callbacks.push(filter)
                         filterIds.push(filter.id)
                     } else {
-                        throw new Error(`The notification filter response is blank or invalid`)
+                        throw new Error(`The callback response is blank or invalid`)
                     }
                 } catch (ex) {
                     logger.error("Jarbunq.setupCallbacks", logAccount, ex)
@@ -383,10 +383,10 @@ class Bunq extends require("./base-events") {
             accountName = account ? account.description : notification.accountId || "unknown"
             eventType = notification.eventType || notification.category
 
-            logger.info("Bunq.notification", notification.id, eventType, `Account: ${accountName}`, notification.description)
-            this.events.emit(`notification`, notification)
+            logger.info("Bunq.callback", notification.id, eventType, `Account: ${accountName}`, notification.description)
+            this.events.emit(`callback`, notification)
         } catch (ex) {
-            logger.error("Bunq.notification", notification.id, eventType, `Account: ${accountName}`, notification.description, ex)
+            logger.error("Bunq.callback", notification.id, eventType, `Account: ${accountName}`, notification.description, ex)
         }
     }
 
