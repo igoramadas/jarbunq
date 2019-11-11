@@ -1,6 +1,11 @@
 {
     "app": {
-        "url": "string: full URL to the root of the service, default is https://jarbunq.local:8833/"
+        "auth": {
+            "user": "string: set the username used to log on Jarbunq, default is admin",
+            "password": "string: password to log on Jarbunq"
+        },
+        "url": "string: full URL to the root of the service, default is https://jarbunq.local:8833/",
+        "title": "string: want to rename Jarbunq to something else, put it here"
     },
     "bunq": {
         "api": {
@@ -16,8 +21,7 @@
             "main": "string: the alias of the main account",
             "amazon": "string: the alias of the Amazon Card account",
             "strava": "string: the alias of the target account for strava mileage payments"
-        },
-        "disablePayments": "boolean: if true, no payments will be ever made (but only logged to the console)"
+        }
     },
     "email": {
         "from": "string: default 'from' email address",
@@ -50,20 +54,34 @@
             },
             {
                 "action": "string: lbb"
-            },
-            {
-                "action": "string: name of the email action string / file, for example 'generic'",
-                "from": "string[]: single or array of email addresses, can also be a partial address",
-                "subject": "string[]: single or array of texts that should be in the subject",
-                "toAlias": "string[]: alias of the target account",
-                "amount": "number: how much should be transferred"
             }
         ]
+    },
+    "eventhooks": {
+        "Bunq.callback": [
+            {
+                "data": {
+                    "eventType": "string",
+                    "description": "string"
+                },
+                "actions": {
+                    "payment": {
+                        "toAlias": "string",
+                        "toName": "string",
+                        "amount": "string"
+                    }
+                }
+            }
+        ],
+        "EmailManager.start": [],
+        "email-manager.stop": []
+    },
+    "general": {
+        "debug": "boolean: if true, logs will contain extra details"
     },
     "strava": {
         "clientId": "string: client ID from your Strava OAuth2 app",
         "clientSecret": "string: client secret from your Strava OAuth2 app",
         "refreshToken": "string: initial refresh token from your Strava OAuth2 app"
-    },
-    "webhooks": {}
+    }
 }
