@@ -125,7 +125,7 @@ class Bunq extends require("./base-events") {
             await bunqClient.run(settings.bunq.api.key, settings.bunq.api.ips, settings.bunq.api.environment, settings.bunq.api.cryptoKey)
             await bunqClient.install()
         } catch (ex) {
-            logger.error("Bunq.init", "Error installing", ex)
+            logger.error("Bunq.init", "Error installing", settings.bunq.api.environment, ex)
             return process.exit()
         }
 
@@ -134,7 +134,7 @@ class Bunq extends require("./base-events") {
             await bunqClient.registerDevice(settings.app.title)
             await bunqClient.registerSession()
         } catch (ex) {
-            logger.error("Bunq.init", "Error registering device session", ex)
+            logger.error("Bunq.init", "Error registering device session", settings.bunq.api.environment, ex)
             return process.exit()
         }
 
