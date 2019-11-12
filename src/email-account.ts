@@ -82,7 +82,7 @@ class EmailAccount extends require("./base-events") {
      */
     openBox = (retry: boolean) => {
         if (this.client && this.client.state == "authenticated") {
-            return logger.warn("EmailAccount.openBox", this.id, "Already connected, abort.")
+            return logger.warn("EmailAccount.openBox", this.id, "Already connected")
         }
 
         // Once IMAP is ready, open the inbox and start listening to messages.
