@@ -112,42 +112,15 @@ class Eventhooks {
      * Process an event. Check if it matches the specified conditions,
      * and if so, execute the defined actions.
      * @param eventhook The eventhook definition.
-     * @param args Arguments passed with the event.
+     * @param args Arguments containing data passed with the event.
      */
     processEvent = async (eventhook: EventhookOptions, args: any) => {
         for (let data of args) {
             logger.debug("Eventhooks.processEvent", eventhook, data)
 
-            for (let [key, value] of Object.entries(eventhook.data)) {
-                try {
-                    if (typeof data[key] == "undefined" || (data[key] === null && value)) {
-                        data = null
-                        break
-                    }
-
-                    // Data has an exact match?
-                    if (data[key] === value) {
-                        continue
-                    }
-
-                    // Compare as strings and lower cased.
-
-                    const dataString = data[key].toString().toLowerCase()
-                    const valueString = value.toString().toLowerCase()
-
-                    if (dataString.indexOf(valueString) < 0) {
-                        data = null
-                        break
-                    }
-                } catch (ex) {
-                    logger.error("Eventhooks.processEvent", key, value, ex)
-                    data = null
-                }
-            }
-
-            // Stop here if it wasn't a match.
-            if (data == null) {
-                return
+            // Check if data matches the filters. If not, continue to next data object.
+            if (!this.matchEventData(eventhook, data)) {
+                continue
             }
 
             // Always treat actions as arrays.
@@ -181,6 +154,83 @@ class Eventhooks {
                 }
             }
         }
+    }
+
+    /**
+     * Check if the event data passes the specified eventhook filters.
+     * @param eventhook The eventhook definition.
+     * @param data A data passed by the event.
+     */
+    matchEventData = (eventhook, data) => {
+        if (data === null) {
+            return false
+        }
+
+        // Iterate data properties and check against the filters.
+        // It will return false straight away when it's not a match,
+        // and continue to next property when a match is found.
+        for (let [key, value] of Object.entries(eventhook.data)) {
+            try {
+                let condition: string, cValue: any
+
+                // Data not found? Stop right here.
+                if (typeof data[key] == "undefined" || (data[key] === null && value)) {
+                    return false
+                }
+
+                // Data has an exact match? Continue.
+                if (data[key] === value) {
+                    continue
+                }
+
+                // If an array with 2 indexes, we expect it's a [condition, value] type,
+                // otherwise assume the generic "has".
+                if (_.isArray(value) && (value as any[]).length == 2) {
+                    condition = value[0]
+                    cValue = value[1]
+                } else {
+                    condition = "has"
+                    cValue = value
+                }
+
+                // Less than...
+                if ((condition == "<" || condition == "lt") && cValue < data[key]) continue
+
+                // Less than equals...
+                if ((condition == "<=" || condition == "lte") && cValue <= data[key]) continue
+
+                // More than...
+                if ((condition == ">" || condition == "gt") && cValue > data[key]) continue
+
+                // More than equals...
+                if ((condition == ">=" || condition == "gte") && cValue >= data[key]) continue
+
+                // Equal...
+                if ((condition == "=" || condition == "==" || condition == "eq") && cValue === data[key]) continue
+
+                // Not equal...
+                if ((condition == "!=" || condition == "neq") && cValue !== data[key]) continue
+
+                // Default comparison: has...
+                if (condition == "has") {
+                    const dataString = data[key].toString().toLowerCase()
+                    const valueString = cValue.toString().toLowerCase()
+
+                    if (dataString.indexOf(valueString) >= 0) {
+                        continue
+                    }
+                }
+
+                // If we reach here than either definitions was wrong, or nothing was found, so return false.
+                return false
+            } catch (ex) {
+                logger.error("Eventhooks.processEvent", key, value, ex)
+                data = null
+            }
+        }
+
+        // Everything passed.
+        return true
     }
 
     /**
