@@ -50,9 +50,6 @@ class Bunq extends require("./base-events") {
     /** List of bank accounts. */
     accounts: any[]
 
-    /** Token used on the callbacks URL. */
-    callbackUrlTokens: string[] = []
-
     /** Timer to auto refresh user data and accounts. */
     timerRefresh: any
 
@@ -261,16 +258,6 @@ class Bunq extends require("./base-events") {
             return
         }
 
-        // Update notification token used on URLs.
-        const newToken = crypto.randomBytes(4).toString("hex")
-        this.callbackUrlTokens.push(newToken)
-
-        // Remove previous token after 10 minutes.
-        const removeOldToken = () => {
-            this.callbackUrlTokens.shift()
-        }
-        setTimeout(removeOldToken, 1000 * 60 * 10)
-
         // Iterate accounts to create individual notification filters, but only for accounts
         // that are listed on settings.bunq.accounts.
         for (let acc of this.accounts) {
@@ -292,7 +279,7 @@ class Bunq extends require("./base-events") {
                     for (let category of ["PAYMENT", "DRAFT_PAYMENT", "CARD_TRANSACTION_SUCCESSFUL", "CARD_TRANSACTION_FAILED"]) {
                         filters.notification_filters.push({
                             category: category,
-                            notification_target: `${baseUrl}bunq/callback/${acc.id}/${newToken}`
+                            notification_target: `${baseUrl}bunq/callback/${acc.id}`
                         })
                     }
 

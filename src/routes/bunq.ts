@@ -33,24 +33,13 @@ const bunqRoutes = {
     },
 
     /** OAuth2 redirect to process the code and get an access token. */
-    "post:bunq/callback/:accountId/:token": async (req, res) => {
+    "post:bunq/callback/:accountId": async (req, res) => {
         const data = req.body.NotificationUrl
 
         // Check if valid data was passed.
         if (!data) {
             logger.error(`Routes.bunqNotification`, req.params.accountId, "Invalid data")
             return app.renderError(req, res, {error: "Invalid data"}, 400)
-        }
-
-        // Check if pased token is valid. On sandbox it will continue but alert,
-        // on production it will return an error.
-        if (bunq.callbackUrlTokens.indexOf(req.params.token) < 0) {
-            if (settings.bunq.api.environment == "SANDBOX") {
-                logger.warn(`Routes.bunqNotification`, req.params.accountId, data.category, `Invalid URL token: ${req.params.token}`, "Will continue, running on sandbox")
-            } else {
-                logger.error(`Routes.bunqNotification`, req.params.accountId, data.category, `Invalid URL token: ${req.params.token}`)
-                return app.renderError(req, res, {error: "Invalid URL token"}, 401)
-            }
         }
 
         try {
