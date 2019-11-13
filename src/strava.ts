@@ -22,7 +22,7 @@ class Strava extends require("./base-events") {
 
     /** The authentication URL used to start the OAuth2 flow with Strava. */
     get authUrl(): string {
-        return `${settings.strava.api.authUrl}?client_id=${settings.strava.clientId}&redirect_uri=${settings.app.url}strava/auth/callback&response_type=code&scope=${settings.strava.api.scope}`
+        return `${settings.strava.api.authUrl}?client_id=${settings.strava.api.clientId}&redirect_uri=${settings.app.url}strava/auth/callback&response_type=code&scope=${settings.strava.api.scope}`
     }
 
     /** Timer to trigger the payments (via setTimeout). */
@@ -35,7 +35,25 @@ class Strava extends require("./base-events") {
      * Init the Strava module by setting up the payment timer.
      */
     async init() {
-        if (!settings.strava.clientId || !settings.strava.clientSecret || !settings.strava.refreshToken) {
+        const now = moment()
+        const day = now.isoWeekday()
+        const ms8Hours = 1000 * 60 * 60 * 8
+        const paymentInterval = settings.strava.payments.interval
+
+        // DEPRECATED! Strava credentials moved to strava.api.
+        if (settings.strava.clientId || settings.strava.clientSecret) {
+            logger.warn("Strava.init", "The clientId and clientSecret moved from settings.strava to settings.strava.api. Please update your settings.")
+
+            if (settings.strava.clientId && !settings.strava.api.clientId) {
+                settings.strava.api.clientId = settings.strava.clientId
+            }
+            if (settings.strava.clientSecret && !settings.strava.api.clientSecret) {
+                settings.strava.api.clientSecret = settings.strava.clientSecret
+            }
+        }
+
+        // Missing credentials? Stop here.
+        if (!settings.strava.api.clientId || !settings.strava.api.clientSecret) {
             return logger.warn("Strava.init", "Missing strava clientId, clientSecret or refreshToken", "Strava features won't be enabled")
         }
 
@@ -48,13 +66,7 @@ class Strava extends require("./base-events") {
             return
         }
 
-        // Milliseconds in a day and in 8 hours.
-        const ms8Hours = 1000 * 60 * 60 * 8
-
-        // Intervals and diffs.
-        const paymentInterval = settings.strava.payments.interval
-        const now = moment()
-        const day = now.isoWeekday()
+        // Target date.
         const target = moment(now.format("YYYY-MM-DD") + " " + settings.strava.payments.time)
 
         // Payment interval must be daily or weekly.
@@ -109,8 +121,8 @@ class Strava extends require("./base-events") {
         try {
             let qs = {
                 grant_type: "authorization_code",
-                client_id: settings.strava.clientId,
-                client_secret: settings.strava.clientSecret,
+                client_id: settings.strava.api.clientId,
+                client_secret: settings.strava.api.clientSecret,
                 redirect_uri: `${settings.app.url}strava/auth/callback`,
                 code: code
             }
@@ -167,7 +179,7 @@ class Strava extends require("./base-events") {
             if (stravaData != null) {
                 qs.refresh_token = stravaData.refreshToken
             } else {
-                qs.refresh_token = settings.strava.refreshToken
+                qs.refresh_token = settings.strava.api.refreshToken
             }
 
             let options = {

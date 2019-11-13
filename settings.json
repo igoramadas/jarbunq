@@ -117,7 +117,8 @@
         }
     },
     "strava": {
-        // API endpoints from Strava.
+        // API endpoints and credentials from Strava. You should add the clientId and
+        // clientSecret on your settings.private.json file.
         "api": {
             "baseUrl": "https://www.strava.com/api/v3",
             "authUrl": "https://www.strava.com/oauth/authorize",
