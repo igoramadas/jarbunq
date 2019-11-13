@@ -34,7 +34,7 @@ interface BaseNotificationOptions {
 interface BunqCallback {
     /** Notification event ID. */
     id: number
-    /** Notification category (lowercased). */
+    /** Notification category. */
     category: string
     /** Notification description. */
     description: string
@@ -42,10 +42,12 @@ interface BunqCallback {
     dateCreated: Date
     /** Date and time when event was updated. */
     dateUpdated: Date
+    /** Counterpary information (name or IBAN). */
+    counterparty?: string
     /** Billed / paid amount. */
-    amount: number
+    amount?: number
     /** Billed / paid currency. */
-    currency: string
+    currency?: string
     /** Original amount. */
     originalAmount?: number
     /** Original currency. */
@@ -56,7 +58,7 @@ interface BunqCallback {
     accountId?: number
     /** Card ID (numeric but NOT the card number) */
     cardId?: number
-    /** Card type. */
+    /** Card type: MAESTRO, MASTERCARD, MAESTRO_MOBILE_NFC, MASTERCARD_MOBILE_NFC, MASTERCARD_VIRTUAL */
     cardType?: string
     /** Card label or description. */
     cardLabel?: string

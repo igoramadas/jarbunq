@@ -95,6 +95,9 @@ const bunqRoutes = {
             if (objectData.auto_save_entry && objectData.auto_save_entry.payment_savings) {
                 notification.autoSavePaymentId = objectData.auto_save_entry.payment_savings.id
             }
+            if (objectData.counterparty_alias) {
+                notification.counterparty = objectData.counterparty_alias.display_name || objectData.counterparty_alias.iban
+            }
             if (objectData.city) {
                 notification.location = objectData.city
             }
