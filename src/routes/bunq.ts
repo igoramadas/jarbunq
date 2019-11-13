@@ -38,7 +38,7 @@ const bunqRoutes = {
 
         // Check if valid data was passed.
         if (!data) {
-            logger.error(`Routes.bunqNotification`, req.params.accountId, "Invalid data")
+            logger.error(`Routes.bunqCallback`, `Account: ${req.params.accountId}`, "Invalid data")
             return app.renderError(req, res, {error: "Invalid data"}, 400)
         }
 
@@ -63,7 +63,8 @@ const bunqRoutes = {
                 description: description,
                 amount: amount.value,
                 currency: amount.currency,
-                date: moment(objectData.updated).toDate()
+                dateCreated: moment(objectData.created).toDate(),
+                dateUpdated: moment(objectData.updated).toDate()
             }
 
             // Check for additional fields.
@@ -100,7 +101,7 @@ const bunqRoutes = {
 
             bunq.callback(notification)
         } catch (ex) {
-            logger.error(`Routes.bunqNotification.${req.params.accountId}`, ex)
+            logger.error(`Routes.bunqCallback`, `Account: ${req.params.accountId}`, ex)
         }
 
         app.renderJson(req, res, {ok: true})

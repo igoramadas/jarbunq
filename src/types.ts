@@ -38,8 +38,10 @@ interface BunqCallback {
     category: string
     /** Notification description. */
     description: string
-    /** Date and time of the event. */
-    date: Date
+    /** Date and time of the event creation. */
+    dateCreated: Date
+    /** Date and time when event was updated. */
+    dateUpdated: Date
     /** Billed / paid amount. */
     amount: number
     /** Billed / paid currency. */
