@@ -40,22 +40,30 @@ interface BunqCallback {
     description: string
     /** Date and time of the event. */
     date: Date
-    /** Billed amount. */
+    /** Billed / paid amount. */
     amount: number
-    /** Billed currency. */
+    /** Billed / paid currency. */
     currency: string
-    /** Original / local amount. */
+    /** Original amount. */
     originalAmount?: number
-    /** Original / local currency. */
+    /** Original currency. */
     originalCurrency?: string
     /** Event type. */
     eventType?: string
-    /** Account ID. */
+    /** Account ID (numeric). */
     accountId?: number
+    /** Card ID (numeric but NOT the card number) */
+    cardId?: number
+    /** Card type. */
+    cardType?: string
+    /** Card label or description. */
+    cardLabel?: string
+    /** Payment clearing status. */
+    clearingStatus?: string
     /** Auto save amount. */
     autoSavePaymentId?: number
-    /** City where event happened. */
-    city?: string
+    /** Location or city where event happened. */
+    location?: string
 }
 
 /**

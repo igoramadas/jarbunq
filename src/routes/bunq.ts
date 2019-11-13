@@ -77,11 +77,25 @@ const bunqRoutes = {
             if (objectData.monetary_account_id) {
                 notification.accountId = objectData.monetary_account_id
             }
+            if (objectData.card_id) {
+                notification.cardId = objectData.card_id
+            }
+            if (objectData.label_card) {
+                if (objectData.label_card.type) {
+                    notification.cardType = objectData.label_card.type
+                }
+                if (objectData.label_card.second_line) {
+                    notification.cardLabel = objectData.label_card.second_line
+                }
+            }
+            if (objectData.clearing_status) {
+                notification.clearingStatus = objectData.clearing_status
+            }
             if (objectData.auto_save_entry && objectData.auto_save_entry.payment_savings) {
                 notification.autoSavePaymentId = objectData.auto_save_entry.payment_savings.id
             }
             if (objectData.city) {
-                notification.city = objectData.city
+                notification.location = objectData.city
             }
 
             bunq.callback(notification)
