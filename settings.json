@@ -74,6 +74,8 @@
         }
     },
     "email": {
+        // Auto upgrade connection to TLS when needed?
+        "autoTLS": true,
         // If true, incoming emails will have its headers checked for extra security.
         // Change to false if you're having problems with email signatures, for instance
         // if you host your own email server and does not validate the headers.
@@ -83,8 +85,8 @@
         "fetchHours": 24,
         // Mark processed messages as read? Set to false to keep all messages unread.
         "markAsRead": true,
-        // When failed to open the email inbox, retry after 30 seconds by default, value in milliseconds.
-        "retryInterval": 30000,
+        // When failed to open the email inbox, retry after 60 seconds by default, value in milliseconds.
+        "retryInterval": 60000,
         // Send weekly reports to the owner's email?
         "weeklyReports": true
     },

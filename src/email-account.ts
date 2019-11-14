@@ -19,8 +19,9 @@ class EmailAccount extends require("./base-events") {
 
         this.id = id
         this.config = config
+        this.config.autoTLS = settings.email.autoTLS
 
-        logger.info("EmailAccount", id, config.host)
+        logger.info("EmailAccount", id, config.host, config.port)
     }
 
     // PROPERTIES
@@ -49,6 +50,7 @@ class EmailAccount extends require("./base-events") {
      * @event start
      */
     start(): void {
+        this.lastFetch = 0
         this.messageIds = {}
 
         this.client = new imap(this.config)
@@ -63,6 +65,7 @@ class EmailAccount extends require("./base-events") {
      */
     stop(): void {
         try {
+            this.client.off("mail", this.onMail)
             this.client.closeBox()
             this.client.end()
             this.client = null
@@ -108,7 +111,12 @@ class EmailAccount extends require("./base-events") {
                     // Start fetching unseen messages immediately.
                     const since = moment().subtract(settings.email.fetchHours, "hours")
                     this.fetchMessages(since.toDate())
-                    this.client.on("mail", () => this.fetchMessages())
+
+                    if (this.lastFetch > 0) {
+                        this.client.off("mail", this.onMail)
+                    }
+
+                    this.client.on("mail", this.onMail)
                 }
             })
         })
@@ -134,6 +142,14 @@ class EmailAccount extends require("./base-events") {
         } catch (ex) {
             logger.error("EmailAccount.openBox", "Can't connect", ex)
         }
+    }
+
+    /**
+     * Triggered when new email arrives on the box. Will make a call to `fetchMessages()`.
+     */
+    onMail = (count?: number) => {
+        logger.debug("EmailAccount.onMail", count)
+        this.fetchMessages()
     }
 
     /**
