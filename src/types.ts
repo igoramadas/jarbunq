@@ -52,6 +52,10 @@ interface BunqCallback {
     originalAmount?: number
     /** Original currency. */
     originalCurrency?: string
+    /** Fee amount. */
+    feeAmount?: number
+    /** Fee currency. */
+    feeCurrency?: string
     /** Event type. */
     eventType?: string
     /** Account ID (numeric). */

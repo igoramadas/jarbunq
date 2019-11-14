@@ -68,12 +68,16 @@ const bunqRoutes = {
             }
 
             // Check for additional fields.
+            if (data.event_type) {
+                notification.eventType = data.event_type
+            }
             if (originalAmount) {
                 notification.originalAmount = originalAmount.value
                 notification.originalCurrency = originalAmount.currency
             }
-            if (data.event_type) {
-                notification.eventType = data.event_type
+            if (objectData.amount_fee) {
+                notification.feeAmount = objectData.amount_fee.value
+                notification.feeCurrency = objectData.amount_fee.currency
             }
             if (objectData.monetary_account_id) {
                 notification.accountId = objectData.monetary_account_id
