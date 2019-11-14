@@ -103,6 +103,7 @@
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-not-exported"><a href="_eventhooks_.eventhooks.html#init" class="tsd-kind-icon">init</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-not-exported"><a href="_eventhooks_.eventhooks.html#load" class="tsd-kind-icon">load</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-not-exported"><a href="_eventhooks_.eventhooks.html#matcheventdata" class="tsd-kind-icon">match<wbr>Event<wbr>Data</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-not-exported"><a href="_eventhooks_.eventhooks.html#parseactionoptions" class="tsd-kind-icon">parse<wbr>Action<wbr>Options</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-not-exported"><a href="_eventhooks_.eventhooks.html#processevent" class="tsd-kind-icon">process<wbr>Event</a></li>
 							</ul>
@@ -124,7 +125,7 @@
 					<div class="tsd-signature tsd-kind-icon">listeners<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> =&nbsp;[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/26091bf/src/eventhooks.ts#L23">eventhooks.ts:23</a></li>
+							<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/2d30dae/src/eventhooks.ts#L23">eventhooks.ts:23</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -146,7 +147,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/26091bf/src/eventhooks.ts#L15">eventhooks.ts:15</a></li>
+									<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/2d30dae/src/eventhooks.ts#L15">eventhooks.ts:15</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="_eventhooks_.eventhooks.html" class="tsd-signature-type">Eventhooks</a></h4>
@@ -166,7 +167,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/26091bf/src/eventhooks.ts#L31">eventhooks.ts:31</a></li>
+									<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/2d30dae/src/eventhooks.ts#L31">eventhooks.ts:31</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -188,7 +189,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/26091bf/src/eventhooks.ts#L43">eventhooks.ts:43</a></li>
+									<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/2d30dae/src/eventhooks.ts#L43">eventhooks.ts:43</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -197,6 +198,47 @@
 								</div>
 							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-not-exported">
+					<a name="matcheventdata" class="tsd-anchor"></a>
+					<h3>match<wbr>Event<wbr>Data</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-not-exported">
+						<li class="tsd-signature tsd-kind-icon">match<wbr>Event<wbr>Data<span class="tsd-signature-symbol">(</span>eventhook<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span>, data<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/2d30dae/src/eventhooks.ts#L164">eventhooks.ts:164</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Check if the event data passes the specified eventhook filters.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>eventhook: <span class="tsd-signature-type">any</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>The eventhook definition.</p>
+										</div>
+									</div>
+								</li>
+								<li>
+									<h5>data: <span class="tsd-signature-type">any</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>A data passed by the event.</p>
+										</div>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -210,7 +252,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/26091bf/src/eventhooks.ts#L190">eventhooks.ts:190</a></li>
+									<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/2d30dae/src/eventhooks.ts#L240">eventhooks.ts:240</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -242,7 +284,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/26091bf/src/eventhooks.ts#L117">eventhooks.ts:117</a></li>
+									<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/2d30dae/src/eventhooks.ts#L117">eventhooks.ts:117</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -265,7 +307,7 @@
 									<h5>args: <span class="tsd-signature-type">any</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<div class="lead">
-											<p>Arguments passed with the event.</p>
+											<p>Arguments containing data passed with the event.</p>
 										</div>
 									</div>
 								</li>
@@ -283,7 +325,7 @@
 					<div class="tsd-signature tsd-kind-icon">actions<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/26091bf/src/eventhooks.ts#L224">eventhooks.ts:224</a></li>
+							<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/2d30dae/src/eventhooks.ts#L274">eventhooks.ts:274</a></li>
 						</ul>
 					</aside>
 					<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-object-literal tsd-is-not-exported">
@@ -296,7 +338,7 @@
 							<li class="tsd-description">
 								<aside class="tsd-sources">
 									<ul>
-										<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/26091bf/src/eventhooks.ts#L241">eventhooks.ts:241</a></li>
+										<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/2d30dae/src/eventhooks.ts#L291">eventhooks.ts:291</a></li>
 									</ul>
 								</aside>
 								<h4 class="tsd-parameters-title">Parameters</h4>
@@ -319,7 +361,7 @@
 							<li class="tsd-description">
 								<aside class="tsd-sources">
 									<ul>
-										<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/26091bf/src/eventhooks.ts#L226">eventhooks.ts:226</a></li>
+										<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/2d30dae/src/eventhooks.ts#L276">eventhooks.ts:276</a></li>
 									</ul>
 								</aside>
 								<h4 class="tsd-parameters-title">Parameters</h4>
@@ -345,7 +387,7 @@
 							<li class="tsd-description">
 								<aside class="tsd-sources">
 									<ul>
-										<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/26091bf/src/eventhooks.ts#L230">eventhooks.ts:230</a></li>
+										<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/2d30dae/src/eventhooks.ts#L280">eventhooks.ts:280</a></li>
 									</ul>
 								</aside>
 								<h4 class="tsd-parameters-title">Parameters</h4>
@@ -368,70 +410,70 @@
 						<a href="../globals.html"><em>Globals</em></a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="../modules/_base_events_.html">"base-<wbr>events"</a>
+						<a href="../modules/_base_events_.html">&quot;base-<wbr>events&quot;</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="../modules/_bunq_.html">"bunq"</a>
+						<a href="../modules/_bunq_.html">&quot;bunq&quot;</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="../modules/_database_.html">"database"</a>
+						<a href="../modules/_database_.html">&quot;database&quot;</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="../modules/_email_account_.html">"email-<wbr>account"</a>
+						<a href="../modules/_email_account_.html">&quot;email-<wbr>account&quot;</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="../modules/_email_actions_amazon_de_.html">"email-<wbr>actions/amazon-<wbr>de"</a>
+						<a href="../modules/_email_actions_amazon_de_.html">&quot;email-<wbr>actions/amazon-<wbr>de&quot;</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="../modules/_email_actions_amazon_de_refund_.html">"email-<wbr>actions/amazon-<wbr>de-<wbr>refund"</a>
+						<a href="../modules/_email_actions_amazon_de_refund_.html">&quot;email-<wbr>actions/amazon-<wbr>de-<wbr>refund&quot;</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="../modules/_email_actions_generic_.html">"email-<wbr>actions/generic"</a>
+						<a href="../modules/_email_actions_generic_.html">&quot;email-<wbr>actions/generic&quot;</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="../modules/_email_actions_lbb_.html">"email-<wbr>actions/lbb"</a>
+						<a href="../modules/_email_actions_lbb_.html">&quot;email-<wbr>actions/lbb&quot;</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="../modules/_email_manager_.html">"email-<wbr>manager"</a>
+						<a href="../modules/_email_manager_.html">&quot;email-<wbr>manager&quot;</a>
 					</li>
 					<li class="current tsd-kind-external-module">
-						<a href="../modules/_eventhooks_.html">"eventhooks"</a>
+						<a href="../modules/_eventhooks_.html">&quot;eventhooks&quot;</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="../modules/_index_.html">"index"</a>
+						<a href="../modules/_index_.html">&quot;index&quot;</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="../modules/_migrations_processed_email_actions_.html">"migrations/processed-<wbr>email-<wbr>actions"</a>
+						<a href="../modules/_migrations_processed_email_actions_.html">&quot;migrations/processed-<wbr>email-<wbr>actions&quot;</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="../modules/_migrations_processed_emails_from_.html">"migrations/processed-<wbr>emails-<wbr>from"</a>
+						<a href="../modules/_migrations_processed_emails_from_.html">&quot;migrations/processed-<wbr>emails-<wbr>from&quot;</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="../modules/_migrations_token_timestamp_.html">"migrations/token-<wbr>timestamp"</a>
+						<a href="../modules/_migrations_token_timestamp_.html">&quot;migrations/token-<wbr>timestamp&quot;</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="../modules/_notifications_.html">"notifications"</a>
+						<a href="../modules/_notifications_.html">&quot;notifications&quot;</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="../modules/_routes_.html">"routes"</a>
+						<a href="../modules/_routes_.html">&quot;routes&quot;</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="../modules/_routes_api_.html">"routes/api"</a>
+						<a href="../modules/_routes_api_.html">&quot;routes/api&quot;</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="../modules/_routes_bunq_.html">"routes/bunq"</a>
+						<a href="../modules/_routes_bunq_.html">&quot;routes/bunq&quot;</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="../modules/_routes_strava_.html">"routes/strava"</a>
+						<a href="../modules/_routes_strava_.html">&quot;routes/strava&quot;</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="../modules/_routes_views_.html">"routes/views"</a>
+						<a href="../modules/_routes_views_.html">&quot;routes/views&quot;</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="../modules/_strava_.html">"strava"</a>
+						<a href="../modules/_strava_.html">&quot;strava&quot;</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="../modules/_types_.html">"types"</a>
+						<a href="../modules/_types_.html">&quot;types&quot;</a>
 					</li>
 				</ul>
 			</nav>
@@ -453,6 +495,9 @@
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-not-exported">
 								<a href="_eventhooks_.eventhooks.html#load" class="tsd-kind-icon">load</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-not-exported">
+								<a href="_eventhooks_.eventhooks.html#matcheventdata" class="tsd-kind-icon">match<wbr>Event<wbr>Data</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-not-exported">
 								<a href="_eventhooks_.eventhooks.html#parseactionoptions" class="tsd-kind-icon">parse<wbr>Action<wbr>Options</a>
