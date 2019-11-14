@@ -3,6 +3,7 @@
 import fs = require("fs")
 import logger = require("anyhow")
 import nodemailer = require("nodemailer")
+import request = require("request-promise-native")
 const settings = require("setmeup").settings
 
 /**
@@ -76,7 +77,7 @@ class Notifications extends require("./base-events") {
      * @param options Email sending options with to, subject, body etc.
      * @event toEmail
      */
-    toEmail = async (options: EmailNotificationOptions) => {
+    toEmail = async (options: EmailNotificationOptions): Promise<void> => {
         logger.debug("Notifications.toEmail", options)
 
         try {
@@ -123,6 +124,61 @@ class Notifications extends require("./base-events") {
         } catch (ex) {
             // Notifications should never throw / reject, so we just log it here.
             logger.error("Notifications.toEmail", options.to, options.subject, ex)
+        }
+    }
+
+    /**
+     * Send a push notification to the configured push service.
+     * @param options Notification options with subject, message and data.
+     */
+    toPush = async (options: PushNotificationOptions): Promise<void> => {
+        if (!settings.notification.push.enabled) {
+            logger.error("Notifications.toPush", "Not enabled on settings, will not send", options.subject, options.message)
+            return
+        }
+
+        // The push service URL is mandatory.
+        if (!settings.notification.push.url) {
+            logger.error("Notifications.toPush", "Misssing settings.notification.push.url", "Please set the destination URL on your settings.private.json file.")
+            return
+        }
+
+        try {
+            const post = settings.notification.push.post !== false
+
+            // Set request options.
+            let reqOptions: any = {
+                method: post ? "POST" : "GET",
+                uri: settings.notification.push.url,
+                json: true,
+                resolveWithFullResponse: true
+            }
+
+            // Using POST with body, or GET with querystrings?
+            if (post) {
+                reqOptions.body = settings.notification.push.post || {}
+                reqOptions.body[settings.notification.push.subjectField] = options.subject
+                reqOptions.body[settings.notification.push.messageField] = options.message
+            } else {
+                reqOptions.qs = {}
+                reqOptions.qs[settings.notification.push.subjectField] = options.subject
+                reqOptions.qs[settings.notification.push.messageField] = options.message
+            }
+
+            // Send request to push API.
+            let res = await request(reqOptions)
+            let result
+
+            // Parse proper response body.
+            if (res.body) {
+                result = res.body.request || res.body.message || res.body.id || res.body.status || Object.values(res.body).join(", ")
+            } else {
+                result = "Empty response"
+            }
+
+            logger.info("Notification.toPush", options.subject, result)
+        } catch (ex) {
+            logger.error("Notification.toPush", options.subject, ex)
         }
     }
 }

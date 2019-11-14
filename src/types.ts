@@ -19,7 +19,7 @@ interface Activity {
 }
 
 /**
- * Defines a generic notification from Jarbunq to the user.
+ * Defines a generic notification from Jarbunq to a user.
  */
 interface BaseNotificationOptions {
     /** The notification subject. */
@@ -105,7 +105,7 @@ interface EventhookOptions {
 }
 
 /**
- * Defines an email notification.
+ * Defines an email notification from Jarbunq to a user.
  */
 interface EmailNotificationOptions extends BaseNotificationOptions {
     /** The sender email address. If unspecified, will use defaul from settings. */
@@ -182,6 +182,14 @@ interface ProcessedEmail {
     subject: string
     /** Array of email actions. */
     actions: any
+}
+
+/**
+ * Defines a push notification from Jarbunq to a user.
+ */
+interface PushNotificationOptions extends BaseNotificationOptions {
+    /** Additional data to be passed over to the push service. */
+    data?: any
 }
 
 /**

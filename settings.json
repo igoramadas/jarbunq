@@ -106,6 +106,22 @@
             "paymentOk": false,
             // Notify payment failures.
             "paymentError": true
+        },
+        // Push notifications options. The defaults below are for Pushover, but you can easily
+        // customize to other services (WirePusher, Push All, etc...). If using Pushover, you
+        // must set the POST token and user on your settings.private.json file. More details:
+        // https://github.com/igoramadas/jarbunq/wiki/SMS-and-push-notifications
+        "push": {
+            "enabled": false,
+            // URL of the push service.
+            "url": "https://api.pushover.net/1/messages.json",
+            // Field name that represents the subject of a message.
+            "subjectField": "title",
+            // Field name that represents the body of a message.
+            "messageField": "message",
+            // Key pairs with additional body to be sent in case of POST.
+            // Set to false to use GET instead.
+            "post": null
         }
     },
     "routes": {
