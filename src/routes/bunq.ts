@@ -92,6 +92,16 @@ const bunqRoutes = {
                 if (objectData.label_card.second_line) {
                     notification.cardLabel = objectData.label_card.second_line
                 }
+                if (objectData.label_card.label_primary_account_number) {
+                    const cardAccount = objectData.label_card.label_primary_account_number
+
+                    if (cardAccount.description) {
+                        notification.cardLabel = cardAccount.description
+                    }
+                    if (cardAccount.last_four_digit) {
+                        notification.card4Digits = cardAccount.last_four_digit
+                    }
+                }
             }
             if (objectData.clearing_status) {
                 notification.clearingStatus = objectData.clearing_status

@@ -66,6 +66,8 @@ interface BunqCallback {
     cardType?: string
     /** Card label or description. */
     cardLabel?: string
+    /** Last 4 digits of the card. */
+    card4Digits?: string
     /** Payment clearing status. */
     clearingStatus?: string
     /** Auto save amount. */
