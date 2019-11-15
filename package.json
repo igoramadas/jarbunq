@@ -1,6 +1,6 @@
 {
     "name": "jarbunq",
-    "version": "19.46.415",
+    "version": "19.46.512",
     "description": "Automate your bunq account with email and Strava based actions!",
     "keywords": [
         "bunq",
@@ -49,7 +49,7 @@
         "@types/node": "^12.12.7",
         "axios-debug-log": "^0.6.2",
         "chalk": "^3.0.0",
-        "typedoc": "^0.15.1",
+        "typedoc": "^0.15.2",
         "typescript": "^3.7.2"
     },
     "pkg": {
