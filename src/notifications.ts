@@ -167,7 +167,7 @@ class Notifications extends require("./base-events") {
 
             // Send request to push API.
             let res = await request(reqOptions)
-            let result
+            let result: string
 
             // Parse proper response body.
             if (res.body) {

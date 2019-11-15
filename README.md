@@ -14,7 +14,7 @@ Jarbunq is a Node.js / TypeScript based service to automate tasks on your bunq a
 - Auto save money for kilometers and elevation ridden on Strava, daily or weekly
 - Transfers can be fully automated, or as draft (with approval needed by the owner)
 - Everything logged to the console by default, easily customized to log elsewhere
-- Email notifications of failed transactions
+- Email and push notifications for actions handled by the service
 - Eventhooks to automate payments and integrate with external systems
 - Easily add your own features via we a plugins file
 
