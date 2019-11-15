@@ -38,6 +38,10 @@
         // accounts to Jarbunq (mostly payments and transactions), so it can act upon them.
         "callbacks": {
             "enabled": true,
+            // Which event categories should Jarbunq listen to? The default categories listed below
+            // are related to payment and transactions only. To add more, see the full list of
+            // categories at https://beta.doc.bunq.com/basics/callbacks#callback-categories
+            "categories": ["PAYMENT", "DRAFT_PAYMENT", "CARD_TRANSACTION_SUCCESSFUL", "CARD_TRANSACTION_FAILED", "SCHEDULE_RESULT", "IDEAL", "SOFORT"],
             // Save full body of incoming notifications from bunq on the database?
             "save": false
         },

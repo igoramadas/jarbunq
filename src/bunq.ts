@@ -276,7 +276,7 @@ class Bunq extends require("./base-events") {
                     }
 
                     // Build the notification filters object.
-                    for (let category of ["PAYMENT", "DRAFT_PAYMENT", "CARD_TRANSACTION_SUCCESSFUL", "CARD_TRANSACTION_FAILED"]) {
+                    for (let category of settings.bunq.callbacks.categories) {
                         filters.notification_filters.push({
                             category: category,
                             notification_target: `${baseUrl}bunq/callback/${acc.id}`
