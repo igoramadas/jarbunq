@@ -72,16 +72,24 @@
                     }
                 }
             }
-        ],
-        "EmailManager.start": [],
-        "email-manager.stop": []
+        ]
     },
     "general": {
         "debug": "boolean: if true, logs will contain extra details"
     },
+    "notification": {
+        "push": {
+            "enabled": "boolean",
+            "post": {
+                "token": "string",
+                "user": "string"
+            }
+        }
+    },
     "strava": {
-        "clientId": "string: client ID from your Strava OAuth2 app",
-        "clientSecret": "string: client secret from your Strava OAuth2 app",
-        "refreshToken": "string: initial refresh token from your Strava OAuth2 app"
+        "api": {
+            "clientId": "string",
+            "clientSecret": "string"
+        }
     }
 }
