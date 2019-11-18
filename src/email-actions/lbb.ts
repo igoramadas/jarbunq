@@ -9,8 +9,7 @@ const settings = require("setmeup").settings
 // Email parsing strings.
 const totalText = "aktuellen Rechnungsbetrag von"
 
-// Exported function. Will return false if Amazon account has enough funds
-// to pay the bills (consider this a good thing!), otherwise true.
+// Exported function.
 const EmailAction = async (message: any): Promise<any> => {
     logger.debug("EmailAction.Lbb", message.messageId, message.from, message.subject, `To ${message.to}`)
 
