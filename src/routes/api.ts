@@ -9,6 +9,11 @@ const app = require("expresser").app
 const settings = require("setmeup").settings
 
 const apiRoutes = {
+    /** Get safe database dump. */
+    "get:api/database-dump": async (req, res) => {
+        app.renderJson(req, res, database.dump(true))
+    },
+
     /** Get settings. */
     "get:api/settings": async (req, res) => {
         app.renderJson(req, res, settings)
