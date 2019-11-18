@@ -1,6 +1,6 @@
 // Amazon Email Action
 // This will process orders from Amazon.de and automatically transfer the
-// necessary money to the Amazon Card account.
+// necessary money to the Amazon Card bunq account.
 
 import logger = require("anyhow")
 const settings = require("setmeup").settings
@@ -21,7 +21,8 @@ const amountCleanup = function(value) {
 const EmailAction = async (message: any): Promise<any> => {
     logger.debug("EmailAction.AmazonDe", message.messageId, message.from, message.subject, `To ${message.to}`)
 
-    let amount, rewardAmount, paymentAmount, description, orderNumber, partial
+    let amount: number | string, rewardAmount: number, paymentAmount: number
+    let description: string, orderNumber: string, partial: string
 
     try {
         let totalIndex = -1
@@ -55,11 +56,11 @@ const EmailAction = async (message: any): Promise<any> => {
         amount = amountCleanup(partial)
 
         // Parsing failed?
-        if (isNaN(amount)) {
+        if (isNaN(amount as number)) {
             return {error: "Could not find correct order amount"}
         }
 
-        amount = parseFloat(amount)
+        amount = parseFloat(amount as string)
 
         // Order has no amount (downloads for example)?
         if (amount < 0.01) {
@@ -78,10 +79,10 @@ const EmailAction = async (message: any): Promise<any> => {
             rewardAmount = amountCleanup(partial)
 
             // Reward amount found? Otherwise set to zero.
-            if (isNaN(rewardAmount)) {
+            if (isNaN(rewardAmount as number)) {
                 rewardAmount = 0
             } else {
-                rewardAmount = parseFloat(rewardAmount)
+                rewardAmount = parseFloat(rewardAmount.toString())
                 paymentAmount = paymentAmount - rewardAmount
             }
         }

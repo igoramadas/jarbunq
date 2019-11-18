@@ -1,6 +1,6 @@
 // LBB Amazon Card Email Action
 // This will process invoices sent by LBB via email and make sure there
-// are enough funds on the Amazon account for the direct debit.
+// are enough funds on the Amazon bunq account for the direct debit.
 
 import bunq = require("../bunq")
 import logger = require("anyhow")
@@ -14,13 +14,13 @@ const totalText = "aktuellen Rechnungsbetrag von"
 const EmailAction = async (message: any): Promise<any> => {
     logger.debug("EmailAction.Lbb", message.messageId, message.from, message.subject, `To ${message.to}`)
 
-    let invoiceAmount, invoiceAmountString, description, partial
+    let invoiceAmount: number, invoiceAmountString: string, description: string, partial: string
 
     try {
         // Find where the invoice amount is on the email text.
         let totalIndex = message.text.indexOf(totalText)
         partial = message.text.substring(totalIndex + totalText.length + 1)
-        partial = partial.trim().substring(0, partial.indexOf(" "))
+        partial = partial.trimLeft().substring(0, partial.indexOf(" "))
         partial = partial.replace(".", "")
         partial = partial.replace(",", ".")
         invoiceAmount = parseFloat(partial.trim())

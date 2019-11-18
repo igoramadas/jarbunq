@@ -1,6 +1,6 @@
 // Amazon Refund Email Action
 // This will process refunds from Amazon.de and automatically transfer the
-// money from the Amazon Card to the Main account.
+// money from the Amazon Card to the Main bunq account.
 
 import logger = require("anyhow")
 const settings = require("setmeup").settings
@@ -20,7 +20,7 @@ const amountCleanup = function(value) {
 const EmailAction = async (message: any): Promise<any> => {
     logger.debug("EmailAction.AmazonDeRefund", message.messageId, message.from, message.subject, `To ${message.to}`)
 
-    let amount, description, itemDescription, partial
+    let amount: number | string, description: string, itemDescription: string, partial: string
 
     try {
         let totalIndex = -1
@@ -54,11 +54,11 @@ const EmailAction = async (message: any): Promise<any> => {
         amount = amountCleanup(partial)
 
         // Parsing failed?
-        if (isNaN(amount)) {
+        if (isNaN(amount as number)) {
             return {error: "Could not find correct refund amount"}
         }
 
-        amount = parseFloat(amount)
+        amount = parseFloat(amount as string)
 
         // Order has no amount (downloads for example)?
         if (amount < 0.01) {
