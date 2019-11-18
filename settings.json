@@ -75,6 +75,14 @@
             "key": "bunq-DB-cryp7o-k3y-plssss-CHANGE",
             // Database encryption is enabled by default.
             "enabled": true
+        },
+        // Size limits for collections on the database. Each key represents the collection name, and
+        // value is the max size of the collection array.
+        "sizeLimits": {
+            "payments": 2000,
+            "processedEmails": 2000,
+            "stravaPayments": 2000,
+            "callbacks": 1000
         }
     },
     "email": {

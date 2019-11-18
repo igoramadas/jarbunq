@@ -36,7 +36,7 @@ class Database extends require("./base-events") {
     /** Shortcut to db.unset(). */
     unset: Function
 
-    // METHODS
+    // INIT AND MAINTENANCE
     // --------------------------------------------------------------------------
 
     /**
@@ -179,6 +179,33 @@ class Database extends require("./base-events") {
             }
         }
     }
+
+    /**
+     * Cleanup the database by removing old or invalid records.
+     */
+    cleanup = async () => {
+        for (let [name, maxSize] of settings.database.sizeLimits) {
+            try {
+                const size = this.db.get(name).size()
+
+                // Check collection size and truncate if necessary.
+                if (size == 0) {
+                    logger.info("Database.cleanup", name, "Collection is empty")
+                } else if (size > maxSize) {
+                    let truncated = this.db.get(name).takeRight(maxSize)
+                    this.db.set(name, truncated.value())
+                    logger.info("Database.cleanup", name, `Truncated from ${size} to ${maxSize}`)
+                } else {
+                    logger.debug("Database.cleanup", name, `Current size ${size}`)
+                }
+            } catch (ex) {
+                logger.error("Database.cleanup", name, ex)
+            }
+        }
+    }
+
+    // METHODS
+    // --------------------------------------------------------------------------
 
     /**
      * Gets the full database as a JSON.
