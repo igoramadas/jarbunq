@@ -39,7 +39,7 @@ const EmailAction = async (message: any): Promise<any> => {
         const paymentOptions: PaymentOptions = {
             amount: invoiceAmount,
             description: description,
-            toAlias: settings.bunq.accounts.invoices
+            toAlias: settings.bunq.accounts.zalando
         }
 
         return paymentOptions
