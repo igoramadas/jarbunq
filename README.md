@@ -16,13 +16,7 @@ Jarbunq is a Node.js / TypeScript based service to automate tasks on your bunq a
 - Everything logged to the console by default, easily customized to log elsewhere
 - Email and push notifications for actions handled by the service
 - Eventhooks to automate payments and integrate with external systems
-- Easily add your own features via we a plugins file
-
-### Planned features
-
-- Support push or SMS notifications
-- Support hot-reloading of settings and modules (no need to restart the service)
-- Create a single app-package using [pkg](https://github.com/zeit/pkg)
+- Easily add your own features via we a plugins file / folder
 
 ## Crazy quick start guide
 

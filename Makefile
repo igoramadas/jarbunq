@@ -31,9 +31,6 @@ decrypt:
 encrypt:
 	./jarbuncli.js encrypt
 
-package:
-	pkg -o ./bin/jarbunq -t linux .
-
 publish:
 	tsc --removeComments
 	npm publish
