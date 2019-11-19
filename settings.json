@@ -42,8 +42,9 @@
             // are related to payment and transactions only. To add more, see the full list of
             // categories at https://beta.doc.bunq.com/basics/callbacks#callback-categories
             "categories": ["PAYMENT", "DRAFT_PAYMENT", "CARD_TRANSACTION_SUCCESSFUL", "CARD_TRANSACTION_FAILED", "SCHEDULE_RESULT", "IDEAL", "SOFORT"],
-            // Save full body of incoming notifications from bunq on the database?
-            "save": false
+            // Save original full body of incoming notifications from bunq on the database?
+            // If true, the orginal body will be added to the "raw" property of notifications.
+            "saveRaw": false
         },
         // Set to false to NOT add Jarbunq related notes to the payments. Default is true,
         // and it's highly recommended to keep it true :-)

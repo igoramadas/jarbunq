@@ -74,6 +74,8 @@ interface BunqCallback {
     autoSavePaymentId?: number
     /** Location or city where event happened. */
     location?: string
+    /** Raw body of the original callback posted by bunq. */
+    rawBody?: any
 }
 
 /**

@@ -46,11 +46,6 @@ const bunqRoutes = {
             const notificationType = Object.keys(data.object)[0]
             const objectData = data.object[notificationType]
 
-            // Save full body of incoming notifications to the database?
-            if (settings.bunq.callbacks.save) {
-                database.insert("callbacks", data.object)
-            }
-
             // Get transaction amounts and description.
             const amount = objectData.amount_billing || objectData.amount_local || objectData.amount
             const originalAmount = objectData.amount_original_local || objectData.amount_local
@@ -65,6 +60,11 @@ const bunqRoutes = {
                 currency: amount.currency,
                 dateCreated: moment(objectData.created).toDate(),
                 dateUpdated: moment(objectData.updated).toDate()
+            }
+
+            // Keep raw body of notification?
+            if (settings.bunq.callbacks.saveRaw) {
+                notification.rawBody = data.object
             }
 
             // Check for additional fields.
@@ -116,7 +116,9 @@ const bunqRoutes = {
                 notification.location = objectData.city
             }
 
+            // Process bunq callback and save to database.
             bunq.callback(notification)
+            database.insert("callbacks", notification)
         } catch (ex) {
             logger.error(`Routes.bunqCallback`, `Account: ${req.params.accountId}`, ex)
         }
