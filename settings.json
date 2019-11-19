@@ -115,9 +115,9 @@
     // filters / callbacks from bunq to Jarbunq.
     "notification": {
         "events": {
-            // Do not notify successful payments by default.
-            "paymentOk": false,
-            // Notify payment failures.
+            // Notify successful payments?
+            "paymentSuccess": true,
+            // Notify payment failures?
             "paymentError": true
         },
         // Push notifications options. The defaults below are for Pushover, but you can easily

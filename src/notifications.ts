@@ -55,17 +55,21 @@ class Notifications extends require("./base-events") {
     // --------------------------------------------------------------------------
 
     /**
-     * Sends a notification to the user.
+     * Sends a notification to the user. This acts as a generic wrapper, so
+     * if a push service is enabled it will via push otherwise, it will send
+     * the notification via email.
      * @param options Notification options with subject and message.
      * @event send
      */
     send = async (options: BaseNotificationOptions) => {
         logger.debug("Notifications.send", options)
 
-        if (this.smtp) {
+        if (settings.notification.push.enabled) {
+            this.toPush(options as PushNotificationOptions)
+        } else if (this.smtp) {
             this.toEmail(options as EmailNotificationOptions)
         } else {
-            logger.warn("Notifications.send", "SMTP not registered, will not send", options.subject, options.message)
+            logger.warn("Notifications.send", "Push service not enabled and SMTP not registered, will not send", options.subject, options.message)
         }
 
         // You can also write your own notification handler by listening to the `send` event.
@@ -100,12 +104,16 @@ class Notifications extends require("./base-events") {
                 return
             }
 
+            // Compact message.
+            let message: string = options.message
+            message = message.replace(/ /, "").trim()
+
             // Keywords to be replaced on the template.
             const keywords = {
                 appTitle: settings.app.title,
                 appUrl: settings.app.url,
                 owner: settings.app.owner ? settings.app.owner : "fellow bunqer",
-                message: options.message
+                message: message
             }
 
             // Load template and replace keywords.
@@ -130,6 +138,7 @@ class Notifications extends require("./base-events") {
     /**
      * Send a push notification to the configured push service.
      * @param options Notification options with subject, message and data.
+     * @event toPush
      */
     toPush = async (options: PushNotificationOptions): Promise<void> => {
         if (!settings.notification.push.enabled) {
@@ -146,6 +155,11 @@ class Notifications extends require("./base-events") {
         try {
             const post = settings.notification.push.post !== false
 
+            // Replace HTML tags and compact message.
+            let message: string = options.message
+            message = message.replace(/<br\s*[\/]?>/gi, "\n")
+            message = message.replace(/ /, "").trim()
+
             // Set request options.
             let reqOptions: any = {
                 method: post ? "POST" : "GET",
@@ -158,11 +172,11 @@ class Notifications extends require("./base-events") {
             if (post) {
                 reqOptions.body = settings.notification.push.post || {}
                 reqOptions.body[settings.notification.push.subjectField] = options.subject
-                reqOptions.body[settings.notification.push.messageField] = options.message
+                reqOptions.body[settings.notification.push.messageField] = message
             } else {
                 reqOptions.qs = {}
                 reqOptions.qs[settings.notification.push.subjectField] = options.subject
-                reqOptions.qs[settings.notification.push.messageField] = options.message
+                reqOptions.qs[settings.notification.push.messageField] = message
             }
 
             // Send request to push API.
@@ -177,6 +191,7 @@ class Notifications extends require("./base-events") {
             }
 
             logger.info("Notification.toPush", options.subject, result)
+            this.events.emit("toPush", options)
         } catch (ex) {
             logger.error("Notification.toPush", options.subject, ex)
         }

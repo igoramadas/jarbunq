@@ -724,9 +724,11 @@ class Bunq extends require("./base-events") {
 
                 // Send notification of successful payment?
                 if (settings.notification.events.paymentSuccess) {
-                    const subject = `Payment ${niceAmount} to ${options.toAlias}`
-                    const message = `Payment of ${niceAmount} ${options.currency}
-                                    from account ${options.fromAlias} to ${options.toAlias} successful.
+                    const fromAccount = this.getAccountFromAlias(options.fromAlias, true)
+                    const toAccount = this.getAccountFromAlias(options.toAlias, true)
+
+                    const subject = `${niceAmount} ${options.currency} from ${fromAccount} to ${toAccount}`
+                    const message = `Payment of ${niceAmount} ${options.currency} from account ${options.fromAlias} to ${options.toAlias} successful.
                                     <br>
                                     Description: ${options.description}`
 
@@ -807,7 +809,7 @@ class Bunq extends require("./base-events") {
      * @param step The payment step (preparing or processing)
      */
     private failedPayment = (options: PaymentOptions, err: any, step: string) => {
-        const amount = options.amount.toFixed(2)
+        const niceAmount = options.amount.toFixed(2)
         let errorString = err.toString()
         let resError = err.response
 
@@ -832,20 +834,19 @@ class Bunq extends require("./base-events") {
             resError = _.isString(err) ? err : "Unkown API error"
         }
 
-        logger.error("Bunq.failedPayment", `${step} payment`, `${amount} ${options.currency} to ${options.toAlias}`, err, resError)
+        logger.error("Bunq.failedPayment", `${step} payment`, `${niceAmount} ${options.currency} to ${options.toAlias}`, err, resError)
 
         // Send notification of payment failures?
         if (settings.notification.events.paymentError) {
-            // Make sure we have "Error" on the error string.
-            if (errorString.indexOf("Error") < 0) {
+            if (errorString.toLowerCase().indexOf("error") < 0) {
                 errorString = "Error - " + errorString
             }
 
             const fromAccount = this.getAccountFromAlias(options.fromAlias, true)
             const toAccount = this.getAccountFromAlias(options.toAlias, true)
 
-            const subject = `Payment ${amount} failed to ${options.toAlias}`
-            const message = `Payment of ${amount} ${options.currency} from account ${fromAccount} to ${toAccount} failed.
+            const subject = `Failed: ${niceAmount} ${options.currency} from ${fromAccount} to ${toAccount}`
+            const message = `Payment of ${niceAmount} ${options.currency} from account ${options.fromAlias} to ${options.toAlias} failed.
                             <br>
                             Description: ${options.description}
                             <br>

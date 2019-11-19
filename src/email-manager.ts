@@ -178,9 +178,9 @@ class EmailManager extends require("./base-events") {
                     }
 
                     // Create payment HTML string.
-                    let msg = `<div><strong>${payment.description}</strong>
+                    let msg = `<div><b>${payment.description}</b>
                                <br>
-                               <strong>${payment.amount.toFixed(2)} ${payment.currency}</strong>
+                               <b>${payment.amount.toFixed(2)} ${payment.currency}</b>
                                from ${fromAccount} to ${toAccount}
                                ${notes}
                                <br>
