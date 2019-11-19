@@ -5,7 +5,6 @@ import bunq = require("./bunq")
 import logger = require("anyhow")
 import notifications = require("./notifications")
 import request = require("request-promise-native")
-import {SSL_OP_SINGLE_ECDH_USE} from "constants"
 const settings = require("setmeup").settings
 
 /**
