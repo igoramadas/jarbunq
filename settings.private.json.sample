@@ -20,7 +20,8 @@
         "accounts": {
             "main": "string: the alias of the main account",
             "amazon": "string: the alias of the Amazon Card account",
-            "strava": "string: the alias of the target account for strava mileage payments"
+            "strava": "string: the alias of the target account for strava mileage payments",
+            "zalando": "string"
         }
     },
     "email": {
@@ -50,10 +51,16 @@
         },
         "rules": [
             {
-                "action": "string: amazon"
+                "action": "string: amazon-de"
             },
             {
                 "action": "string: lbb"
+            },
+            {
+                "action": "string: strava"
+            },
+            {
+                "action": "string: zalando-de"
             }
         ]
     },
@@ -69,6 +76,17 @@
                         "toAlias": "string",
                         "toName": "string",
                         "amount": "string"
+                    }
+                }
+            }
+        ],
+        "EmailManager.stop": [
+            {
+                "actions": {
+                    "email": {
+                        "to": "string",
+                        "subject": "string",
+                        "message": "string"
                     }
                 }
             }
