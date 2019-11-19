@@ -5,6 +5,7 @@ import bunq = require("./bunq")
 import logger = require("anyhow")
 import notifications = require("./notifications")
 import request = require("request-promise-native")
+import {SSL_OP_SINGLE_ECDH_USE} from "constants"
 const settings = require("setmeup").settings
 
 /**
@@ -79,6 +80,15 @@ class Eventhooks {
 
                 // Iterate the specified eventooks.
                 for (eventhook of settings.eventhooks[me]) {
+                    const validateMsg = this.validateSpecs(moduleId, eventName, eventhook)
+
+                    // Eventhook specs not valid? Alert and stop here.
+                    if (validateMsg != null) {
+                        logger.error("Eventhooks.load", me, "Invalid specs", validateMsg)
+                        continue
+                    }
+
+                    // Helper to create the callback to process the event.
                     const createCallback = (m, e, hook) => {
                         return async (...args) => {
                             logger.debug("Eventhooks.callback", m, e)
@@ -103,6 +113,42 @@ class Eventhooks {
         }
 
         logger.info("Eventhooks.load", `Loaded ${this.listeners.length} eventhooks`)
+    }
+
+    /**
+     * Check if the passed eventhook specs is valid. Returns a string if failed,
+     * or null if no issues were found.
+     * @param moduleId Name of the module (without .ts or .js)
+     * @param eventName The name of the event being triggered
+     * @param specs The eventhook sepcs
+     */
+    validateSpecs = (moduleId: string, eventName: string, specs: EventhookOptions): string => {
+        if (specs.data == null && specs.actions == null) {
+            return "Eventhook with empty data and actions"
+        }
+
+        try {
+            if (specs.actions == null || specs.actions.lenth == 0) {
+                return "Eventhook with empty actions, please define at least 1 action"
+            }
+
+            const actions = _.isArray(specs.actions) ? specs.actions : [specs.actions]
+            const hasPayment = _.some(actions, a => {
+                return a.payment != null
+            })
+
+            // Bunq callbacks with payment actions must have data filters.
+            if (moduleId == "bunq" && eventName == "callback") {
+                if (specs.data == null && hasPayment) {
+                    return "Bunq.callback eventhooks with payment as action must implement data filters"
+                }
+            }
+
+            return null
+        } catch (ex) {
+            logger.error("Eventhooks.validateSpecs", moduleId, eventName, ex)
+            return `Exception: ${ex.toString()}`
+        }
     }
 
     // EVENTHOOKS
@@ -149,7 +195,11 @@ class Eventhooks {
 
                         logger.info("Eventhooks.processEvent", key, fields.join(", "))
                     } catch (ex) {
-                        logger.error("Eventhooks.processEvent", key, `Data keys: ${Object.keys(eventhook.data).join(", ")}`, ex)
+                        if (eventhook.data == null) {
+                            logger.error("Eventhooks.processEvent", key, `No data filters`, ex)
+                        } else {
+                            logger.error("Eventhooks.processEvent", key, `Data keys: ${Object.keys(eventhook.data).join(", ")}`, ex)
+                        }
                     }
                 }
             }
@@ -163,7 +213,12 @@ class Eventhooks {
      */
     matchEventData = (eventhook, data) => {
         if (data === null) {
-            return false
+            return true
+        }
+
+        if (eventhook.data == null) {
+            logger.debug("Eventhooks.processEvent", "Passed eventhook has no data filters")
+            return true
         }
 
         // Iterate data properties and check against the filters.

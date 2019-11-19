@@ -31,7 +31,7 @@ class Notifications extends require("./base-events") {
      */
     async init() {
         if (!settings.email.smtp || !settings.email.smtp.host || !settings.email.smtp.auth) {
-            logger.warn("Notifications.init", "Missing SMTP settings on settings.email.smtp, so emails will NOT be sent.")
+            logger.warn("Notifications.init", "Missing SMTP settings on settings.email.smtp, so emails will NOT be sent")
             return
         }
 
