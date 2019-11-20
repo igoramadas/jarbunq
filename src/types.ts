@@ -197,6 +197,20 @@ interface PushNotificationOptions extends BaseNotificationOptions {
 }
 
 /**
+ * Defines a scheduled job (payment or notification) to be executed in the future.
+ */
+interface ScheduledJob {
+    /** Date and time of execution. */
+    date: Date
+    /** Job title. */
+    title: string
+    /** Job type (payment, email or push). */
+    type: string
+    /** Job options (payment or notification). */
+    options: PaymentOptions | EmailNotificationOptions | PushNotificationOptions
+}
+
+/**
  * Defines a payment made for activity mileage.
  */
 interface StravaPayment {

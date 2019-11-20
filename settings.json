@@ -147,6 +147,13 @@
             "global": null
         }
     },
+    // Scheduler options.
+    "scheduler": {
+        // Ignore jobs that had their execution time passed? By default (false), the Scheduler
+        // will execute all jobs that missed their target datetimee, for instance if the
+        // Jarbunq server was down for some hours or days.
+        "ignoreDelayed": false
+    },
     "strava": {
         // API endpoints and credentials from Strava. You should add the clientId and
         // clientSecret on your settings.private.json file.
@@ -165,5 +172,15 @@
             // Time of the day in which payments are processed (24h, HH:MM format, local time).
             "time": "16:00"
         }
+    },
+    // Zalando settings (defaults are for Zalando.de, in Germany).
+    "zalando": {
+        // Automatically schedule draft payments for Zalando invoices?
+        // Default is 14 days, set to 0 or false to disable.
+        "autoScheduleDays": 14,
+        // Target IBAN for Zalando invoice payments.
+        "iban": "DE86210700200123010101",
+        // Target name for Zalando invoice payments.
+        "name": "Zalando Payments GmbH"
     }
 }
