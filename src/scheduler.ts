@@ -33,15 +33,48 @@ class Scheduler extends require("./base-events") {
         try {
             const size = database.db.get("scheduler").size()
 
+            if (size > 0) {
+                logger.info("Scheduler.init", `There are ${size} pending scheduled jobs`)
+            } else {
+                logger.info("Scheduler.init", "No pending scheduled jobs")
+            }
+
             // Start the check timer.
             await this.check()
-            this.timerCheck = setInterval(this.check, 1000 * 300)
-
-            logger.info("Scheduler.init", `There are ${size} pending scheduled jobs`)
+            this.start()
         } catch (ex) {
             logger.error("Scheduler.init", ex)
         }
     }
+
+    /**
+     * Starts getting and running scheduled jobs.
+     * @event start
+     */
+    start = (): void => {
+        if (this.timerCheck) {
+            logger.warn("Scheduler.start", "Already running")
+            return
+        }
+
+        this.timerCheck = setInterval(this.check, 1000 * 300)
+        this.events.emit("start")
+    }
+
+    /**
+     * Stops getting and running scheduled jobs.
+     * @event stop
+     */
+    stop = (): void => {
+        if (this.timerCheck) {
+            clearInterval(this.timerCheck)
+        }
+
+        this.events.emit("stop")
+    }
+
+    // MAIN METHODS
+    // --------------------------------------------------------------------------
 
     /**
      * Check for jobs to be executed. This should once every run every 5 minutes.

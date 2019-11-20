@@ -73,6 +73,10 @@ let startup = async function() {
     const emailManager = require("./email-manager")
     await emailManager.init()
 
+    // Start the Scheduler.
+    const scheduler = require("./scheduler")
+    await scheduler.init()
+
     // Start the Strava wrapper.
     const strava = require("./strava")
     await strava.init()
