@@ -1,7 +1,7 @@
 // Zalando Invoice Email Action
 // This will process Zalando invoices sent via email and transfer
-// the relevant amount to the Invoices bunq account. It will also
-// schedule a draft payment to be made 14 days later.
+// the relevant amount to the Invoices bunq account. It might also
+// schedule a draft payment to be made a few days later.
 
 import logger = require("anyhow")
 import scheduler = require("../scheduler")
