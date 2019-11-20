@@ -36,14 +36,14 @@ const apiRoutes = {
             let findPayment = database.get("payments").find({id: paymentId})
             let payment: Payment = findPayment.value()
 
-            // Payment not found? Stop here.
+            // Payment not found?
             if (payment == null) {
                 return app.renderError(req, res, {error: "Payment not found"}, 404)
             }
 
             // Confirm date of payment.
             if (moment(payment.date).format("YYYY-MM-DD") != req.params.date) {
-                return app.renderError(req, res, {error: "Invalid payment date"}, 404)
+                return app.renderError(req, res, {error: "Invalid payment date"}, 400)
             }
 
             // Payment already reversed?
@@ -51,26 +51,7 @@ const apiRoutes = {
                 return app.renderError(req, res, {error: `Payment already reversed, ID ${payment.reverseId}`}, 400)
             }
 
-            let paymentOptions = _.cloneDeep(payment) as PaymentOptions
-
-            // Reverse the source and target accounts.
-            const fromAlias = paymentOptions.toAlias
-            const toAlias = paymentOptions.fromAlias
-            paymentOptions.fromAlias = fromAlias
-            paymentOptions.toAlias = toAlias
-
-            // Append reversal note.
-            const notes = (paymentOptions.notes as string[]) || []
-            notes.unshift(`Reversal for payment ${paymentId}, ${req.params.date}`)
-            paymentOptions.notes = notes
-
-            // Make payment reversal.
-            let reversePayment = await bunq.makePayment(paymentOptions)
-
-            // Add reverse payment ID to the original.
-            findPayment = database.get("payments").find({id: paymentId})
-            findPayment.assign({reverseId: reversePayment.id}).write()
-
+            const reversePayment = bunq.reversePayment(payment)
             app.renderJson(req, res, reversePayment)
         } catch (ex) {
             app.renderError(req, res, ex)

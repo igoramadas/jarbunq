@@ -310,11 +310,11 @@ class Bunq extends require("./base-events") {
         this.events.emit("setupCallbacks", callbacks)
 
         // Reset callbacks every few hour(s).
-        setTimeout(this.setupCallbacks, 1000 * 60 * settings.bunq.refreshMinutes * 2)
+        setTimeout(this.setupCallbacks, 1000 * 60 * settings.bunq.refreshMinutes * 3)
     }
 
     /**
-     * Get list of registered callbacks (notification filters) at bunq.
+     * Get list of registered callbacks (URL notification filters) at bunq.
      */
     getCallbacks = async () => {
         const aliasesFromSettings = Object.values(settings.bunq.accounts)
@@ -701,6 +701,7 @@ class Bunq extends require("./base-events") {
                 }
 
                 // Make sure we get the correct payment ID from response.
+                // TODO! Remove and leave only correct condition after bunq API is on stable v1.
                 if (_.isArray(paymentId)) {
                     paymentId = paymentId[0]
                 }
@@ -749,6 +750,49 @@ class Bunq extends require("./base-events") {
         } catch (ex) {
             this.processBunqError(ex)
             this.failedPayment(options, ex, "processing")
+            throw ex
+        }
+    }
+
+    /**
+     * Reverse (refund) a payment made by Jarbunq. Will only work if
+     * both source and target bunq accounts are owned by the user.
+     * @param payment The payment object to be reversed.
+     * @event reversePayment
+     */
+    reversePayment = async (payment: Payment): Promise<Payment> => {
+        const paymentId = payment.id
+        const paymentDate = moment(payment.date).format("YYYY-MM-DD")
+
+        try {
+            let paymentOptions = _.cloneDeep(payment) as PaymentOptions
+
+            // Payment already reversed? Stop here.
+            if (payment.reverseId) {
+                throw new Error(`Payment already reversed, ID ${payment.reverseId}`)
+            }
+
+            // Reverse the source and target accounts.
+            const fromAlias = paymentOptions.toAlias
+            const toAlias = paymentOptions.fromAlias
+            paymentOptions.fromAlias = fromAlias
+            paymentOptions.toAlias = toAlias
+
+            // Append reversal note.
+            const notes = (paymentOptions.notes as string[]) || []
+            notes.unshift(`Reversal for payment ${paymentId}, ${paymentDate}`)
+            paymentOptions.notes = notes
+
+            // Make payment reversal.
+            let reversePayment = await this.makePayment(paymentOptions)
+
+            // Add reverse payment ID to the original.
+            const findPayment = database.get("payments").find({id: paymentId})
+            findPayment.assign({reverseId: reversePayment.id}).write()
+
+            return reversePayment
+        } catch (ex) {
+            logger.error("Bunq.reversePayment", paymentId, paymentDate, ex)
             throw ex
         }
     }
