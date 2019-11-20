@@ -29,7 +29,7 @@ class Scheduler extends require("./base-events") {
     /**
      * Init the Scheduler and start the check timer.
      */
-    async init() {
+    init = async (): Promise<void> => {
         try {
             const size = database.db.get("scheduler").size()
 

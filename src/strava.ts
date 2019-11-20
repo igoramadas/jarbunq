@@ -34,7 +34,7 @@ class Strava extends require("./base-events") {
     /**
      * Init the Strava module by setting up the payment timer.
      */
-    async init() {
+    init = async (): Promise<void> => {
         const now = moment()
         const day = now.isoWeekday()
         const ms8Hours = 1000 * 60 * 60 * 8

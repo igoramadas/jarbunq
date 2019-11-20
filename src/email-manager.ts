@@ -36,7 +36,7 @@ class EmailManager extends require("./base-events") {
     /**
      * Init the email accounts.
      */
-    async init() {
+    init = async (): Promise<void> => {
         this.start()
     }
 

@@ -28,13 +28,14 @@ class Bunq extends require("./base-events") {
 
     /** The authentication URL used to start the OAuth2 flow. */
     get authenticated(): boolean {
-        const result = database.get("jsClient.tokenTimestamp").value() != null
+        const timestamp = database.get("jsClient.tokenTimestamp").value()
 
-        if (!result) {
+        if (!timestamp) {
             this.authNeeded()
+            return false
         }
 
-        return result
+        return true
     }
 
     /** The authentication URL used to start the OAuth2 flow. */
@@ -59,7 +60,7 @@ class Bunq extends require("./base-events") {
     /**
      * Create the bunq-js-client and load initial data.
      */
-    async init() {
+    init = async (): Promise<void> => {
         // Make sure settings are defined.
         if (!settings.bunq.api.key) {
             throw new Error("No API key define on settings.bunq.api.key.")
@@ -181,7 +182,8 @@ class Bunq extends require("./base-events") {
             }
 
             // Save current date to database.
-            database.set("jsClient.tokenTimestamp", moment().unix()).write()
+            const tokenTimestamp = moment().unix()
+            database.set("jsClient.tokenTimestamp", tokenTimestamp).write()
 
             logger.info("Bunq.getOAuthToken", "Got a new access token")
             return true

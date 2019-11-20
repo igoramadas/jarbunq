@@ -28,7 +28,7 @@ class Eventhooks {
     /**
      * Init the eventhooks handler by loading them from settings.
      */
-    async init() {
+    init = async (): Promise<void> => {
         this.load()
 
         // DEPRECATED! Webhooks are now Eventhooks.

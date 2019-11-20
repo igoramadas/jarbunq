@@ -42,7 +42,7 @@ class Database extends require("./base-events") {
     /**
      * Init and load data from jarbunq.db.
      */
-    async init() {
+    init = async (): Promise<void> => {
         const FileAsync = require("lowdb/adapters/FileAsync")
         const dbPath = path.join(__dirname, "../", "jarbunq.db")
         const cryptoCipher = env["SETMEUP_CRYPTO_CIPHER"] || settings.database.crypto.cipher
