@@ -42,19 +42,20 @@ class EmailAccount extends require("./base-events") {
     /** Timestamp of last fetch. */
     lastFetch: number
 
-    // MAIN METHODS
+    /** Retry count. */
+    retryCount: number = 0
+
+    // CONTROL METHODS
     // --------------------------------------------------------------------------
 
     /**
-     * Start parsing relevant messages on the mail server.
+     * Connect and sart parsing relevant messages on the mail server.
      * @event start
      */
-    start(): void {
+    start = (): void => {
         this.lastFetch = 0
         this.messageIds = {}
-
-        this.client = new imap(this.config)
-        this.openBox(true)
+        this.connect()
 
         this.events.emit("start")
     }
@@ -63,9 +64,10 @@ class EmailAccount extends require("./base-events") {
      * Stops parsing messages on the mail server.
      * @event stop
      */
-    stop(): void {
+    stop = (): void => {
+        this.unbind()
+
         try {
-            this.client.off("mail", this.onMail)
             this.client.closeBox()
             this.client.end()
             this.client = null
@@ -76,90 +78,136 @@ class EmailAccount extends require("./base-events") {
         this.events.emit("stop")
     }
 
-    // METHODS
+    // CLIENT EVENTS
+    // --------------------------------------------------------------------------
+
+    /**
+     * Stop listening to events triggered by the IMAP client.
+     */
+    private unbind = (): void => {
+        try {
+            this.client.off("mail", this.onMail)
+            this.client.off("error", this.onError)
+            this.client.off("ready", this.onReady)
+            this.client.off("end", this.onEnd)
+        } catch (ex) {
+            logger.error("EmailAccount.unbind", this.id, ex)
+        }
+    }
+
+    /**
+     * When the IMAP client has connected and ready to open the email box.
+     * @event ready
+     */
+    private onReady = () => {
+        logger.debug("EmailAccount.onRead")
+
+        this.client.openBox(this.config.inboxName, false, err => {
+            if (err) {
+                this.retryCount++
+
+                // Auth failed? Do not try again.
+                if (err.textCode == "AUTHORIZATIONFAILED") {
+                    return logger.error("EmailAccount.onReady", this.id, "Auth failed, please check user and password")
+                }
+
+                // Too many retries? Stop now.
+                if (this.retryCount > settings.email.maxRetry) {
+                    return logger.error("EmailAccount.onReady", this.id, `Failed to connect ${this.retryCount} times, abort`)
+                }
+
+                // Try again after some seconds.
+                logger.warn("EmailAccount.onReady", this.id, err, "Will retry...")
+                return _.delay(this.connect, settings.email.retryInterval)
+            }
+
+            // Reset retry count.
+            this.retryCount = 0
+            logger.info("EmailAccount.onReady", this.id, "Inbox ready")
+
+            // Start fetching unseen messages immediately.
+            const since = moment().subtract(settings.email.fetchHours, "hours")
+            this.fetchMessages(since.toDate())
+
+            if (this.lastFetch > 0) {
+                this.client.off("mail", this.onMail)
+            }
+
+            this.client.on("mail", this.onMail)
+            this.events.emit("ready")
+        })
+    }
+
+    /**
+     * When errors are triggered on the IMAP client.
+     * @event error
+     */
+    private onError = (err: any) => {
+        logger.error("EmailAccount.onError", this.id, err)
+
+        if (err.code == "ECONNRESET" || err.code == "EAI_AGAIN") {
+            _.delay(this.connect, settings.email.retryInterval)
+        }
+
+        this.events.emit("error", err)
+    }
+
+    /**
+     * When new email arrives on the box. Will make a call to `fetchMessages()`.
+     */
+    private onMail = (count?: number) => {
+        logger.debug("EmailAccount.onMail", count)
+        this.fetchMessages()
+    }
+
+    /**
+     * When the IMAP client connection has ended, set a timer to reconnect.
+     */
+    private onEnd = () => {
+        logger.info("EmailAccount.end", this.id, "Connection closed")
+        _.delay(this.connect, settings.email.retryInterval)
+    }
+
+    // MAIN METHODS
     // --------------------------------------------------------------------------
 
     /**
      * Opens the mailbox.
      * @param retry When true it will retry opening the mailbox if failed.
      */
-    openBox = (retry: boolean) => {
-        if (this.client && this.client.state == "authenticated") {
-            return logger.warn("EmailAccount.openBox", this.id, "Already connected")
+    connect = () => {
+        if (this.client) {
+            if (this.client.state == "authenticated") {
+                return logger.warn("EmailAccount.connect", this.id, "Already connected")
+            } else {
+                this.unbind()
+            }
         }
 
-        // Once IMAP is ready, open the inbox and start listening to messages.
-        this.client.once("ready", () => {
-            this.client.openBox(this.config.inboxName, false, err => {
-                if (err) {
-                    logger.warn("EmailAccount.openBox", this.id, err)
+        // Force create a new client object.
+        this.client = new imap(this.config)
 
-                    // Auth failed? Do not try again.
-                    if (err.textCode == "AUTHORIZATIONFAILED") {
-                        return logger.error("EmailAccount.openBox", this.id, "Auth failed, please check user and password")
-                    }
-
-                    // Retry connection?
-                    if (retry) {
-                        return _.delay(this.openBox, settings.email.retryInterval, false)
-                    }
-
-                    return logger.error("EmailAccount.openBox", this.id, "Failed to connect")
-                } else {
-                    logger.info("EmailAccount.openBox", this.id, "Inbox ready")
-
-                    // Start fetching unseen messages immediately.
-                    const since = moment().subtract(settings.email.fetchHours, "hours")
-                    this.fetchMessages(since.toDate())
-
-                    if (this.lastFetch > 0) {
-                        this.client.off("mail", this.onMail)
-                    }
-
-                    this.client.on("mail", this.onMail)
-                }
-            })
-        })
-
-        // Handle IMAP errors. If disconnected because of connection reset, call openBox again.
-        this.client.once("error", err => {
-            logger.error("EmailAccount.openBox.onError", this.id, err)
-
-            if (err.code == "ECONNRESET" || err.code == "EAI_AGAIN") {
-                return _.delay(this.openBox, settings.email.retryInterval, true)
-            }
-        })
-
-        // Auto reconnect when connection closes.
-        this.client.once("end", () => {
-            logger.info("EmailAccount.end", this.id, "Connection closed")
-            _.delay(this.openBox, settings.email.retryInterval, true)
-        })
+        // Bind events.
+        this.client.on("error", this.onError)
+        this.client.once("ready", this.onReady)
+        this.client.once("end", this.onEnd)
 
         // Connect to the IMAP server.
         try {
             return this.client.connect()
         } catch (ex) {
-            logger.error("EmailAccount.openBox", "Can't connect", ex)
+            logger.error("EmailAccount.connect", ex)
         }
-    }
-
-    /**
-     * Triggered when new email arrives on the box. Will make a call to `fetchMessages()`.
-     */
-    onMail = (count?: number) => {
-        logger.debug("EmailAccount.onMail", count)
-        this.fetchMessages()
     }
 
     /**
      * Fetch new unread messages for the specified account.
      * @param since Optional date, if not specified will fetch new / unseen messages.
      */
-    fetchMessages = (since?: Date) => {
+    fetchMessages = (since?: Date): void => {
         let query = since ? ["SINCE", since] : "UNSEEN"
 
-        return this.client.search([query], (err, results) => {
+        this.client.search([query], (err, results) => {
             if (err) {
                 return logger.error("EmailAccount.fetchMessages", this.id, err)
             }
@@ -182,7 +230,7 @@ class EmailAccount extends require("./base-events") {
      * Download the specified message and load the related Email Action.
      * @param rawMessage The unprocessed, raw message
      */
-    downloadMessage = rawMessage => {
+    downloadMessage = (rawMessage: any): void => {
         let uid
 
         let parserCallback = async (err, parsedMessage) => {
