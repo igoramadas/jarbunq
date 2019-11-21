@@ -98,8 +98,10 @@
         "fetchHours": 24,
         // Mark processed messages as read? Set to false to keep all messages unread.
         "markAsRead": true,
-        // When failed to open the email inbox, retry after 60 seconds by default, value in milliseconds.
-        "retryInterval": 60000,
+        // How many times should it retry to connect before aborting?
+        "maxRetry": 5,
+        // When failed to open the email inbox, retry after 2 minutes by default, value in milliseconds.
+        "retryInterval": 120000,
         // Send weekly reports to the owner's email?
         "weeklyReports": true
     },

@@ -139,7 +139,7 @@ class Scheduler extends require("./base-events") {
                 throw new Error(`Unsupported job type: ${job.type}`)
             }
 
-            this.emit("execute", job)
+            this.events.emit("execute", job)
         } catch (ex) {
             logger.error("Scheduler.execute", job.type, job.title, job.date, ex)
         }
@@ -157,7 +157,7 @@ class Scheduler extends require("./base-events") {
 
         database.insert("scheduler", job)
         logger.info("Scheduler.queue", job.type, job.title, job.date)
-        this.emit("queue", job)
+        this.events.emit("queue", job)
     }
 }
 
