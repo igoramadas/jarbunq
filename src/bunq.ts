@@ -641,7 +641,7 @@ class Bunq extends require("./base-events") {
             // that this is the internal database reference, do not confuse with
             // the payment description (called reference as well by some banks).
             if (!options.reference) {
-                const description = options.description ? options.description.toString().replace(/ /, "") : options.draft.toString()
+                const description = options.description.toString().replace(/ /g, "")
                 options.reference = `${moment().format("YYMMDD")}-${niceAmount}-${options.toAlias}-${description}`
             }
 
@@ -864,10 +864,8 @@ class Bunq extends require("./base-events") {
         let errorString = err.toString()
         let resError
 
-        // Is error an actual error / string, or an API response?
-        if (!err.response) {
-            resError = err.message || err
-        } else {
+        // Is error coming from API response?
+        if (err.response) {
             resError = err.response
 
             if (resError && resError.body) {
@@ -885,12 +883,13 @@ class Bunq extends require("./base-events") {
             if (_.isArray(resError) && resError.length > 0) {
                 resError = resError[0].error_description
             }
+
+            logger.error("Bunq.failedPayment", `${step} payment`, `${niceAmount} ${options.currency} to ${options.toAlias}`, err, resError)
+        } else {
+            resError = ""
+
+            logger.error("Bunq.failedPayment", `${step} payment`, `${niceAmount} ${options.currency} to ${options.toAlias}`, err)
         }
-
-        // Make sure error is a string.
-        resError = resError.toString()
-
-        logger.error("Bunq.failedPayment", `${step} payment`, `${niceAmount} ${options.currency} to ${options.toAlias}`, err, resError)
 
         // Send notification of payment failures?
         if (settings.notification.events.paymentError) {

@@ -2,6 +2,7 @@
 
 import _ = require("lodash")
 import bunq = require("./bunq")
+import jaul = require("jaul")
 import logger = require("anyhow")
 import notifications = require("./notifications")
 import request = require("request-promise-native")
@@ -304,9 +305,11 @@ class Eventhooks {
                 // Check if value is pointing to a property from the data (starts with @@).
                 if (_.isString(value)) {
                     if (value == "@@") {
-                        result[key] = JSON.stringify(value, null, 2)
+                        result[key] = JSON.stringify(value, null, 1)
                     } else if (value.substring(0, 2) == "@@") {
                         result[key] = data[value.substring(2)]
+                    } else {
+                        result[key] = jaul.data.replaceTags(value, data)
                     }
                     continue
                 }
