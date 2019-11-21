@@ -158,7 +158,7 @@ class Notifications extends require("./base-events") {
             // Replace HTML tags and compact message.
             let message: string = options.message
             message = message.replace(/<br\s*[\/]?>/gi, "\n")
-            message = message.replace(/ /, "").trim()
+            message = message.replace(/  /, " ").trim()
 
             // Set request options.
             let reqOptions: any = {
