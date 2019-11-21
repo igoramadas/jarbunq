@@ -98,13 +98,6 @@
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
-							<h3>Events</h3>
-							<ul class="tsd-index-list">
-								<li class="tsd-kind-event tsd-parent-kind-class"><a href="_email_account_.emailaccount.html#start" class="tsd-kind-icon">start</a></li>
-								<li class="tsd-kind-event tsd-parent-kind-class"><a href="_email_account_.emailaccount.html#stop" class="tsd-kind-icon">stop</a></li>
-							</ul>
-						</section>
-						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_email_account_.emailaccount.html#client" class="tsd-kind-icon">client</a></li>
@@ -112,16 +105,18 @@
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_email_account_.emailaccount.html#id" class="tsd-kind-icon">id</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_email_account_.emailaccount.html#lastfetch" class="tsd-kind-icon">last<wbr>Fetch</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_email_account_.emailaccount.html#messageids" class="tsd-kind-icon">message<wbr>Ids</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_email_account_.emailaccount.html#retrycount" class="tsd-kind-icon">retry<wbr>Count</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_email_account_.emailaccount.html#connect" class="tsd-kind-icon">connect</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_email_account_.emailaccount.html#downloadmessage" class="tsd-kind-icon">download<wbr>Message</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_email_account_.emailaccount.html#fetchmessages" class="tsd-kind-icon">fetch<wbr>Messages</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_email_account_.emailaccount.html#onmail" class="tsd-kind-icon">on<wbr>Mail</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_email_account_.emailaccount.html#openbox" class="tsd-kind-icon">open<wbr>Box</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_email_account_.emailaccount.html#processemail" class="tsd-kind-icon">process<wbr>Email</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_email_account_.emailaccount.html#start" class="tsd-kind-icon">start</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_email_account_.emailaccount.html#stop" class="tsd-kind-icon">stop</a></li>
 							</ul>
 						</section>
 					</div>
@@ -139,7 +134,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/7b9d640/src/email-account.ts#L15">src/email-account.ts:15</a></li>
+									<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/d751d8f/src/email-account.ts#L15">src/email-account.ts:15</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -162,53 +157,6 @@
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
-				<h2>Events</h2>
-				<section class="tsd-panel tsd-member tsd-kind-event tsd-parent-kind-class">
-					<a name="start" class="tsd-anchor"></a>
-					<h3>start</h3>
-					<ul class="tsd-signatures tsd-kind-event tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">start<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/7b9d640/src/email-account.ts#L52">src/email-account.ts:52</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Start parsing relevant messages on the mail server.</p>
-								</div>
-							</div>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-event tsd-parent-kind-class">
-					<a name="stop" class="tsd-anchor"></a>
-					<h3>stop</h3>
-					<ul class="tsd-signatures tsd-kind-event tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">stop<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/7b9d640/src/email-account.ts#L66">src/email-account.ts:66</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Stops parsing messages on the mail server.</p>
-								</div>
-							</div>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-						</li>
-					</ul>
-				</section>
-			</section>
-			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="client" class="tsd-anchor"></a>
@@ -216,7 +164,7 @@
 					<div class="tsd-signature tsd-kind-icon">client<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/7b9d640/src/email-account.ts#L37">src/email-account.ts:37</a></li>
+							<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/d751d8f/src/email-account.ts#L37">src/email-account.ts:37</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -231,7 +179,7 @@
 					<div class="tsd-signature tsd-kind-icon">config<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/7b9d640/src/email-account.ts#L34">src/email-account.ts:34</a></li>
+							<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/d751d8f/src/email-account.ts#L34">src/email-account.ts:34</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -246,7 +194,7 @@
 					<div class="tsd-signature tsd-kind-icon">id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/7b9d640/src/email-account.ts#L31">src/email-account.ts:31</a></li>
+							<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/d751d8f/src/email-account.ts#L31">src/email-account.ts:31</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -261,7 +209,7 @@
 					<div class="tsd-signature tsd-kind-icon">last<wbr>Fetch<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/7b9d640/src/email-account.ts#L43">src/email-account.ts:43</a></li>
+							<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/d751d8f/src/email-account.ts#L43">src/email-account.ts:43</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -276,7 +224,7 @@
 					<div class="tsd-signature tsd-kind-icon">message<wbr>Ids<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/7b9d640/src/email-account.ts#L40">src/email-account.ts:40</a></li>
+							<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/d751d8f/src/email-account.ts#L40">src/email-account.ts:40</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -285,9 +233,46 @@
 						</div>
 					</div>
 				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="retrycount" class="tsd-anchor"></a>
+					<h3>retry<wbr>Count</h3>
+					<div class="tsd-signature tsd-kind-icon">retry<wbr>Count<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;0</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/d751d8f/src/email-account.ts#L46">src/email-account.ts:46</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Retry count.</p>
+						</div>
+					</div>
+				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Methods</h2>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="connect" class="tsd-anchor"></a>
+					<h3>connect</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">connect<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/d751d8f/src/email-account.ts#L178">src/email-account.ts:178</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Opens the mailbox.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span></h4>
+						</li>
+					</ul>
+				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
 					<a name="downloadmessage" class="tsd-anchor"></a>
 					<h3>download<wbr>Message</h3>
@@ -298,7 +283,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/7b9d640/src/email-account.ts#L185">src/email-account.ts:185</a></li>
+									<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/d751d8f/src/email-account.ts#L233">src/email-account.ts:233</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -325,13 +310,13 @@
 					<a name="fetchmessages" class="tsd-anchor"></a>
 					<h3>fetch<wbr>Messages</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">fetch<wbr>Messages<span class="tsd-signature-symbol">(</span>since<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Date</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></li>
+						<li class="tsd-signature tsd-kind-icon">fetch<wbr>Messages<span class="tsd-signature-symbol">(</span>since<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Date</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/7b9d640/src/email-account.ts#L159">src/email-account.ts:159</a></li>
+									<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/d751d8f/src/email-account.ts#L207">src/email-account.ts:207</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -350,68 +335,7 @@
 									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="onmail" class="tsd-anchor"></a>
-					<h3>on<wbr>Mail</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">on<wbr>Mail<span class="tsd-signature-symbol">(</span>count<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/7b9d640/src/email-account.ts#L150">src/email-account.ts:150</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Triggered when new email arrives on the box. Will make a call to <code>fetchMessages()</code>.</p>
-								</div>
-							</div>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> count: <span class="tsd-signature-type">number</span></h5>
-								</li>
-							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="openbox" class="tsd-anchor"></a>
-					<h3>open<wbr>Box</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">open<wbr>Box<span class="tsd-signature-symbol">(</span>retry<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/7b9d640/src/email-account.ts#L86">src/email-account.ts:86</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Opens the mailbox.</p>
-								</div>
-							</div>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>retry: <span class="tsd-signature-type">boolean</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<div class="lead">
-											<p>When true it will retry opening the mailbox if failed.</p>
-										</div>
-									</div>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -425,7 +349,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/7b9d640/src/email-account.ts#L222">src/email-account.ts:222</a></li>
+									<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/d751d8f/src/email-account.ts#L270">src/email-account.ts:270</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -445,6 +369,50 @@
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="start" class="tsd-anchor"></a>
+					<h3>start</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">start<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/d751d8f/src/email-account.ts#L55">src/email-account.ts:55</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Connect and sart parsing relevant messages on the mail server.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="stop" class="tsd-anchor"></a>
+					<h3>stop</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">stop<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/d751d8f/src/email-account.ts#L67">src/email-account.ts:67</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Stops parsing messages on the mail server.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -520,6 +488,9 @@
 						<a href="../modules/_routes_views_.html">&quot;routes/views&quot;</a>
 					</li>
 					<li class=" tsd-kind-external-module">
+						<a href="../modules/_scheduler_.html">&quot;scheduler&quot;</a>
+					</li>
+					<li class=" tsd-kind-external-module">
 						<a href="../modules/_strava_.html">&quot;strava&quot;</a>
 					</li>
 					<li class=" tsd-kind-external-module">
@@ -537,12 +508,6 @@
 							<li class=" tsd-kind-constructor tsd-parent-kind-class">
 								<a href="_email_account_.emailaccount.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
-							<li class=" tsd-kind-event tsd-parent-kind-class">
-								<a href="_email_account_.emailaccount.html#start" class="tsd-kind-icon">start</a>
-							</li>
-							<li class=" tsd-kind-event tsd-parent-kind-class">
-								<a href="_email_account_.emailaccount.html#stop" class="tsd-kind-icon">stop</a>
-							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="_email_account_.emailaccount.html#client" class="tsd-kind-icon">client</a>
 							</li>
@@ -558,6 +523,12 @@
 							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="_email_account_.emailaccount.html#messageids" class="tsd-kind-icon">message<wbr>Ids</a>
 							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_email_account_.emailaccount.html#retrycount" class="tsd-kind-icon">retry<wbr>Count</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_email_account_.emailaccount.html#connect" class="tsd-kind-icon">connect</a>
+							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="_email_account_.emailaccount.html#downloadmessage" class="tsd-kind-icon">download<wbr>Message</a>
 							</li>
@@ -565,13 +536,13 @@
 								<a href="_email_account_.emailaccount.html#fetchmessages" class="tsd-kind-icon">fetch<wbr>Messages</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="_email_account_.emailaccount.html#onmail" class="tsd-kind-icon">on<wbr>Mail</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="_email_account_.emailaccount.html#openbox" class="tsd-kind-icon">open<wbr>Box</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="_email_account_.emailaccount.html#processemail" class="tsd-kind-icon">process<wbr>Email</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_email_account_.emailaccount.html#start" class="tsd-kind-icon">start</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_email_account_.emailaccount.html#stop" class="tsd-kind-icon">stop</a>
 							</li>
 						</ul>
 					</li>
