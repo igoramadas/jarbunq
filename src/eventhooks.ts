@@ -327,11 +327,11 @@ class Eventhooks {
     // List of available actions for payment hooks.
     actions = {
         // Make a payment.
-        payment: async (options: PaymentOptions, _data: any) => {
+        payment: async (options: PaymentOptions, _data: any): Promise<void> => {
             await bunq.makePayment(options)
         },
         // Send data to an URL. By default it will POST (if no method was specified).
-        url: async (options: any) => {
+        url: async (options: any): Promise<void> => {
             if (options.method == null) {
                 options.method = "POST"
             }
@@ -342,8 +342,12 @@ class Eventhooks {
             await request(options)
         },
         // Send an email. By default will send to the email specified on the settings.
-        email: async (options: EmailNotificationOptions) => {
+        email: async (options: EmailNotificationOptions): Promise<void> => {
             await notifications.toEmail(options)
+        },
+        // Send a push notification.
+        push: async (options: PushNotificationOptions): Promise<void> => {
+            await notifications.toPush(options)
         }
     }
 }
