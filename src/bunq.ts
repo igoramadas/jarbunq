@@ -592,6 +592,11 @@ class Bunq extends require("./base-events") {
                 throw new Error("Not authenticated to bunq")
             }
 
+            // Payment description is mandatory.
+            if (!options.description || options.description == " ") {
+                throw new Error("A payment description is mandatory.")
+            }
+
             // Basic payment validation.
             if (options.amount <= 0) {
                 throw new Error("Payments must have an amount greater than 0.")
@@ -857,28 +862,33 @@ class Bunq extends require("./base-events") {
     private failedPayment = (options: PaymentOptions, err: any, step: string) => {
         const niceAmount = options.amount.toFixed(2)
         let errorString = err.toString()
-        let resError = err.response
+        let resError
 
-        // Catch error from response.
-        if (resError && resError.body) {
-            resError = resError.body
-        }
-        if (resError && resError.data) {
-            resError = resError.data
-        }
-        if (resError && resError.Error) {
-            resError = resError.Error
-        }
-        if (resError && resError.error) {
-            resError = resError.error
-        }
-        if (_.isArray(resError) && resError.length > 0) {
-            resError = resError[0].error_description
+        // Is error an actual error / string, or an API response?
+        if (!err.response) {
+            resError = err.message || err
+        } else {
+            resError = err.response
+
+            if (resError && resError.body) {
+                resError = resError.body
+            }
+            if (resError && resError.data) {
+                resError = resError.data
+            }
+            if (resError && resError.Error) {
+                resError = resError.Error
+            }
+            if (resError && resError.error) {
+                resError = resError.error
+            }
+            if (_.isArray(resError) && resError.length > 0) {
+                resError = resError[0].error_description
+            }
         }
 
-        if (!resError) {
-            resError = _.isString(err) ? err : "Unkown API error"
-        }
+        // Make sure error is a string.
+        resError = resError.toString()
 
         logger.error("Bunq.failedPayment", `${step} payment`, `${niceAmount} ${options.currency} to ${options.toAlias}`, err, resError)
 
