@@ -1,15 +1,17 @@
-# Jarbunq
+# Jarbunq Docker
 
-FROM node:12.10.0-alpine
-ENV NODE_ENV production
-ENV NPM_CONFIG_LOGLEVEL warn
+FROM node:13.1.0-alpine
+WORKDIR /app
 
-# Add all required files from root.
-ADD . /
+# Install and configure required basic dependencies.
+RUN apk update && apk upgrade
 
-# Install and configure required dependencies.
-RUN apk update && apk upgrade && apk add git
+# Copy package and install Node dependencies.
+COPY package.json package-lock.json* ./
 RUN npm install --production
+
+# Add application files.
+COPY . ./
 
 # Expose and start!
 EXPOSE 8080
