@@ -14,10 +14,9 @@ Jarbunq is a Node.js / TypeScript based service to automate tasks on your bunq a
     - Action: Zalando.de - reserve amounts and schedule payments for Zalando.de invoices
 - Auto save money for kilometers and elevation ridden on Strava, daily or weekly
 - Transfers can be fully automated, or as draft (with approval needed by the owner)
-- Everything logged to the console by default, easily customized to log elsewhere
+- Eventhooks to automate payments and integrate with external systems (a mini IFTTT)
 - Email and push notifications for actions handled by the service
-- Eventhooks to automate payments and integrate with external systems
-- Easily add your own features via we a plugins file / folder
+- Easily add your own features via a plugins file / folder
 
 ## Crazy quick start guide
 
@@ -29,6 +28,10 @@ Jarbunq is a Node.js / TypeScript based service to automate tasks on your bunq a
     $ make run
 
 Need help? Sure you do. Then follow these [detailed instructions](https://github.com/igoramadas/jarbunq/wiki/Downloading-the-code)...
+
+## Are you good with UX?
+
+Help is needed! There's a very basic and crude web UI to see contents from the database at the moment. I am more of a command line / API guy, so I haven't taken the necessary time to build a proper management UI yet. If you want to help building one, so users can not only query DB contents but also change the service settings, please let me know :-)
 
 ## What for?
 
@@ -44,9 +47,10 @@ And a big **thank you** to all the open-source warriors that are responsible for
 
 Total lack of creativity. Jarvis + bunq.
 sure.
+
 ## How stable is this?
 
-I have it running myself on my own server since 1st of September 2019. No issues so far, and a bunch of Amazon and Strava related payments processed successfully :-)
+I have it running myself on my own server since 1st of September 2019. No issues so far, and a bunch of automated payments processed successfully :-)
 
 ## Bugs or suggestions?
 
