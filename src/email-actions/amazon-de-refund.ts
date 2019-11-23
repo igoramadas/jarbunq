@@ -25,7 +25,7 @@ const EmailAction = async (message: any): Promise<any> => {
     let itemIndex = -1
 
     try {
-        if (!settings.bunq.accounts.zalando) {
+        if (!settings.bunq.accounts.amazon) {
             return {error: "The settings.bunq.accounts.amazon is not set."}
         }
 
