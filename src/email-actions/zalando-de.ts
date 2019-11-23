@@ -19,6 +19,10 @@ const EmailAction = async (message: any): Promise<any> => {
     let invoiceAmount: number, orderNumber: string, description: string, partial: string
 
     try {
+        if (!settings.bunq.accounts.zalando) {
+            return {error: "The settings.bunq.accounts.zalando is not set."}
+        }
+
         // Find where the invoice amount is on the email text.
         let totalIndex = message.text.indexOf(totalText)
         partial = message.text.substring(totalIndex + totalText.length + 1)

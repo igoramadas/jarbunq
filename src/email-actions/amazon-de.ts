@@ -23,10 +23,13 @@ const EmailAction = async (message: any): Promise<any> => {
 
     let amount: number | string, rewardAmount: number, paymentAmount: number
     let description: string, orderNumber: string, partial: string
+    let totalIndex = -1
+    let orderIndex = -1
 
     try {
-        let totalIndex = -1
-        let orderIndex = -1
+        if (!settings.bunq.accounts.amazon) {
+            return {error: "The settings.bunq.accounts.amazon is not set."}
+        }
 
         // Find where the total order is defined on the email plain text.
         for (let totalText of arrTotalText) {

@@ -21,10 +21,13 @@ const EmailAction = async (message: any): Promise<any> => {
     logger.debug("EmailAction.AmazonDeRefund", message.messageId, message.from, message.subject, `To ${message.to}`)
 
     let amount: number | string, description: string, itemDescription: string, partial: string
+    let totalIndex = -1
+    let itemIndex = -1
 
     try {
-        let totalIndex = -1
-        let itemIndex = -1
+        if (!settings.bunq.accounts.zalando) {
+            return {error: "The settings.bunq.accounts.amazon is not set."}
+        }
 
         // Find where the total order is defined on the email plain text.
         for (let totalText of arrTotalText) {
