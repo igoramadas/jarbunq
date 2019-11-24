@@ -396,10 +396,9 @@ Please open ${settings.app.url + "strava/auth"} on your browser
             const activities = await this.getRecentActivities(since)
             const distance = _.sumBy(activities, "distance")
             const elevation = _.sumBy(activities, "elevation")
-            const totalKm = Math.round(distance + elevation / 1000)
             const now = moment()
 
-            logger.debug("Strava.payForActivities", paymentInterval, `Distance ${distance}`, `Elevation ${elevation}`, `Total ${totalKm}`)
+            logger.debug("Strava.payForActivities", paymentInterval, `Distance ${distance}km`, `Elevation ${elevation}m`)
 
             // Not enough mileage for this period?
             if (distance < 1) {
@@ -407,12 +406,14 @@ Please open ${settings.app.url + "strava/auth"} on your browser
             }
 
             // Calculate total amount based on distance and elevation.
-            const amount = totalKm * settings.strava.payments.pricePerKm
+            const amountDistance = distance * settings.strava.payments.pricePerKm
+            const amountElevation = (elevation / 1000) * settings.strava.payments.pricePerClimbedKm
+            const totalAmount = amountDistance + amountElevation
 
             // Define payment options.
             const paymentOptions = {
-                amount: amount,
-                description: `Strava, ${distance}km ${paymentInterval}`,
+                amount: totalAmount,
+                description: `Strava, ${distance}km, elevation ${elevation}m, ${paymentInterval}`,
                 toAlias: settings.bunq.accounts.strava,
                 reference: `strava-${now.format("YYYY-MM-DD")}`
             }
@@ -422,11 +423,12 @@ Please open ${settings.app.url + "strava/auth"} on your browser
 
             const stravaPayment: StravaPayment = {
                 date: now.toDate(),
-                totalKm: totalKm,
+                distance: distance,
+                elevation: elevation,
                 activityCount: activities.length,
                 payment: {
                     id: payment.id,
-                    amount: amount
+                    amount: totalAmount
                 }
             }
 
@@ -445,7 +447,7 @@ Please open ${settings.app.url + "strava/auth"} on your browser
             // Scheduled next payment.
             this.timerPay = setTimeout(this.payForActivities, interval)
 
-            logger.info("Strava.payForActivities", `Transferred ${amount.toFixed(2)} for ${totalKm}km`, `Next payment`)
+            logger.info("Strava.payForActivities", `Transferred ${totalAmount.toFixed(2)} for ${distance}km, elevation ${elevation}m`)
         } catch (ex) {
             logger.error("Strava.payForActivities", ex)
         }

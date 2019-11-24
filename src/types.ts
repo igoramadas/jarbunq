@@ -223,7 +223,9 @@ interface StravaPayment {
     /** Date and time of payment. */
     date: Date
     /** Total distance in kilometers. */
-    totalKm: number
+    distance: number
+    /** Total elevation in meters. */
+    elevation: number
     /** How many activities. */
     activityCount: number
 }
