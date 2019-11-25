@@ -402,7 +402,7 @@ Please open ${settings.app.url + "strava/auth"} on your browser
 
             // Not enough mileage for this period?
             if (distance < 1) {
-                return logger.warn("Strava.payForActivities", "Not enough mileage, payment skipped")
+                return logger.warn(`Strava.payForActivities", "Not enough mileage on the period (${paymentInterval}), payment skipped`)
             }
 
             // Calculate total amount based on distance and elevation.
@@ -413,8 +413,8 @@ Please open ${settings.app.url + "strava/auth"} on your browser
             // Define payment options.
             const paymentOptions = {
                 amount: totalAmount,
-                description: `Strava, ${distance}km, elevation ${elevation}m, ${paymentInterval}`,
                 toAlias: settings.bunq.accounts.strava,
+                description: `Strava ${distance}km / ${elevation}m, ${paymentInterval}`,
                 reference: `strava-${now.format("YYYY-MM-DD")}`
             }
 
@@ -447,7 +447,7 @@ Please open ${settings.app.url + "strava/auth"} on your browser
             // Scheduled next payment.
             this.timerPay = setTimeout(this.payForActivities, interval)
 
-            logger.info("Strava.payForActivities", `Transferred ${totalAmount.toFixed(2)} for ${distance}km, elevation ${elevation}m`)
+            logger.info("Strava.payForActivities", `Transferred ${totalAmount.toFixed(2)} for ${distance}km / ${elevation}m`)
         } catch (ex) {
             logger.error("Strava.payForActivities", ex)
         }
