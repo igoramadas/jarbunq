@@ -92,22 +92,22 @@ class Bunq extends require("./base-events") {
 
             // Custom adapter wrapping the anyhow logger.
             const customLogger = {
-                log: obj => {
+                log: (obj) => {
                     logger.debug("BunqJSClient", obj)
                 },
-                trace: obj => {
+                trace: (obj) => {
                     logger.debug("BunqJSClient", obj)
                 },
-                debug: obj => {
+                debug: (obj) => {
                     logger.debug("BunqJSClient", obj)
                 },
-                info: obj => {
+                info: (obj) => {
                     logger.info("BunqJSClient", obj)
                 },
-                warn: obj => {
+                warn: (obj) => {
                     logger.warn("BunqJSClient", obj)
                 },
-                error: obj => {
+                error: (obj) => {
                     logger.error("BunqJSClient", obj)
                 }
             }
@@ -214,9 +214,10 @@ class Bunq extends require("./base-events") {
             if (remind) {
                 try {
                     const subject = `Jarbunq token expires in ${days} days`
-                    const message = `The authorization tokens used by Jarbunq to connect to your bunq accounts will expire in ${days} days!
-                                     <br><br>
-                                     Please open ${settings.app.url}bunq/auth on your browser to renew the tokens and avoid interruptions.`
+                    const message =
+                        `The authorization tokens used by Jarbunq to connect to your bunq accounts will expire in ${days} days!` +
+                        `<br><br>` +
+                        `Please open ${settings.app.url}bunq/auth on your browser to renew the tokens and avoid interruptions.`
 
                     notifications.send({subject: subject, message: message})
                 } catch (ex) {
@@ -286,7 +287,7 @@ class Bunq extends require("./base-events") {
                     }
 
                     // Response limiter taken directly from the bunqJSClient.
-                    const response = await limiter.run(async axiosClient =>
+                    const response = await limiter.run(async (axiosClient) =>
                         bunqClient.ApiAdapter.post(`/v1/user/${userId}/monetary-account/${acc.id}/notification-filter-url`, filters, {}, {}, axiosClient)
                     )
 
@@ -344,7 +345,7 @@ class Bunq extends require("./base-events") {
                 const logAccount = this.getAccountFromAlias(intersect[0], true)
 
                 try {
-                    const response = await limiter.run(async axiosClient => bunqClient.ApiAdapter.get(`/v1/user/${userId}/monetary-account/${acc.id}/notification-filter-url`, {}, {}, axiosClient))
+                    const response = await limiter.run(async (axiosClient) => bunqClient.ApiAdapter.get(`/v1/user/${userId}/monetary-account/${acc.id}/notification-filter-url`, {}, {}, axiosClient))
 
                     // Valid response?
                     if (response.Response && response.Response.length > 0) {
@@ -489,7 +490,7 @@ class Bunq extends require("./base-events") {
                 throw new Error("Not authenticated to bunq")
             }
 
-            const acc = _.find(this.accounts, a => {
+            const acc = _.find(this.accounts, (a) => {
                 return _.find(a.alias, {value: alias}) != null
             })
 
@@ -531,7 +532,7 @@ class Bunq extends require("./base-events") {
 
             await this.getAccounts()
 
-            const acc = _.find(this.accounts, a => {
+            const acc = _.find(this.accounts, (a) => {
                 return _.find(a.alias, {value: alias}) != null
             })
 
@@ -606,7 +607,7 @@ class Bunq extends require("./base-events") {
             if (_.isNumber(options.fromAlias)) {
                 accountId = options.fromAlias
             } else {
-                const acc = _.find(this.accounts, a => {
+                const acc = _.find(this.accounts, (a) => {
                     return _.find(a.alias, {value: options.fromAlias}) != null
                 })
 
@@ -736,9 +737,7 @@ class Bunq extends require("./base-events") {
                     const toAccount = this.getAccountFromAlias(options.toAlias, true)
 
                     const subject = `${niceAmount} ${options.currency} from ${fromAccount} to ${toAccount}`
-                    const message = `Payment of ${niceAmount} ${options.currency} from account ${options.fromAlias} to ${options.toAlias} successful.
-                                    <br>
-                                    Description: ${options.description}`
+                    const message = `Payment of ${niceAmount} ${options.currency} from account ${options.fromAlias} to ${options.toAlias} successful.<br>Description: ${options.description}`
 
                     notifications.send({subject: subject, message: message})
                 }
@@ -901,13 +900,14 @@ class Bunq extends require("./base-events") {
             const toAccount = this.getAccountFromAlias(options.toAlias, true)
 
             const subject = `Failed: ${niceAmount} ${options.currency} from ${fromAccount} to ${toAccount}`
-            const message = `Payment of ${niceAmount} ${options.currency} from account ${options.fromAlias} to ${options.toAlias} failed.
-                            <br>
-                            Description: ${options.description}
-                            <br>
-                            ${errorString}
-                            <br>
-                            ${resError}`
+            const message =
+                `Payment of ${niceAmount} ${options.currency} from account ${options.fromAlias} to ${options.toAlias} failed.` +
+                `<br>` +
+                `Description: ${options.description}` +
+                `<br>` +
+                `${errorString}` +
+                `<br>` +
+                `${resError}`
 
             // Send notification of failed payment.
             notifications.send({subject: subject, message: message})

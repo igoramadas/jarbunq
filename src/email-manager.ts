@@ -184,7 +184,7 @@ class EmailManager extends require("./base-events") {
                                from ${fromAccount} to ${toAccount}
                                ${notes}
                                <br>
-                               <small>${paymentTitle} ${payment.id}</small>
+                               <small>${paymentTitle} ID: ${payment.id}</small>
                                </div>`
 
                     paymentStrings.push(msg)
@@ -195,10 +195,9 @@ class EmailManager extends require("./base-events") {
 
             // Build subject and message strings.
             const subject = `Weekly payment report from ${settings.app.title}`
-            const message = `Aloha! This is your weekly report of payments triggered by Jarbunq last week,
-                             from ${minDate.format("ll")} to ${yesterday.format("ll")}.
-                             \n-\n
-                             ${paymentStrings.join("\n-\n")}`
+            const message = `<div>This is your weekly report of payments triggered by Jarbunq last week.</div>
+                             <div>--</div>
+                             ${paymentStrings.join("<br>--<br>")}`
 
             //Send email!
             notifications.toEmail({subject: subject, message: message})

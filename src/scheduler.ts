@@ -81,7 +81,7 @@ class Scheduler extends require("./base-events") {
      */
     check = async (): Promise<void> => {
         try {
-            const filter = job => {
+            const filter = (job) => {
                 const jobDate = moment(job.date)
                 return jobDate.isBefore(moment())
             }

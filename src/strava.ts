@@ -83,7 +83,7 @@ class Strava extends require("./base-events") {
             // Maybe we just missed the payment? Check the database, if we're less than 8 hours
             // from the execution time at same day, and no payment was recorded yet, then do it now.
             if (now.diff(target) <= ms8Hours && now.format("HH:mm") > settings.strava.payments.time) {
-                const paymentFinder = p => {
+                const paymentFinder = (p) => {
                     return moment(p.date).dayOfYear() == now.dayOfYear()
                 }
                 const allPayments = database.get("stravaPayments")
@@ -106,7 +106,12 @@ class Strava extends require("./base-events") {
 
         // Log successful init.
         const timeToNext = moment.duration(diff).humanize(true)
-        logger.info("Strava.init", paymentInterval, `${settings.strava.payments.pricePerKm} EUR / km`, `Next payment ${timeToNext}`)
+        logger.info(
+            "Strava.init",
+            paymentInterval,
+            `${settings.strava.payments.pricePerKm.toFixed(2)} distance / ${settings.strava.payments.pricePerClimbedKm.toFixed(2)} elevation price`,
+            `Next payment ${timeToNext}`
+        )
     }
 
     // AUTH METHODS
@@ -296,7 +301,7 @@ Please open ${settings.app.url + "strava/auth"} on your browser
     getActivities = async (query: any) => {
         logger.debug("Strava.getRecentActivities", query)
 
-        const arrLogQuery = Object.entries(query).map(p => p[0] + "=" + p[1])
+        const arrLogQuery = Object.entries(query).map((p) => p[0] + "=" + p[1])
         const logQuery = arrLogQuery.join(", ")
 
         try {
