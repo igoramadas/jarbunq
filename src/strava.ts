@@ -399,8 +399,8 @@ Please open ${settings.app.url + "strava/auth"} on your browser
             const paymentInterval = settings.strava.payments.interval
             const since = paymentInterval == "weekly" ? 7 : 1
             const activities = await this.getRecentActivities(since)
-            const distance = _.sumBy(activities, "distance")
-            const elevation = _.sumBy(activities, "elevation")
+            const distance = Math.round(_.sumBy(activities, "distance"))
+            const elevation = Math.round(_.sumBy(activities, "elevation"))
             const now = moment()
 
             logger.debug("Strava.payForActivities", paymentInterval, `Distance ${distance}km`, `Elevation ${elevation}m`)
