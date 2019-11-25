@@ -110,18 +110,21 @@ const EmailAction = async (message: any): Promise<any> => {
         }
 
         // Get order number and description.
-        description = `Order ${orderNumber}, ${amount.toFixed(2)} EUR`
+        description = `Order ${orderNumber}`
+
+        // Set payment notes.
+        const notes: string[] = [`Order total: ${amount.toFixed(2)} EUR`]
+
+        if (rewardAmount > 0) {
+            notes.push(`Used reward points: ${rewardAmount.toFixed(2)} EUR`)
+        }
 
         // Set payment options.
         const paymentOptions: PaymentOptions = {
             amount: paymentAmount,
             description: description,
-            toAlias: settings.bunq.accounts.amazon
-        }
-
-        // Add notes about reward points usage.
-        if (rewardAmount > 0) {
-            paymentOptions.notes = [`Used reward points: ${rewardAmount.toFixed(2)} EUR`]
+            toAlias: settings.bunq.accounts.amazon,
+            notes: notes
         }
 
         return paymentOptions
