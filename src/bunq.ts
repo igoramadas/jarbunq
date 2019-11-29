@@ -670,7 +670,7 @@ class Bunq extends require("./base-events") {
 
         try {
             const now = moment()
-            const logDraft = options.draft ? "Draft payment" : "Regular payment"
+            const logDraft = options.draft ? "Draft payment" : "Payment"
             const logAccount = _.find(this.accounts, {id: accountId}).description
             const logFromTo = `${niceAmount} ${options.currency} from ${logAccount} to ${options.toAlias}`
             let paymentId: any
@@ -909,12 +909,9 @@ class Bunq extends require("./base-events") {
             const subject = `Failed: ${niceAmount} ${options.currency} from ${fromAccount} to ${toAccount}`
             const message =
                 `Payment failed!<br>` +
-                `${niceAmount} ${options.currency} from ${options.fromAlias} to ${options.toAlias}` +
-                `<br>` +
-                `Description: ${options.description}` +
-                `<br>` +
-                `${errorString}` +
-                `<br>` +
+                `${niceAmount} ${options.currency} from ${options.fromAlias} to ${options.toAlias}<br>` +
+                `Description: ${options.description}<br>` +
+                `${errorString}<br>` +
                 `${resError}`
 
             // Send notification of failed payment.
