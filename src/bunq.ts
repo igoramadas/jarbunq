@@ -731,13 +731,20 @@ class Bunq extends require("./base-events") {
 
                 logger.info("Bunq.makePayment", logDraft, `ID ${paymentId}`, logFromTo, options.description)
 
+                // Payment notes as string.
+                const msgNotes = options.notes && options.notes.length > 0 ? (options.notes as string[]).join("<br>") : ""
+
                 // Send notification of successful payment?
                 if (settings.notification.events.paymentSuccess) {
                     const fromAccount = this.getAccountFromAlias(options.fromAlias, true)
                     const toAccount = this.getAccountFromAlias(options.toAlias, true)
 
                     const subject = `${niceAmount} ${options.currency} from ${fromAccount} to ${toAccount}`
-                    const message = `Payment of ${niceAmount} ${options.currency} from account ${options.fromAlias} to ${options.toAlias} successful.<br>Description: ${options.description}`
+                    const message =
+                        `Payment successful!<br>` +
+                        `${niceAmount} ${options.currency} from ${options.fromAlias} to ${options.toAlias}<br><br>` +
+                        `Description: ${options.description}<br>` +
+                        `${msgNotes}`
 
                     notifications.send({subject: subject, message: message})
                 }
@@ -901,7 +908,8 @@ class Bunq extends require("./base-events") {
 
             const subject = `Failed: ${niceAmount} ${options.currency} from ${fromAccount} to ${toAccount}`
             const message =
-                `Payment of ${niceAmount} ${options.currency} from account ${options.fromAlias} to ${options.toAlias} failed.` +
+                `Payment failed!<br>` +
+                `${niceAmount} ${options.currency} from ${options.fromAlias} to ${options.toAlias}` +
                 `<br>` +
                 `Description: ${options.description}` +
                 `<br>` +
