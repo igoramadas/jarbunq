@@ -6,6 +6,7 @@ import logger = require("anyhow")
 const settings = require("setmeup").settings
 
 // Email parsing strings.
+const arrTaxText = ["Item Tax Refund:"]
 const arrTotalText = ["Refund total:", "Item Refund:"]
 const arrItemText = ["Item details:", "Item:"]
 
@@ -20,7 +21,9 @@ const amountCleanup = function(value) {
 const EmailAction = async (message: any): Promise<any> => {
     logger.debug("EmailAction.AmazonDeRefund", message.messageId, message.from, message.subject, `To ${message.to}`)
 
-    let amount: number | string, description: string, itemDescription: string, partial: string
+    let amount: number | string, taxAmount: number | string
+    let description: string, itemDescription: string, partial: string
+    let taxIndex = -1
     let totalIndex = -1
     let itemIndex = -1
 
@@ -66,6 +69,36 @@ const EmailAction = async (message: any): Promise<any> => {
         // Order has no amount (downloads for example)?
         if (amount < 0.01) {
             return {error: "Refund amount is 0"}
+        }
+
+        // Get tax value.
+        for (let taxText of arrTaxText) {
+            if (taxIndex < 0) {
+                taxIndex = message.text.indexOf(taxText)
+
+                if (taxIndex >= 0) {
+                    partial = message.text.substring(taxIndex + taxText.length)
+                    break
+                }
+            }
+        }
+
+        // Check if tax should be added to value.
+        if (taxIndex > 0) {
+            partial = partial.substring(0, partial.indexOf("\n"))
+            taxAmount = amountCleanup(partial)
+
+            if (!isNaN(taxAmount as number)) {
+                taxAmount = parseFloat(taxAmount as string)
+
+                // Consider a 19% VAT to check if the value is already considered.
+                const taxDiff = taxAmount - (amount - amount / 1.19)
+
+                // If calculated tax differs by more than 1 cent, add tax amount to total.
+                if (Math.abs(taxDiff) > 0.1) {
+                    amount += taxAmount
+                }
+            }
         }
 
         // Set transaction description based on order details.
