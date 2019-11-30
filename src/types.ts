@@ -76,6 +76,8 @@ interface BunqCallback {
     location?: string
     /** Raw body of the original callback posted by bunq. */
     rawBody?: any
+    /** Notification processing had an error? */
+    error?: string
 }
 
 /**

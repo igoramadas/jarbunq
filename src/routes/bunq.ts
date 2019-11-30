@@ -35,6 +35,7 @@ const bunqRoutes = {
     /** OAuth2 redirect to process the code and get an access token. */
     "post:bunq/callback/:accountId": async (req, res) => {
         const data = req.body.NotificationUrl
+        let notification: Partial<BunqCallback>
 
         // Check if valid data was passed.
         if (!data) {
@@ -47,33 +48,34 @@ const bunqRoutes = {
             const objectData = data.object[notificationType]
 
             // Get transaction amounts and description.
-            const amount = objectData.amount_billing || objectData.amount_local || objectData.amount
-            const originalAmount = objectData.amount_original_local || objectData.amount_local
+            const amount = objectData.amount || objectData.amount_billing || objectData.amount_local
             const description = objectData.description || objectData.merchant_reference
 
             // Create notification object.
-            const notification: BunqCallback = {
+            notification = {
                 id: objectData.id,
                 category: data.category,
                 description: description,
-                amount: amount.value,
-                currency: amount.currency,
                 dateCreated: moment(objectData.created).toDate(),
                 dateUpdated: moment(objectData.updated).toDate()
             }
 
-            // Keep raw body of notification?
-            if (settings.bunq.callbacks.saveRaw) {
-                notification.rawBody = data.object
+            // Check for amount.
+            if (amount) {
+                notification.amount = amount.value
+                notification.currency = amount.currency
             }
 
             // Check for additional fields.
             if (data.event_type) {
                 notification.eventType = data.event_type
             }
-            if (originalAmount) {
-                notification.originalAmount = originalAmount.value
-                notification.originalCurrency = originalAmount.currency
+            if (objectData.amount_local) {
+                notification.originalAmount = objectData.amount_local.value
+                notification.originalCurrency = objectData.amount_local.currency
+            } else if (objectData.amount_original_local) {
+                notification.originalAmount = objectData.amount_original_local.value
+                notification.originalCurrency = objectData.amount_original_local.currency
             }
             if (objectData.amount_fee) {
                 notification.feeAmount = objectData.amount_fee.value
@@ -115,15 +117,24 @@ const bunqRoutes = {
             if (objectData.city) {
                 notification.location = objectData.city
             }
-
-            // Process bunq callback and save to database.
-            bunq.callback(notification)
-            database.insert("callbacks", notification)
         } catch (ex) {
-            logger.error(`Routes.bunqCallback`, `Account: ${req.params.accountId}`, ex)
+            logger.error(`Routes.bunqCallback`, `Account: ${req.params.accountId}`, "Can't process notification", ex)
+            notification.error = ex.toString()
         }
 
-        app.renderJson(req, res, {ok: true})
+        // Process bunq callback and save to database.
+        try {
+            if (settings.bunq.callbacks.saveRaw) {
+                notification.rawBody = data.object
+            }
+
+            database.insert("callbacks", notification)
+            bunq.callback(notification as BunqCallback)
+            app.renderJson(req, res, {ok: true})
+        } catch (ex) {
+            logger.error(`Routes.bunqCallback`, `Account: ${req.params.accountId}`, "Can't save notification", ex)
+            app.renderJson(req, res, {ok: false})
+        }
     }
 }
 
