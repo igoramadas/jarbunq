@@ -681,7 +681,7 @@ class Bunq extends require("./base-events") {
             // Check if payments are disable. If so, log instead, otherwise proceed.
             if (settings.bunq.disablePayments) {
                 paymentId = 0
-                logger.warn("Bunq.makePayment", `${logDraft} ! DISABLED !`, logFromTo, options.description)
+                logger.warn("Bunq.makePayment", "Payments are DISABLED on settings", logDraft, logFromTo, options.description)
             } else {
                 // Is it a draft or regular payment?
                 if (options.draft) {
@@ -738,13 +738,14 @@ class Bunq extends require("./base-events") {
                 if (settings.notification.events.paymentSuccess) {
                     const fromAccount = this.getAccountFromAlias(options.fromAlias, true)
                     const toAccount = this.getAccountFromAlias(options.toAlias, true)
+                    const paymentIntro = options.draft ? "Draft payment requested" : "Payment successful"
 
                     const subject = `${niceAmount} ${options.currency} from ${fromAccount} to ${toAccount}`
                     const message =
-                        `Payment successful!<br>` +
+                        `${paymentIntro}!<br>` +
                         `${niceAmount} ${options.currency} from ${options.fromAlias} to ${options.toAlias}<br><br>` +
                         `Description: ${options.description}<br>` +
-                        `${msgNotes}`
+                        `${msgNotes}<br>`
 
                     notifications.send({subject: subject, message: message})
                 }
