@@ -125,18 +125,6 @@ interface EmailNotificationOptions extends BaseNotificationOptions {
 }
 
 /**
- * Defines a notification filter URL (callback) opened with bunq.
- */
-interface NotificationFilterUrl {
-    /** The URL id. */
-    id: number
-    /** The category, can be PAYMENT, DRAFT_PAYMENT, CARD_TRANSACTION_SUCCESSFUL, CARD_TRANSACTION_FAILED. */
-    category: string
-    /** Date of creation. */
-    date: Date
-}
-
-/**
  * Defines payment options.
  */
 interface PaymentOptions {

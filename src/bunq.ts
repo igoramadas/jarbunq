@@ -522,7 +522,7 @@ class Bunq extends require("./base-events") {
      * Get the current account balance for the specified alias.
      * @param alias The email, phone or IBAN of the account.
      */
-    getAccountBalance = async (alias: string | number) => {
+    getAccountBalance = async (alias: string | number): Promise<number> => {
         logger.debug("Bunq.getAccountBalance", alias)
 
         try {
@@ -537,7 +537,7 @@ class Bunq extends require("./base-events") {
             })
 
             if (!acc) {
-                throw new Error(`Account ${alias} not found.`)
+                throw new Error(`Account ${alias} not found`)
             }
 
             return parseFloat(acc.balance.value)

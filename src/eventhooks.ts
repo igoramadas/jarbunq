@@ -133,7 +133,7 @@ class Eventhooks {
             }
 
             const actions = _.isArray(specs.actions) ? specs.actions : [specs.actions]
-            const hasPayment = _.some(actions, a => {
+            const hasPayment = _.some(actions, (a) => {
                 return a.payment != null
             })
 
@@ -330,7 +330,18 @@ class Eventhooks {
     // List of available actions for payment hooks.
     actions = {
         // Make a payment.
-        payment: async (options: PaymentOptions, _data: any): Promise<void> => {
+        payment: async (options: PaymentOptions): Promise<void> => {
+            await bunq.makePayment(options)
+        },
+        // Transfer balance from one account to the other.
+        balanceTransfer: async (options: PaymentOptions): Promise<void> => {
+            if (options.amount < 0.001 || options.amount > 1) {
+                throw new Error(`Action balanceTransfer must have amount between (including) 0.001 and 1`)
+            }
+
+            const balance = await bunq.getAccountBalance(options.fromAlias)
+            options.amount = balance * options.amount
+
             await bunq.makePayment(options)
         },
         // Send data to an URL. By default it will POST (if no method was specified).
