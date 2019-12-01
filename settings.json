@@ -180,8 +180,8 @@
     // Zalando settings (defaults are for Zalando.de, in Germany).
     "zalando": {
         // Automatically schedule draft payments for Zalando invoices?
-        // Default is 12 days, set to 0 or false to disable.
-        "autoScheduleDays": 12,
+        // Default is 10 days, set to 0 or false to disable.
+        "autoScheduleDays": 10,
         // Target IBAN for Zalando invoice payments.
         "iban": "DE86210700200123010101",
         // Target name for Zalando invoice payments.
