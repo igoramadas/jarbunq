@@ -2,6 +2,7 @@
 // These routes are exclusively triggered by bunq, hence they are not
 // under the default /api scope.
 
+import _ = require("lodash")
 import bunq = require("../bunq")
 import database = require("../database")
 import logger = require("anyhow")
@@ -54,10 +55,21 @@ const bunqRoutes = {
             // Create notification object.
             notification = {
                 id: objectData.id,
-                category: data.category,
+                type: objectData.sub_type || notificationType.toUpperCase(),
+                eventType: data.event_type || data.category,
                 description: description,
                 dateCreated: moment(objectData.created).toDate(),
                 dateUpdated: moment(objectData.updated).toDate()
+            }
+
+            // Check for account details.
+            if (objectData.monetary_account_id) {
+                notification.accountId = objectData.monetary_account_id
+
+                const findAccount = _.find(bunq.accounts, {id: objectData.monetary_account_id})
+                if (findAccount) {
+                    notification.accountName = findAccount.description
+                }
             }
 
             // Check for amount.
@@ -67,9 +79,6 @@ const bunqRoutes = {
             }
 
             // Check for additional fields.
-            if (data.event_type) {
-                notification.eventType = data.event_type
-            }
             if (objectData.amount_local) {
                 notification.originalAmount = objectData.amount_local.value
                 notification.originalCurrency = objectData.amount_local.currency
@@ -80,9 +89,6 @@ const bunqRoutes = {
             if (objectData.amount_fee) {
                 notification.feeAmount = objectData.amount_fee.value
                 notification.feeCurrency = objectData.amount_fee.currency
-            }
-            if (objectData.monetary_account_id) {
-                notification.accountId = objectData.monetary_account_id
             }
             if (objectData.card_id) {
                 notification.cardId = objectData.card_id
@@ -105,8 +111,10 @@ const bunqRoutes = {
                     }
                 }
             }
-            if (objectData.clearing_status) {
-                notification.clearingStatus = objectData.clearing_status
+            if (objectData.status) {
+                notification.status = objectData.status
+            } else if (objectData.clearing_status) {
+                notification.status = objectData.clearing_status
             }
             if (objectData.auto_save_entry && objectData.auto_save_entry.payment_savings) {
                 notification.autoSavePaymentId = objectData.auto_save_entry.payment_savings.id

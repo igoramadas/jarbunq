@@ -371,7 +371,7 @@ class Bunq extends require("./base-events") {
         try {
             account = _.find(this.accounts, {id: notification.accountId})
             accountName = account ? account.description : notification.accountId || "unknown"
-            eventType = notification.eventType || notification.category
+            eventType = notification.eventType || notification.type
 
             logger.info("Bunq.callback", notification.id, eventType, `Account: ${accountName}`, notification.description)
             this.events.emit(`callback`, notification)

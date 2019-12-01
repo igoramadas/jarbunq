@@ -34,8 +34,14 @@ interface BaseNotificationOptions {
 interface BunqCallback {
     /** Notification event ID. */
     id: number
-    /** Notification category. */
-    category: string
+    /** Type of notification. */
+    type: string
+    /** Event type. */
+    eventType: string
+    /** Account ID (numeric). */
+    accountId: number
+    /** Account name. */
+    accountName: string
     /** Notification description. */
     description: string
     /** Date and time of the event creation. */
@@ -56,10 +62,6 @@ interface BunqCallback {
     feeAmount?: number
     /** Fee currency. */
     feeCurrency?: string
-    /** Event type. */
-    eventType?: string
-    /** Account ID (numeric). */
-    accountId?: number
     /** Card ID (numeric but NOT the card number) */
     cardId?: number
     /** Card type: MAESTRO, MASTERCARD, MAESTRO_MOBILE_NFC, MASTERCARD_MOBILE_NFC, MASTERCARD_VIRTUAL */
@@ -68,8 +70,8 @@ interface BunqCallback {
     cardLabel?: string
     /** Last 4 digits of the card. */
     card4Digits?: string
-    /** Payment clearing status. */
-    clearingStatus?: string
+    /** Payment / clearing status. */
+    status?: string
     /** Auto save amount. */
     autoSavePaymentId?: number
     /** Location or city where event happened. */
