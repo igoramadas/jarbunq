@@ -2,20 +2,23 @@
 
 Jarbunq is a Node.js / TypeScript based service to automate tasks on your bunq account(s).
 
-**This is a personal "weekend-project", and NOT an official bunq software.**
-
 ## Features
 
-- Trigger actions on bunq accounts based on received emails
+- Trigger actions on bunq accounts based on received emails:
     - Action: Generic - transfer fixed amount when email comes with the specified address, subject and/or body
     - Action: Amazon.de - transfer order values from the Main account to the Amazon account
     - Action: Amazon.de Refund - transfer Amazon refunds from the Amazon to the Main account
     - Action: LBB Credit Card - make sure the Amazon account has enough funds to pay the credit card bills
     - Action: Zalando.de - reserve amounts and schedule payments for Zalando.de invoices
+- Eventhooks to automate payments and integrate with external systems (a mini IFTTT), like:
+    - Auto save a % of current balance to savings account when salary arrives
+    - Forward rent payments from your flatmates to the owners account
+    - Make a donation of 5 EUR each time you buy flight tickets
+    - Forward failed card payments notifications to your security system
+    - Etc etc etc, your imagination is the limit :-)
 - Auto save money for kilometers and elevation ridden on Strava, daily or weekly
 - Transfers can be fully automated, or as draft (with approval needed by the owner)
-- Eventhooks to automate payments and integrate with external systems (a mini IFTTT)
-- Email and push notifications for actions handled by the service
+- Email and push notifications (via Pushover or similar)
 - Easily add your own features via a plugins file / folder
 
 ## Crazy quick start guide
