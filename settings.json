@@ -41,7 +41,7 @@
             // Which event categories should Jarbunq listen to? The default categories listed below
             // are related to payment and transactions only. To add more, see the full list of
             // categories at https://beta.doc.bunq.com/basics/callbacks#callback-categories
-            "categories": ["PAYMENT", "DRAFT_PAYMENT", "CARD_TRANSACTION_SUCCESSFUL", "CARD_TRANSACTION_FAILED", "SCHEDULE_RESULT", "IDEAL", "SOFORT"],
+            "categories": ["MUTATION", "DRAFT_PAYMENT", "CARD_TRANSACTION_FAILED"],
             // Save original full body of incoming notifications from bunq on the database?
             // If true, the orginal body will be added to the "raw" property of notifications.
             "saveRaw": false

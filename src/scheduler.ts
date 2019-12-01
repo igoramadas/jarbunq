@@ -34,7 +34,7 @@ class Scheduler extends require("./base-events") {
             const size = database.db.get("scheduler").size()
 
             if (size > 0) {
-                logger.info("Scheduler.init", `There are ${size} pending scheduled jobs`)
+                logger.info("Scheduler.init", `There are ${size} pending scheduled job(s)`)
             } else {
                 logger.info("Scheduler.init", "No pending scheduled jobs")
             }
