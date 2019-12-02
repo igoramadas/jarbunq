@@ -80,15 +80,18 @@ const bunqRoutes = {
 
             // Check for additional fields.
             if (objectData.amount_local) {
-                notification.originalAmount = objectData.amount_local.value
+                notification.originalAmount = parseFloat(objectData.amount_local.value)
                 notification.originalCurrency = objectData.amount_local.currency
             } else if (objectData.amount_original_local) {
-                notification.originalAmount = objectData.amount_original_local.value
+                notification.originalAmount = parseFloat(objectData.amount_original_local.value)
                 notification.originalCurrency = objectData.amount_original_local.currency
             }
             if (objectData.amount_fee) {
                 notification.feeAmount = objectData.amount_fee.value
                 notification.feeCurrency = objectData.amount_fee.currency
+            }
+            if (objectData.balance_after_mutation) {
+                notification.newBalance = parseFloat(objectData.balance_after_mutation.value)
             }
             if (objectData.card_id) {
                 notification.cardId = objectData.card_id

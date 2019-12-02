@@ -186,7 +186,7 @@ class Eventhooks {
 
                         // Parse options and execute action.
                         const actionOptions = this.parseActionOptions(action[key], data)
-                        await this.actions[key](actionOptions)
+                        await this.actions[key](actionOptions, data)
 
                         // Log result.
                         for (let [key, value] of Object.entries(actionOptions)) {
@@ -292,7 +292,7 @@ class Eventhooks {
      * Parse the action options, by replacing properties
      * with data from the event when necessary.
      */
-    parseActionOptions = (actionOptions, data) => {
+    parseActionOptions = (actionOptions: any, data: any) => {
         const result = _.cloneDeep(actionOptions)
         let key: string, value: any
 
@@ -334,12 +334,22 @@ class Eventhooks {
             await bunq.makePayment(options)
         },
         // Transfer balance from one account to the other.
-        balanceTransfer: async (options: PaymentOptions): Promise<void> => {
+        balanceTransfer: async (options: PaymentOptions, data: BunqCallback): Promise<void> => {
             if (options.amount < 0.001 || options.amount > 1) {
                 throw new Error(`Action balanceTransfer must have amount between (including) 0.001 and 1`)
             }
 
-            const balance = await bunq.getAccountBalance(options.fromAlias)
+            let balance: number
+
+            // If action is triggered by a Bunq.callback event, then use the balance
+            // minus the amount at the time of the callback mutation. Otherwise simply
+            // get the current balance from the account and use the total value.
+            if (!data || (!data.newBalance && data.newBalance !== 0)) {
+                balance = await bunq.getAccountBalance(options.fromAlias)
+            } else {
+                balance = data.newBalance - data.amount
+            }
+
             options.amount = balance * options.amount
 
             await bunq.makePayment(options)

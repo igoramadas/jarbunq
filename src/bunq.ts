@@ -331,6 +331,7 @@ class Bunq extends require("./base-events") {
             return
         }
 
+
         let result: any = {}
 
         // Iterate accounts to create individual callbacks, but only for accounts

@@ -62,6 +62,8 @@ interface BunqCallback {
     feeAmount?: number
     /** Fee currency. */
     feeCurrency?: string
+    /** Balance after mutation (for payments and transactions). */
+    newBalance?: number
     /** Card ID (numeric but NOT the card number) */
     cardId?: number
     /** Card type: MAESTRO, MASTERCARD, MAESTRO_MOBILE_NFC, MASTERCARD_MOBILE_NFC, MASTERCARD_VIRTUAL */
