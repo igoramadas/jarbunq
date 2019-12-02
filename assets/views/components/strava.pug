@@ -11,10 +11,12 @@
                 thead
                     tr
                         th Details
-                        th KM
+                        th Distance
+                        th Elevation
                         th.has-text-right Amount
                 tbody
                     tr(v-for="s in stravaPayments")
                         td.date {{ moment(s.date).format(jarbunq.shortDateTimeFormat) }}
-                        td.km {{ s.totalKm }} KM
+                        td.distance {{ s.distance }}km
+                        td.elevation {{ s.elevation }}m
                         td.amount.has-text-right {{ s.payment.amount.toFixed(2) }} EUR
