@@ -66,12 +66,11 @@
 					<h1>Jarbunq</h1>
 				</a>
 				<p>Jarbunq is a Node.js / TypeScript based service to automate tasks on your bunq account(s).</p>
-				<p><strong>This is a personal &quot;weekend-project&quot;, and NOT an official bunq software.</strong></p>
 				<a href="#features" id="features" style="color: inherit; text-decoration: none;">
 					<h2>Features</h2>
 				</a>
 				<ul>
-					<li>Trigger actions on bunq accounts based on received emails<ul>
+					<li>Trigger actions on bunq accounts based on received emails:<ul>
 							<li>Action: Generic - transfer fixed amount when email comes with the specified address, subject and/or body</li>
 							<li>Action: Amazon.de - transfer order values from the Main account to the Amazon account</li>
 							<li>Action: Amazon.de Refund - transfer Amazon refunds from the Amazon to the Main account</li>
@@ -79,10 +78,17 @@
 							<li>Action: Zalando.de - reserve amounts and schedule payments for Zalando.de invoices</li>
 						</ul>
 					</li>
+					<li>Eventhooks to automate payments and integrate with external systems (a mini IFTTT), like:<ul>
+							<li>Auto save a % of current balance to savings account when salary arrives</li>
+							<li>Forward rent payments from your flatmates to the owners account</li>
+							<li>Make a donation of 5 EUR each time you buy flight tickets</li>
+							<li>Forward failed card payments notifications to your security system</li>
+							<li>Etc etc etc, your imagination is the limit :-)</li>
+						</ul>
+					</li>
 					<li>Auto save money for kilometers and elevation ridden on Strava, daily or weekly</li>
 					<li>Transfers can be fully automated, or as draft (with approval needed by the owner)</li>
-					<li>Eventhooks to automate payments and integrate with external systems (a mini IFTTT)</li>
-					<li>Email and push notifications for actions handled by the service</li>
+					<li>Email and push notifications (via Pushover or similar)</li>
 					<li>Easily add your own features via a plugins file / folder</li>
 				</ul>
 				<a href="#crazy-quick-start-guide" id="crazy-quick-start-guide" style="color: inherit; text-decoration: none;">
