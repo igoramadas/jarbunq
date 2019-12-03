@@ -79,9 +79,9 @@ class Strava extends require("./base-events") {
             target.add(8 - day, "days")
         }
 
+        // Maybe we just missed the payment? Check the database, if we're less than 8 hours
+        // from the execution time at same day, and no payment was recorded yet, then do it now.
         if (now.isAfter(target)) {
-            // Maybe we just missed the payment? Check the database, if we're less than 8 hours
-            // from the execution time at same day, and no payment was recorded yet, then do it now.
             if (now.diff(target) <= ms8Hours && now.format("HH:mm") > settings.strava.payments.time) {
                 const paymentFinder = (p) => {
                     return moment(p.date).dayOfYear() == now.dayOfYear()
@@ -98,7 +98,7 @@ class Strava extends require("./base-events") {
                 }
             }
 
-            target.add(1, "days")
+            target.add(7, "days")
         }
 
         const diff = target.diff(now)
