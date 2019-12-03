@@ -10,7 +10,7 @@ Jarbunq is a Node.js / TypeScript based service to automate tasks on your bunq a
     - Action: Amazon.de Refund - transfer Amazon refunds from the Amazon to the Main account
     - Action: LBB Credit Card - make sure the Amazon account has enough funds to pay the credit card bills
     - Action: Zalando.de - reserve amounts and schedule payments for Zalando.de invoices
-- Eventhooks to automate payments and integrate with external systems (a mini IFTTT), like:
+- Eventhooks to automate payments and integrate with external systems (a mini IFTTT), examples:
     - Auto save a % of current balance to savings account when salary arrives
     - Forward rent payments from your flatmates to the owners account
     - Make a donation of 5 EUR each time you buy flight tickets
