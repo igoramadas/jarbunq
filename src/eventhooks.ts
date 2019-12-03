@@ -226,7 +226,7 @@ class Eventhooks {
         // and continue to next property when a match is found.
         for (let [key, value] of Object.entries(eventhook.data)) {
             try {
-                let condition: string, cValue: any
+                let condition: string, cValue: any, arrValue: any[]
 
                 // Data not found? Stop right here.
                 if (typeof data[key] == "undefined" || (data[key] === null && value)) {
@@ -243,6 +243,7 @@ class Eventhooks {
                 if (_.isArray(value) && (value as any[]).length == 2) {
                     condition = value[0]
                     cValue = value[1]
+                    arrValue = _.slice(value, 1)
                 } else {
                     condition = "has"
                     cValue = value
@@ -266,12 +267,18 @@ class Eventhooks {
                 // Not equal...
                 if ((condition == "!=" || condition == "neq") && cValue !== data[key]) continue
 
-                // Default comparison: has...
-                if (condition == "has") {
-                    const dataString = data[key].toString().toLowerCase()
-                    const valueString = cValue.toString().toLowerCase()
+                // Comparison for "eq and "has".
+                for (let subValue of arrValue) {
+                    if (condition == "eq" && data[key] === subValue) {
+                        continue
+                    }
 
-                    if (dataString.indexOf(valueString) >= 0) {
+                    // Lowercase everythjing for comparison.
+                    const dataStringLc = data[key].toString().toLowerCase()
+                    const subValueLc = subValue.toString().toLowerCase()
+
+                    // Lowercased "has" comparison.
+                    if (condition == "has" && dataStringLc.indexOf(subValueLc) >= 0) {
                         continue
                     }
                 }
