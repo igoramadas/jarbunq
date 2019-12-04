@@ -102,7 +102,7 @@ class EmailAccount extends require("./base-events") {
     private onReady = () => {
         logger.debug("EmailAccount.onRead")
 
-        this.client.openBox(this.config.inboxName, false, err => {
+        this.client.openBox(this.config.inboxName, false, (err) => {
             if (err) {
                 this.retryCount++
 
@@ -217,8 +217,8 @@ class EmailAccount extends require("./base-events") {
             }
 
             const fetcher = this.client.fetch(results, {size: true, struct: true, markSeen: false, bodies: ""})
-            fetcher.on("message", msg => this.downloadMessage(msg))
-            fetcher.once("error", err => logger.error("EmailAccount.fetchMessages.onError", this.id, err))
+            fetcher.on("message", (msg) => this.downloadMessage(msg))
+            fetcher.once("error", (err) => logger.error("EmailAccount.fetchMessages.onError", this.id, err))
 
             // Log and set last fetch timestamp.
             logger.info("EmailAccount.fetchMessages", this.id, `${results.length} message(s)`)
@@ -256,10 +256,10 @@ class EmailAccount extends require("./base-events") {
         }
 
         // Get message attributes and body chunks, and on end proccess the message.
-        rawMessage.once("attributes", attrs => {
+        rawMessage.once("attributes", (attrs) => {
             uid = attrs.uid
         })
-        rawMessage.on("body", stream => mailparser.simpleParser(stream, parserCallback))
+        rawMessage.on("body", (stream) => mailparser.simpleParser(stream, parserCallback))
     }
 
     /**
@@ -363,46 +363,9 @@ class EmailAccount extends require("./base-events") {
 
             // Extra validation on incoming messages. Must have
             // at least 4 out of 7 possible security features.
-            if (settings.email.checkSecurity) {
-                let securityCount = 0
-
-                if (message.headers.has("received-spf") && message.headers.get("received-spf").includes("pass")) {
-                    securityCount++
-                }
-
-                // Check for authentication results header, or via ARC.
-                if (message.headers.has("authentication-results")) {
-                    const authResults = message.headers.get("authentication-results")
-                    if (authResults.includes("spf=pass")) {
-                        securityCount++
-                    }
-                    if (authResults.includes("dkim=pass")) {
-                        securityCount++
-                    }
-                } else if (message.headers.has("arc-authentication-results")) {
-                    const arcAuthResults = message.headers.get("arc-authentication-results")
-                    if (arcAuthResults.includes("spf=pass")) {
-                        securityCount++
-                    }
-                    if (arcAuthResults.includes("dkim=pass")) {
-                        securityCount++
-                    }
-                }
-
-                // Check for ARC seal.
-                if (message.headers.has("arc-seal")) {
-                    securityCount++
-                }
-
-                // Check for security scan.
-                if (message.headers.has("x-cloud-security-sender") && rule.from.indexOf(message.headers.get("x-cloud-security-sender")) > 0) {
-                    securityCount++
-                }
-
-                // Less than 3 security features? Quit processing here.
-                if (securityCount < 4) {
-                    return logger.error("EmailAccount", this.id, message.messageId, message.subject, "Message did not pass the security checks")
-                }
+            if (settings.email.checkSecurity && !this.validateEmail(message, rule)) {
+                logger.error("EmailAccount", this.id, message.messageId, message.subject, "Message did not pass the security checks")
+                return
             }
 
             if (processedEmail == null) {
@@ -478,13 +441,56 @@ class EmailAccount extends require("./base-events") {
 
             // Mark message as read?
             if (settings.email.markAsRead && message.uid) {
-                this.client.addFlags(message.uid, "SEEN", err => {
+                this.client.addFlags(message.uid, "SEEN", (err) => {
                     if (err) {
                         logger.error("EmailAccount.processEmail", "markAsRead", message.messageId, message.subject, err)
                     }
                 })
             }
         }
+    }
+
+    /**
+     * Check email headers for security features.
+     */
+    private validateEmail = (message, rule): boolean => {
+        let securityCount = 0
+
+        if (message.headers.has("received-spf") && message.headers.get("received-spf").includes("pass")) {
+            securityCount++
+        }
+
+        // Check for authentication results header, or via ARC.
+        if (message.headers.has("authentication-results")) {
+            const authResults = message.headers.get("authentication-results")
+            if (authResults.includes("spf=pass")) {
+                securityCount++
+            }
+            if (authResults.includes("dkim=pass")) {
+                securityCount++
+            }
+        } else if (message.headers.has("arc-authentication-results")) {
+            const arcAuthResults = message.headers.get("arc-authentication-results")
+            if (arcAuthResults.includes("spf=pass")) {
+                securityCount++
+            }
+            if (arcAuthResults.includes("dkim=pass")) {
+                securityCount++
+            }
+        }
+
+        // Check for ARC seal.
+        if (message.headers.has("arc-seal")) {
+            securityCount++
+        }
+
+        // Check for security scan.
+        if (message.headers.has("x-cloud-security-sender") && rule.from.indexOf(message.headers.get("x-cloud-security-sender")) > 0) {
+            securityCount++
+        }
+
+        // At least 3 security features required.
+        return securityCount >= 3
     }
 }
 
