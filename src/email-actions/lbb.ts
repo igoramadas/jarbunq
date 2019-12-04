@@ -43,7 +43,7 @@ const EmailAction = async (message: any): Promise<any> => {
         description = `Invoice top-up to ${invoiceAmountString}`
 
         // How much top-up is needed?
-        const diffAmount = (invoiceAmount - balance) * settings.amazon.paymentMultiplier
+        const diffAmount = (invoiceAmount - balance) * 1.001
 
         // Set payment options.
         const paymentOptions: PaymentOptions = {
