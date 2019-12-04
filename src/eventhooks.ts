@@ -240,7 +240,7 @@ class Eventhooks {
 
                 // If an array with 2 indexes, we expect it's a [condition, value] type,
                 // otherwise assume the generic "has".
-                if (_.isArray(value) && (value as any[]).length == 2) {
+                if (_.isArray(value) && (value as any[]).length >= 2) {
                     condition = value[0]
                     cValue = value[1]
                     arrValue = _.slice(value, 1)
