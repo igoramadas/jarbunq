@@ -287,7 +287,7 @@ class Eventhooks {
                 return false
             } catch (ex) {
                 logger.error("Eventhooks.processEvent", key, value, ex)
-                data = null
+                return false
             }
         }
 
