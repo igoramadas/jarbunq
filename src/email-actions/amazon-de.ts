@@ -110,7 +110,7 @@ const EmailAction = async (message: any): Promise<any> => {
         }
 
         // Get order number and description.
-        description = `Order ${orderNumber}`
+        description = `Amazon Order ${orderNumber}`
 
         // Set payment notes.
         const notes: string[] = [`Order total: ${amount.toFixed(2)} EUR`]
