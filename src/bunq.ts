@@ -331,7 +331,6 @@ class Bunq extends require("./base-events") {
             return
         }
 
-
         let result: any = {}
 
         // Iterate accounts to create individual callbacks, but only for accounts
@@ -455,6 +454,12 @@ class Bunq extends require("./base-events") {
             for (let acc of accounts) {
                 let firstKey = Object.keys(acc)[0]
                 acc[firstKey].type = firstKey.replace("MonetaryAccount", "")
+
+                // Only consider active accounts.
+                if (acc[firstKey].status && acc[firstKey].status.toUpperCase() != "ACTIVE") {
+                    continue
+                }
+
                 updatedAccounts.push(acc[firstKey])
 
                 // New account description?
