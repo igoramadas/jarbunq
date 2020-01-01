@@ -471,7 +471,7 @@ class Bunq extends require("./base-events") {
             this.accounts = updatedAccounts
 
             const logChangedAccounts = diffAccountNames.length > 0 ? "Changed: " + diffAccountNames.join(", ") : "No changes"
-            logger.info("Bunq.getAccounts", `Got ${accounts.length} accounts`, logChangedAccounts)
+            logger.info("Bunq.getAccounts", `Got ${updatedAccounts.length} active accounts`, logChangedAccounts)
             this.events.emit("getAccounts", this.accounts)
 
             return this.accounts
