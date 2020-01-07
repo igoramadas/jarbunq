@@ -143,7 +143,7 @@ class EmailManager extends require("./base-events") {
             minDate.seconds(0)
 
             // Filter function to grab payments for the last 7 days.
-            const filter = p => {
+            const filter = (p) => {
                 const pDate = moment(p.date)
                 return pDate.isSameOrAfter(minDate) && pDate.isSameOrBefore(yesterday)
             }
@@ -195,7 +195,7 @@ class EmailManager extends require("./base-events") {
 
             // Build subject and message strings.
             const subject = `Weekly payment report from ${settings.app.title}`
-            const message = `<div>This is your weekly report of payments triggered by Jarbunq last week.</div>
+            const message = `<div>Here's your weekly report of payments triggered by Jarbunq last week.</div>
                              <div>--</div>
                              ${paymentStrings.join("<br>--<br>")}`
 

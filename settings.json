@@ -8,7 +8,9 @@
         // You can add an extra to every Amazon payment, to cover for occasional fees and late
         // payments. For instance set this to 1.01 to add a 1% on top of amazon order values
         // transferred to your Amazon account.
-        "paymentMultiplier": 1
+        "paymentMultiplier": 1,
+        // Refunds should be processed 7 days after refund email is received by default.
+        "refunDays": 7
     },
     "app": {
         // Web admin authentication.

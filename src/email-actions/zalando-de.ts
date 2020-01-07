@@ -72,6 +72,8 @@ const EmailAction = async (message: any): Promise<any> => {
             }
 
             scheduler.queue(job)
+
+            return `Payment of ${invoiceAmount.toFixed(2)} scheduled to ${targetDate.format("ll")}`
         }
 
         return paymentOptions
