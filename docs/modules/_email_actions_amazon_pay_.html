@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>&quot;email-actions/generic&quot; | Jarbunq</title>
+	<title>&quot;email-actions/amazon-pay&quot; | Jarbunq</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -54,10 +54,10 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="_email_actions_generic_.html">&quot;email-actions/generic&quot;</a>
+					<a href="_email_actions_amazon_pay_.html">&quot;email-actions/amazon-pay&quot;</a>
 				</li>
 			</ul>
-			<h1>External module &quot;email-actions/generic&quot;</h1>
+			<h1>External module &quot;email-actions/amazon-pay&quot;</h1>
 		</div>
 	</div>
 </header>
@@ -71,8 +71,18 @@
 						<section class="tsd-index-section tsd-is-not-exported">
 							<h3>Variables</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported"><a href="_email_actions_generic_.html#arrtotaltext" class="tsd-kind-icon">arr<wbr>Total<wbr>Text</a></li>
-								<li class="tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported"><a href="_email_actions_generic_.html#logger" class="tsd-kind-icon">logger</a></li>
+								<li class="tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported"><a href="_email_actions_amazon_pay_.html#arrmerchanttext" class="tsd-kind-icon">arr<wbr>Merchant<wbr>Text</a></li>
+								<li class="tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported"><a href="_email_actions_amazon_pay_.html#arrpaymentidtext" class="tsd-kind-icon">arr<wbr>Payment<wbr>IdText</a></li>
+								<li class="tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported"><a href="_email_actions_amazon_pay_.html#arrtotaltext" class="tsd-kind-icon">arr<wbr>Total<wbr>Text</a></li>
+								<li class="tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported"><a href="_email_actions_amazon_pay_.html#logger" class="tsd-kind-icon">logger</a></li>
+								<li class="tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported"><a href="_email_actions_amazon_pay_.html#settings" class="tsd-kind-icon">settings</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section tsd-is-not-exported">
+							<h3>Functions</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported"><a href="_email_actions_amazon_pay_.html#emailaction" class="tsd-kind-icon">Email<wbr>Action</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported"><a href="_email_actions_amazon_pay_.html#amountcleanup" class="tsd-kind-icon">amount<wbr>Cleanup</a></li>
 							</ul>
 						</section>
 					</div>
@@ -81,12 +91,32 @@
 			<section class="tsd-panel-group tsd-member-group tsd-is-not-exported">
 				<h2>Variables</h2>
 				<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
-					<a name="arrtotaltext" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagConst">Const</span> arr<wbr>Total<wbr>Text</h3>
-					<div class="tsd-signature tsd-kind-icon">arr<wbr>Total<wbr>Text<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> = [&quot;Order Total Including VAT&quot;, &quot;Order Grand Total&quot;, &quot;Order Total&quot;, &quot;Total Amount&quot;, &quot;Total sum&quot;]</span></div>
+					<a name="arrmerchanttext" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagConst">Const</span> arr<wbr>Merchant<wbr>Text</h3>
+					<div class="tsd-signature tsd-kind-icon">arr<wbr>Merchant<wbr>Text<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> = [&quot;Merchant information&quot;]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/1e615bb/src/email-actions/generic.ts#L8">src/email-actions/generic.ts:8</a></li>
+							<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/1e615bb/src/email-actions/amazon-pay.ts#L9">src/email-actions/amazon-pay.ts:9</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
+					<a name="arrpaymentidtext" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagConst">Const</span> arr<wbr>Payment<wbr>IdText</h3>
+					<div class="tsd-signature tsd-kind-icon">arr<wbr>Payment<wbr>IdText<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> = [&quot;Amazon Pay payment ID&quot;]</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/1e615bb/src/email-actions/amazon-pay.ts#L10">src/email-actions/amazon-pay.ts:10</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
+					<a name="arrtotaltext" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagConst">Const</span> arr<wbr>Total<wbr>Text</h3>
+					<div class="tsd-signature tsd-kind-icon">arr<wbr>Total<wbr>Text<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> = [&quot;Charge amount&quot;]</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/1e615bb/src/email-actions/amazon-pay.ts#L8">src/email-actions/amazon-pay.ts:8</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -96,9 +126,68 @@
 					<div class="tsd-signature tsd-kind-icon">logger<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/1e615bb/src/email-actions/generic.ts#L5">src/email-actions/generic.ts:5</a></li>
+							<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/1e615bb/src/email-actions/amazon-pay.ts#L4">src/email-actions/amazon-pay.ts:4</a></li>
 						</ul>
 					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
+					<a name="settings" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagConst">Const</span> settings</h3>
+					<div class="tsd-signature tsd-kind-icon">settings<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol"> = require(&quot;setmeup&quot;).settings</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/1e615bb/src/email-actions/amazon-pay.ts#L5">src/email-actions/amazon-pay.ts:5</a></li>
+						</ul>
+					</aside>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group tsd-is-not-exported">
+				<h2>Functions</h2>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported">
+					<a name="emailaction" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagConst">Const</span> Email<wbr>Action</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported">
+						<li class="tsd-signature tsd-kind-icon">Email<wbr>Action<span class="tsd-signature-symbol">(</span>message<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/1e615bb/src/email-actions/amazon-pay.ts#L20">src/email-actions/amazon-pay.ts:20</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>message: <span class="tsd-signature-type">any</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported">
+					<a name="amountcleanup" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagConst">Const</span> amount<wbr>Cleanup</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported">
+						<li class="tsd-signature tsd-kind-icon">amount<wbr>Cleanup<span class="tsd-signature-symbol">(</span>value<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/igoramadas/jarbunq/blob/1e615bb/src/email-actions/amazon-pay.ts#L13">src/email-actions/amazon-pay.ts:13</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>value: <span class="tsd-signature-type">any</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span></h4>
+						</li>
+					</ul>
 				</section>
 			</section>
 		</div>
@@ -109,17 +198,32 @@
 						<a href="../globals.html"><em>Globals</em></a>
 					</li>
 					<li class="current tsd-kind-external-module">
-						<a href="_email_actions_generic_.html">&quot;email-<wbr>actions/generic&quot;</a>
+						<a href="_email_actions_amazon_pay_.html">&quot;email-<wbr>actions/amazon-<wbr>pay&quot;</a>
 					</li>
 				</ul>
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
 					<li class=" tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
-						<a href="_email_actions_generic_.html#arrtotaltext" class="tsd-kind-icon">arr<wbr>Total<wbr>Text</a>
+						<a href="_email_actions_amazon_pay_.html#arrmerchanttext" class="tsd-kind-icon">arr<wbr>Merchant<wbr>Text</a>
 					</li>
 					<li class=" tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
-						<a href="_email_actions_generic_.html#logger" class="tsd-kind-icon">logger</a>
+						<a href="_email_actions_amazon_pay_.html#arrpaymentidtext" class="tsd-kind-icon">arr<wbr>Payment<wbr>IdText</a>
+					</li>
+					<li class=" tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
+						<a href="_email_actions_amazon_pay_.html#arrtotaltext" class="tsd-kind-icon">arr<wbr>Total<wbr>Text</a>
+					</li>
+					<li class=" tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
+						<a href="_email_actions_amazon_pay_.html#logger" class="tsd-kind-icon">logger</a>
+					</li>
+					<li class=" tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
+						<a href="_email_actions_amazon_pay_.html#settings" class="tsd-kind-icon">settings</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported">
+						<a href="_email_actions_amazon_pay_.html#emailaction" class="tsd-kind-icon">Email<wbr>Action</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported">
+						<a href="_email_actions_amazon_pay_.html#amountcleanup" class="tsd-kind-icon">amount<wbr>Cleanup</a>
 					</li>
 				</ul>
 			</nav>
