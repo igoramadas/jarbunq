@@ -170,8 +170,8 @@
         "payments": {
             // How much should be paid per kilometer ridden (distance)? Default 9 cents.
             "pricePerKm": 0.09,
-            // How much should be paid per kilometer climbed (elevation)? Default 99 cents.
-            "pricePerClimbedKm": 0.99,
+            // How much should be paid per kilometer climbed (elevation)? Default 1.19 EUR.
+            "pricePerClimbedKm": 1.19,
             // Process activities and payment daily or weekly.
             // If daily weekly payments will happen on Mondays.
             "interval": "weekly",
