@@ -57,8 +57,9 @@
         // Safeguard to avoid automatic payments of large amounts, default is 800 EUR.
         // Payments with value higher than that will automatically be set as draft payments.
         "maxPaymentAmount": 800,
-        // Safeguard to avoid low balances on accounts, by default keep at least 1 EUR.
-        "minBalance": 1,
+        // Safeguard to avoid low balances on accounts, for example you could set to 50 EUR
+        // to make sure no transactions made by Jarbunq will result in a less-than 50 balance.
+        "minBalance": 0,
         // Auto refresh user data automatically once per hour by default, value in minutes.
         "refreshMinutes": 60,
         // OAuth authorizations must be renewed at least once every 90 days.
