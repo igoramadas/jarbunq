@@ -456,13 +456,16 @@ class EmailAccount extends require("./base-events") {
     private validateEmail = (message, rule): boolean => {
         let securityCount = 0
 
-        if (message.headers.has("received-spf") && message.headers.get("received-spf").includes("pass")) {
-            securityCount++
+        if (message.headers.has("received-spf")) {
+            const spf = message.headers.get("received-spf").toString()
+            if (spf.includes("pass")) {
+                securityCount++
+            }
         }
 
         // Check for authentication results header, or via ARC.
         if (message.headers.has("authentication-results")) {
-            const authResults = message.headers.get("authentication-results")
+            const authResults = message.headers.get("authentication-results").toString()
             if (authResults.includes("spf=pass")) {
                 securityCount++
             }
@@ -470,11 +473,19 @@ class EmailAccount extends require("./base-events") {
                 securityCount++
             }
         } else if (message.headers.has("arc-authentication-results")) {
-            const arcAuthResults = message.headers.get("arc-authentication-results")
+            const arcAuthResults = message.headers.get("arc-authentication-results").toString()
             if (arcAuthResults.includes("spf=pass")) {
                 securityCount++
             }
             if (arcAuthResults.includes("dkim=pass")) {
+                securityCount++
+            }
+        } else if (message.headers.has("authentication-results-original")) {
+            const origAuthResults = message.headers.get("authentication-results-original").toString()
+            if (origAuthResults.includes("spf=pass")) {
+                securityCount++
+            }
+            if (origAuthResults.includes("dkim=pass")) {
                 securityCount++
             }
         }
