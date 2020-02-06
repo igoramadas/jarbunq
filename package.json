@@ -53,8 +53,10 @@
         "chalk": "^3.0.0",
         "typedoc": "^0.16.9"
     },
-    "pkg": {
-        "scripts": "lib/**/*.js",
-        "assets": "assets/**/*"
+    "prettier": {
+        "trailingComma": "es5",
+        "tabWidth": 4,
+        "semi": false,
+        "singleQuote": false
     }
 }
