@@ -54,9 +54,11 @@
         "typedoc": "^0.16.9"
     },
     "prettier": {
-        "trailingComma": "es5",
+        "trailingComma": "none",
         "tabWidth": 4,
         "semi": false,
-        "singleQuote": false
+        "singleQuote": false,
+        "arrowParens": "always",
+        "bracketSpacing": false
     }
 }

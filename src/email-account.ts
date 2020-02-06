@@ -45,6 +45,9 @@ class EmailAccount extends require("./base-events") {
     /** Retry count. */
     retryCount: number = 0
 
+    /** Timer to force connect regularly. */
+    timerConnect: any
+
     // CONTROL METHODS
     // --------------------------------------------------------------------------
 
@@ -58,6 +61,9 @@ class EmailAccount extends require("./base-events") {
         this.connect()
 
         this.events.emit("start")
+
+        // Auto force connect daily.
+        this.timerConnect = setInterval(this.connect, settings.email.fetchHours * 60 * 60 * 900)
     }
 
     /**
@@ -65,6 +71,9 @@ class EmailAccount extends require("./base-events") {
      * @event stop
      */
     stop = (): void => {
+        clearInterval(this.timerConnect)
+        this.timerConnect = null
+
         this.unbind()
 
         try {
