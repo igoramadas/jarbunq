@@ -9,8 +9,8 @@
         // payments. For instance set this to 1.01 to add a 1% on top of amazon order values
         // transferred to your Amazon account.
         "paymentMultiplier": 1,
-        // Refunds should be processed 7 days after refund email is received by default.
-        "refunDays": 7
+        // Refunds should be processed 8 days after refund email is received by default.
+        "refundDays": 8
     },
     "app": {
         // Web admin authentication.
