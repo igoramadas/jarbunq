@@ -1,8 +1,8 @@
-TYPEDOC:= ./node_modules/.bin/typedoc
+TYPEDOC:= ./node_modules/typeoc/bin/typedoc
+TSC:= ./node_modules/typescript/bin/tsc
 
 build:
-	rm -rf ./expressvue
-	tsc
+	$(TSC)
 
 build-settings-sample:
 	./jarbuncli.js build-settings-sample
@@ -32,23 +32,23 @@ encrypt:
 	./jarbuncli.js encrypt
 
 publish:
-	tsc --removeComments
+	$(TSC) --removeComments
 	npm publish
-	tsc
+	$(TSC)
 
 run:
-	tsc
+	$(TSC)
 	DEBUG=axios node index.js
 
 update:
-	ncu -u
+	-ncu -u
 	npm version $(shell date '+%y.%-V.%u%H') --force --allow-same-version
 	npm install
-	tsc
+	$(TSC)
 
 pm2:
 	git pull
-	tsc
+	$(TSC)
 	pm2 restart jarbunq
 
 .PHONY: docs package pm2
