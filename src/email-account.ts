@@ -372,8 +372,8 @@ class EmailAccount extends require("./base-events") {
 
             // Extra validation on incoming messages. Must have
             // at least 4 out of 7 possible security features.
-            if (settings.email.checkSecurity && !this.validateEmail(message, rule)) {
-                logger.error("EmailAccount", this.id, message.messageId, message.subject, "Message did not pass the security checks")
+            if (!this.validateEmail(message)) {
+                logger.error("EmailAccount", this.id, message.messageId, message.subject, "Message did not pass the security and header checks")
                 return
             }
 
@@ -462,55 +462,95 @@ class EmailAccount extends require("./base-events") {
     /**
      * Check email headers for security features.
      */
-    private validateEmail = (message, rule): boolean => {
-        let securityCount = 0
+    private validateEmail = (message: any): boolean => {
+        let oneFailed = false
 
-        if (message.headers.has("received-spf")) {
-            const spf = message.headers.get("received-spf").toString()
-            if (spf.includes("pass")) {
-                securityCount++
+        // Check security headers (SPF, DKIM, DMARC)?
+        if (settings.email.checkSecurity) {
+            let spf = 0
+            let dkim = 0
+            let dmarc = 0
+
+            // Check received SPF.
+            if (message.headers.has("received-spf")) {
+                const receivedSpf = message.headers.get("received-spf").toString()
+                if (receivedSpf.includes("pass")) {
+                    spf++
+                }
+            }
+
+            // Check authentication results.
+            if (message.headers.has("authentication-results")) {
+                const authResults = message.headers.get("authentication-results").toString()
+                if (authResults.includes("spf=pass")) {
+                    spf++
+                }
+                if (authResults.includes("dkim=pass")) {
+                    dkim++
+                }
+                if (authResults.includes("dmarc=pass")) {
+                    dmarc++
+                }
+            }
+            if (message.headers.has("arc-authentication-results")) {
+                const authResults = message.headers.get("authentication-results").toString()
+                if (authResults.includes("spf=pass")) {
+                    spf++
+                }
+                if (authResults.includes("dkim=pass")) {
+                    dkim++
+                }
+                if (authResults.includes("dmarc=pass")) {
+                    dmarc++
+                }
+            }
+            if (message.headers.has("authentication-results-original")) {
+                const authResults = message.headers.get("authentication-results-original").toString()
+                if (authResults.includes("spf=pass")) {
+                    spf++
+                }
+                if (authResults.includes("dkim=pass")) {
+                    dkim++
+                }
+                if (authResults.includes("dmarc=pass")) {
+                    dmarc++
+                }
+            }
+
+            // Check ARC Seal.
+            if (message.headers.has("arc-seal")) {
+                const arcSeal = message.headers.get("arc-seal").toString()
+                if (arcSeal.includes("cv=pass")) {
+                    dmarc++
+                }
+            }
+
+            // At least 2 our of 3 items must pass validation.
+            for (let i of [spf, dkim, dmarc]) {
+                if (oneFailed && i == 0) {
+                    return false
+                } else if (i == 0) {
+                    oneFailed = true
+                }
             }
         }
 
-        // Check for authentication results header, or via ARC.
-        if (message.headers.has("authentication-results")) {
-            const authResults = message.headers.get("authentication-results").toString()
-            if (authResults.includes("spf=pass")) {
-                securityCount++
-            }
-            if (authResults.includes("dkim=pass")) {
-                securityCount++
-            }
-        } else if (message.headers.has("arc-authentication-results")) {
-            const arcAuthResults = message.headers.get("arc-authentication-results").toString()
-            if (arcAuthResults.includes("spf=pass")) {
-                securityCount++
-            }
-            if (arcAuthResults.includes("dkim=pass")) {
-                securityCount++
-            }
-        } else if (message.headers.has("authentication-results-original")) {
-            const origAuthResults = message.headers.get("authentication-results-original").toString()
-            if (origAuthResults.includes("spf=pass")) {
-                securityCount++
-            }
-            if (origAuthResults.includes("dkim=pass")) {
-                securityCount++
+        // Check additional email headers, if any was defined..
+        if (settings.email.checkHeaders && _.isObject(settings.email.checkHeaders)) {
+            for (let [key, value] of Object.entries(settings.email.checkHeaders)) {
+                if (!message.headers.has(key)) {
+                    return false
+                }
+
+                const headerValue = message.headers.get(key).toString()
+
+                if (!headerValue.includes(value)) {
+                    return false
+                }
             }
         }
 
-        // Check for ARC seal.
-        if (message.headers.has("arc-seal")) {
-            securityCount++
-        }
-
-        // Check for security scan.
-        if (message.headers.has("x-cloud-security-sender") && rule.from.indexOf(message.headers.get("x-cloud-security-sender")) > 0) {
-            securityCount++
-        }
-
-        // At least 3 security features required.
-        return securityCount >= 3
+        return true
     }
 }
 

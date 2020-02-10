@@ -94,8 +94,12 @@
         "autoTLS": true,
         // If true, incoming emails will have its headers checked for extra security.
         // Change to false if you're having problems with email signatures, for instance
-        // if you host your own email server and you don't want to validate the headers.
+        // if you host your own email server and you don't want to validate SPF / DKIM / DMARC headers.
         "checkSecurity": true,
+        // Check for additional headers on incoming emails. For instance, to only accept incoming emails
+        // if they were forwarded to my@email.com, you could set:
+        // "checkHeaders:" { "x-forwarded-for": "my@email.com" },
+        "checkHeaders": null,
         // When the app starts up, it will initially fetch emails received on the last 24 hours.
         // Then emails are fetched as they arrive.
         "fetchHours": 24,
