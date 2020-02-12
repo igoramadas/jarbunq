@@ -63,10 +63,10 @@ class Bunq extends require("./base-events") {
     init = async (): Promise<void> => {
         // Make sure settings are defined.
         if (!settings.bunq.api.key) {
-            throw new Error("No API key define on settings.bunq.api.key.")
+            throw new Error("No API key defined on settings.bunq.api.key.")
         }
         if (!settings.bunq.api.cryptoKey) {
-            throw new Error("No encryption key define on settings.bunq.api.cryptoKey.")
+            throw new Error("No encryption key defined on settings.bunq.api.cryptoKey.")
         }
         if (!settings.bunq.api.clientId || !settings.bunq.api.clientSecret) {
             throw new Error("Missing a valid settings.bunq.api.clientId and settings.bunq.api.clientSecret combination.")
@@ -214,10 +214,7 @@ class Bunq extends require("./base-events") {
             if (remind) {
                 try {
                     const subject = `Jarbunq token expires in ${days} days`
-                    const message =
-                        `The authorization tokens used by Jarbunq to connect to your bunq accounts will expire in ${days} days!` +
-                        `<br><br>` +
-                        `Please open ${settings.app.url}bunq/auth on your browser to renew the tokens and avoid interruptions.`
+                    const message = `The authorization tokens used by Jarbunq to connect to your bunq accounts will expire in ${days} days!` + `<br><br>` + `Please open ${settings.app.url}bunq/auth on your browser to renew the tokens and avoid interruptions.`
 
                     notifications.send({subject: subject, message: message})
                 } catch (ex) {
@@ -287,9 +284,7 @@ class Bunq extends require("./base-events") {
                     }
 
                     // Response limiter taken directly from the bunqJSClient.
-                    const response = await limiter.run(async (axiosClient) =>
-                        bunqClient.ApiAdapter.post(`/v1/user/${userId}/monetary-account/${acc.id}/notification-filter-url`, filters, {}, {}, axiosClient)
-                    )
+                    const response = await limiter.run(async (axiosClient) => bunqClient.ApiAdapter.post(`/v1/user/${userId}/monetary-account/${acc.id}/notification-filter-url`, filters, {}, {}, axiosClient))
 
                     // Valid response? Add the result to the callbacks list.
                     if (response.Response && response.Response.length > 0 && response.Response[0].NotificationFilterUrl) {
@@ -747,11 +742,7 @@ class Bunq extends require("./base-events") {
                     const toAccount = this.getAccountFromAlias(options.toAlias, true)
 
                     const subject = `${niceAmount} ${options.currency} from ${fromAccount} to ${toAccount}`
-                    const message =
-                        `Payment successful!<br>` +
-                        `${niceAmount} ${options.currency} from ${options.fromAlias} to ${options.toAlias}<br><br>` +
-                        `Description: ${options.description}<br>` +
-                        `${msgNotes}`
+                    const message = `Payment successful!<br>` + `${niceAmount} ${options.currency} from ${options.fromAlias} to ${options.toAlias}<br><br>` + `Description: ${options.description}<br>` + `${msgNotes}`
 
                     notifications.send({subject: subject, message: message})
                 }
@@ -914,12 +905,7 @@ class Bunq extends require("./base-events") {
             const toAccount = this.getAccountFromAlias(options.toAlias, true)
 
             const subject = `Failed: ${niceAmount} ${options.currency} from ${fromAccount} to ${toAccount}`
-            const message =
-                `Payment failed!<br>` +
-                `${niceAmount} ${options.currency} from ${options.fromAlias} to ${options.toAlias}<br>` +
-                `Description: ${options.description}<br>` +
-                `${errorString}<br>` +
-                `${resError}`
+            const message = `Payment failed!<br>` + `${niceAmount} ${options.currency} from ${options.fromAlias} to ${options.toAlias}<br>` + `Description: ${options.description}<br>` + `${errorString}<br>` + `${resError}`
 
             // Send notification of failed payment.
             notifications.send({subject: subject, message: message})

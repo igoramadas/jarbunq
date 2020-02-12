@@ -1,5 +1,5 @@
-TYPEDOC:= ./node_modules/typeoc/bin/typedoc
-TSC:= ./node_modules/typescript/bin/tsc
+TYPEDOC:= ./node_modules/.bin/typedoc
+TSC:= ./node_modules/.bin/tsc
 
 build:
 	$(TSC)
