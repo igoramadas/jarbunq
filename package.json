@@ -60,6 +60,7 @@
         "semi": false,
         "singleQuote": false,
         "arrowParens": "always",
-        "bracketSpacing": false
+        "bracketSpacing": false,
+        "printWidth": 250
     }
 }
