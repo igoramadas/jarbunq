@@ -1,6 +1,6 @@
 # Jarbunq
 
-Jarbunq is a Node.js / TypeScript based service to automate tasks on your bunq account(s).
+Jarbunq is a Node.js / TypeScript based service to automate tasks on your [bunq](https://bunq.endtrk.com/RWXLS6/225JFQ/?sourceId=jarbunq) account(s).
 
 ## Features
 
@@ -32,10 +32,6 @@ Jarbunq is a Node.js / TypeScript based service to automate tasks on your bunq a
 
 Need help? Sure you do. Then follow these [detailed instructions](https://github.com/igoramadas/jarbunq/wiki/Downloading-the-code)...
 
-## Are you good with UX?
-
-Help is needed! There's a very basic and crude web UI to see contents from the database at the moment. I am more of a command line / API guy, so I haven't taken the necessary time to build a proper management UI yet. If you want to help building one, so users can not only query DB contents but also change the service settings, please let me know :-)
-
 ## What for?
 
 The idea came up once I decided to automate some of my bike related savings. I usually spare some money every month for the eventual replacement of chains, cassette, cables and other wear-prone parts. But it would be much cooler if I could do this automatically and based on my actual mileage, insead of a fixed monthly amount :-)
@@ -49,11 +45,14 @@ And a big **thank you** to all the open-source warriors that are responsible for
 ## Why Jarbunq?
 
 Total lack of creativity. Jarvis + bunq.
-sure.
 
 ## How stable is this?
 
 I have it running myself on my own server since 1st of September 2019. No issues so far, and a bunch of automated payments processed successfully :-)
+
+## I don't even know what bunq is...
+
+Then head on to [bunq.com](https://bunq.endtrk.com/RWXLS6/225JFQ/?sourceId=jarbunq) and learn more. In a few words, the best banking experience you can have in Europe right now.
 
 ## Bugs or suggestions?
 
