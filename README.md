@@ -46,13 +46,13 @@ And a big **thank you** to all the open-source warriors that are responsible for
 
 Total lack of creativity. Jarvis + bunq.
 
+## Why bunq?
+
+I don't think you'll find a bank that offers such a great and open API elsewhere. Once you try [bunq](https://bunq.endtrk.com/RWXLS6/225JFQ/?sourceId=jarbunq) and start integrating with its API, you'll ask yourself "why should I use any other bank now?"
+
 ## How stable is this?
 
 I have it running myself on my own server since 1st of September 2019. No issues so far, and a bunch of automated payments processed successfully :-)
-
-## I don't even know what bunq is...
-
-Then head on to [bunq.com](https://bunq.endtrk.com/RWXLS6/225JFQ/?sourceId=jarbunq) and learn more. In a few words, the best banking experience you can have in Europe right now.
 
 ## Bugs or suggestions?
 

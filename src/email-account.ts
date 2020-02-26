@@ -290,7 +290,8 @@ class EmailAccount extends require("./base-events") {
             const existingMessage = findExisting.value()
 
             if (existingMessage != null) {
-                return logger.warn("EmailAccount.processEmail", message.messageId, from, message.subject, `Skip, was already processed at ${existingMessage.date}`)
+                logger.warn("EmailAccount.processEmail", message.messageId, from, message.subject, `Skip, was already processed at ${existingMessage.date}`)
+                return
             }
         } catch (ex) {
             logger.error("EmailAccount.processEmail", this.id, message.messageId, ex)

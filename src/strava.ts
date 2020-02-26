@@ -54,7 +54,8 @@ class Strava extends require("./base-events") {
 
         // Missing credentials? Stop here.
         if (!settings.strava.api.clientId || !settings.strava.api.clientSecret) {
-            return logger.warn("Strava.init", "Missing strava clientId, clientSecret or refreshToken", "Strava features won't be enabled")
+            logger.warn("Strava.init", "Missing strava clientId, clientSecret or refreshToken", "Strava features won't be enabled")
+            return
         }
 
         // Refresh the access token and user info first.
@@ -106,12 +107,7 @@ class Strava extends require("./base-events") {
 
         // Log successful init.
         const timeToNext = moment.duration(diff).humanize(true)
-        logger.info(
-            "Strava.init",
-            paymentInterval,
-            `${settings.strava.payments.pricePerKm.toFixed(2)} distance / ${settings.strava.payments.pricePerClimbedKm.toFixed(2)} elevation price`,
-            `Next payment ${timeToNext}`
-        )
+        logger.info("Strava.init", paymentInterval, `${settings.strava.payments.pricePerKm.toFixed(2)} distance / ${settings.strava.payments.pricePerClimbedKm.toFixed(2)} elevation price`, `Next payment ${timeToNext}`)
     }
 
     // AUTH METHODS

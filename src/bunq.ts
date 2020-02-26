@@ -75,7 +75,9 @@ class Bunq extends require("./base-events") {
         // DEPRECATED! The notificationFilters setting should be migrate to the callbacks.enabled property.
         if (_.isBoolean(settings.bunq.notificationFilters)) {
             logger.warn("Bunq.init", "Please use settings.bunq.callbacks.enabled instead of settings.bunq.notificationFilters only.")
-            settings.bunq.callbacks = {enabled: settings.bunq.notificationFilters}
+            settings.bunq.callbacks = {
+                enabled: settings.bunq.notificationFilters
+            }
             delete settings.bunq.notificationFilters
         }
 
@@ -214,14 +216,15 @@ class Bunq extends require("./base-events") {
             if (remind) {
                 try {
                     const subject = `Jarbunq token expires in ${days} days`
-                    const message = `The authorization tokens used by Jarbunq to connect to your bunq accounts will expire in ${days} days!` + `<br><br>` + `Please open ${settings.app.url}bunq/auth on your browser to renew the tokens and avoid interruptions.`
+                    const message =
+                        `The authorization tokens used by Jarbunq to connect to your bunq accounts will expire in ${days} days!` + `<br><br>` + `Please open ${settings.app.url}bunq/auth on your browser to renew the tokens and avoid interruptions.`
 
                     notifications.send({subject: subject, message: message})
                 } catch (ex) {
                     logger.error("Bunq.remindOAuthRenew", `${days} days`, ex)
                 }
             } else {
-                days = logger.info("Bunq.remindOAuthRenew", `Token needs to be renewed in ${days} days`)
+                logger.info("Bunq.remindOAuthRenew", `Token needs to be renewed in ${days} days`)
             }
         }
 
@@ -289,7 +292,11 @@ class Bunq extends require("./base-events") {
                     // Valid response? Add the result to the callbacks list.
                     if (response.Response && response.Response.length > 0 && response.Response[0].NotificationFilterUrl) {
                         const responseFilter = response.Response[0].NotificationFilterUrl
-                        const filter = {id: responseFilter.id, category: responseFilter.category, date: responseFilter.updated}
+                        const filter = {
+                            id: responseFilter.id,
+                            category: responseFilter.category,
+                            date: responseFilter.updated
+                        }
 
                         callbacks.push(filter)
                         filterIds.push(filter.id)
@@ -458,7 +465,12 @@ class Bunq extends require("./base-events") {
                 updatedAccounts.push(acc[firstKey])
 
                 // New account description?
-                if (!this.accounts || !_.find(this.accounts, {description: acc[firstKey].description})) {
+                if (
+                    !this.accounts ||
+                    !_.find(this.accounts, {
+                        description: acc[firstKey].description
+                    })
+                ) {
                     diffAccountNames.push(acc[firstKey].description)
                 }
             }
