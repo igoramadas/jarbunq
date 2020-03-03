@@ -82,7 +82,7 @@ const EmailAction = async (message: any): Promise<any> => {
     }
 }
 
-// Default rule for lbb action.
+// Default rule for zalando action.
 EmailAction.defaultRule = {
     from: "info@service-mail.zalando.de",
     subject: "Thanks for your order",

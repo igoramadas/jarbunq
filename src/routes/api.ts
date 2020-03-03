@@ -51,6 +51,11 @@ const apiRoutes = {
                 return app.renderError(req, res, {error: `Payment already reversed, ID ${payment.reverseId}`}, 400)
             }
 
+            // Missing payment description?
+            if (payment.description == "") {
+                return app.renderError(req, res, {error: "Payment description is mandatory"}, 400)
+            }
+
             const reversePayment = bunq.reversePayment(payment)
             app.renderJson(req, res, reversePayment)
         } catch (ex) {
@@ -92,7 +97,7 @@ const apiRoutes = {
         }
 
         // Helper function to filter data according to the passed query.
-        const filter = d => {
+        const filter = (d) => {
             // Filter by date from?
             if (req.query.dateFrom != null) {
                 if (moment(d.date).isBefore(moment(req.query.dateFrom).toDate())) {

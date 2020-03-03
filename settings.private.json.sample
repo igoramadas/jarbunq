@@ -54,9 +54,6 @@
                 "action": "string: amazon-de"
             },
             {
-                "action": "string: lbb"
-            },
-            {
                 "action": "string: strava"
             },
             {
