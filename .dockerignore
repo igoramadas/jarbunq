@@ -8,7 +8,7 @@ bin/
 coverage/
 
 node_modules/
-/src
+
 
 jarbunq.db
 npm-debug.log
