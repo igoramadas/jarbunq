@@ -39,15 +39,14 @@
         "lodash": "^4.17.15",
         "lowdb": "^1.0.0",
         "mailparser": "^2.7.7",
-        "moment": "^2.25.0",
+        "moment": "2.24.0",
         "nodemailer": "^6.4.6",
         "pug": "^2.0.4",
         "request": "^2.88.2",
         "request-promise-native": "^1.0.8",
         "setmeup": "^1.5.4",
         "stylus": "^0.54.7",
-        "typescript": "^3.8.3",
-        "xoauth2": "^1.2.0"
+        "typescript": "^3.8.3"
     },
     "devDependencies": {
         "axios-debug-log": "^0.7.0",
