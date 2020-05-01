@@ -135,7 +135,6 @@ class Bunq extends require("./base-events") {
             await bunqClient.registerSession()
         } catch (ex) {
             logger.error("Bunq.init", "Error registering device session", settings.bunq.api.environment, ex)
-            return process.exit()
         }
 
         logger.info("Bunq.init", settings.bunq.api.environment, `Registered as '${settings.app.title}'`)
@@ -150,7 +149,6 @@ class Bunq extends require("./base-events") {
             }
         } catch (ex) {
             logger.error("Bunq.init", "Can't load initial data", ex)
-            return process.exit()
         }
 
         // Setup callbacks?
@@ -159,7 +157,6 @@ class Bunq extends require("./base-events") {
                 await this.setupCallbacks()
             } catch (ex) {
                 logger.error("Bunq.init", "Can't setup callbacks", ex)
-                return process.exit()
             }
         }
 
