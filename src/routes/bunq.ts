@@ -148,10 +148,10 @@ const bunqRoutes = {
         }
     },
 
-    /** Force reset the bunq JS client. */
-    "get:bunq/reset": async (req, res) => {
-        const resetResult = await bunq.reset()
-        app.renderJson(req, res, {reset: resetResult})
+    /** Force reset the bunq JS client registration. */
+    "get:bunq/auth/reset": async (_req, res) => {
+        await bunq.reset()
+        res.redirect(bunq.authUrl)
     }
 }
 

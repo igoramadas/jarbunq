@@ -172,9 +172,9 @@ class Bunq extends require("./base-events") {
     }
 
     /**
-     * Reset the installation and session tokens.
+     * Reset the installation. After reset, user should re-do the authentication flow.
      */
-    reset = async (): Promise<boolean> => {
+    reset = async (): Promise<void> => {
         if (bunqClient) {
             bunqClient.destroySession()
         }
@@ -183,8 +183,6 @@ class Bunq extends require("./base-events") {
 
         // Setup the client again.
         await this.setup()
-
-        return bunqClient.Session.verifySessionInstallation()
     }
 
     /**
