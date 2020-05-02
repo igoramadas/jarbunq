@@ -279,6 +279,7 @@ class EmailAccount extends require("./base-events") {
     processEmail = async (message: any): Promise<void> => {
         logger.debug("EmailAccount.processEmail", message.messageId, message.from, message.subject, `To ${message.to}`)
 
+        let failed: boolean = false
         let processedEmail: ProcessedEmail = null
         let from = null
 
@@ -441,11 +442,14 @@ class EmailAccount extends require("./base-events") {
             } catch (ex) {
                 logger.error("EmailAccount.processEmail", this.id, logRule.join(", "), message.messageId, message.subject, ex)
                 processedEmail.actions[rule.action] = ex.toString()
+
+                // Exceptions will set the "failed" flag, so the service might be able to try again later.
+                failed = true
             }
         }
 
-        // Add to database in case email had any action.
-        if (processedEmail != null) {
+        // Add to database in case it didn't fail.
+        if (processedEmail != null && !failed) {
             database.insert("processedEmails", processedEmail)
             this.events.emit("processEmail", processedEmail)
 
