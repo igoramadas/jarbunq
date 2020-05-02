@@ -48,12 +48,11 @@ const decrypt = () => {
 
 // Action build-settings-sample: generates a sample of the current settings.private.json file.
 const buildSettingsSample = () => {
-    const setmeup = require("setmeup")
     const privateSettings = JSON.parse(fs.readFileSync(__dirname + "/settings.private.json", {encoding: "utf8"}))
     const privateSettingsSample = JSON.parse(fs.readFileSync(__dirname + "/settings.private.json.sample", {encoding: "utf8"}))
 
     // Recursive function to replace private values with type strings.
-    const settingsReplacer = function(source, target) {
+    const settingsReplacer = function (source, target) {
         if (source != null) {
             const keys = Object.keys(source)
 

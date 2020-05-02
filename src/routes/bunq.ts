@@ -146,6 +146,12 @@ const bunqRoutes = {
             logger.error(`Routes.bunqCallback`, `Account: ${req.params.accountId}`, "Can't save notification", ex)
             app.renderJson(req, res, {ok: false})
         }
+    },
+
+    /** Force reset the bunq JS client. */
+    "get:bunq/reset": async (req, res) => {
+        const resetResult = await bunq.reset()
+        app.renderJson(req, res, {reset: resetResult})
     }
 }
 

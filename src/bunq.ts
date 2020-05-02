@@ -8,7 +8,7 @@ import logger = require("anyhow")
 import moment = require("moment")
 import notifications = require("./notifications")
 const settings = require("setmeup").settings
-let bunqClient, lastAuthWarning: moment.Moment, authFailedCount: number
+let bunqClient: BunqJSClient, lastAuthWarning: moment.Moment, authFailedCount: number
 
 // Milliseconds in a day.
 const msDay = 1000 * 60 * 60 * 24
@@ -61,6 +61,9 @@ class Bunq extends require("./base-events") {
      * Create the bunq-js-client and load initial data.
      */
     init = async (): Promise<void> => {
+        authFailedCount = 0
+        lastAuthWarning = moment("2000-01-01")
+
         // Make sure settings are defined.
         if (!settings.bunq.api.key) {
             throw new Error("No API key defined on settings.bunq.api.key.")
@@ -81,10 +84,17 @@ class Bunq extends require("./base-events") {
             delete settings.bunq.notificationFilters
         }
 
-        authFailedCount = 0
-        lastAuthWarning = moment("2000-01-01")
+        // Setup the client.
+        await this.setup()
 
-        // Create bunq JS client.
+        // Reminder to renew OAuth tokens.
+        this.remindOAuthRenew()
+    }
+
+    /**
+     * Setup the bunq JS client.
+     */
+    setup = async () => {
         try {
             const store = {
                 get: (key: string) => database.get(`jsClient.${key}`).value(),
@@ -159,9 +169,22 @@ class Bunq extends require("./base-events") {
                 logger.error("Bunq.init", "Can't setup callbacks", ex)
             }
         }
+    }
 
-        // Reminder to renew OAuth tokens.
-        this.remindOAuthRenew()
+    /**
+     * Reset the installation and session tokens.
+     */
+    reset = async (): Promise<boolean> => {
+        if (bunqClient) {
+            bunqClient.destroySession()
+        }
+
+        database.set("jsClient", {}).write()
+
+        // Setup the client again.
+        await this.setup()
+
+        return bunqClient.Session.verifySessionInstallation()
     }
 
     /**
@@ -241,6 +264,12 @@ class Bunq extends require("./base-events") {
     setupCallbacks = async () => {
         const callbacks = []
         const baseUrl = settings.app.url
+
+        // Make sure user details were retrieved from bunq.
+        if (!this.user || !this.user.id) {
+            logger.error("Jarbunq.setupCallbacks", `Can't setup callbacks before user details have been retrieved from bunq`)
+            return
+        }
 
         if (baseUrl.indexOf("bunq.local") > 0) {
             logger.error("Jarbunq.setupCallbacks", `Can't setup callbacks from bunq using a local URL: ${baseUrl}`)
@@ -836,7 +865,7 @@ class Bunq extends require("./base-events") {
         // Iterate and add payment notes.
         for (let note of notes) {
             try {
-                await bunqClient.api.noteText.post(eventType, this.user.id, accountId, paymentId, note)
+                await bunqClient.api.noteText.post(eventType as any, this.user.id, accountId, paymentId, note)
                 addedNotes.push(note)
             } catch (ex) {
                 logger.error("Bunq.addPaymentNotes", `Payment ${paymentId} on account ${accountId}`, note, ex)
