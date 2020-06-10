@@ -1,5 +1,11 @@
 # Jarbunq
 
+```
+** ATTENTION ** I am not actively using bunq any longer, and unfortunately I have
+no time to keep working on this project. So it is now on maintenance mode. I will
+still answer to questions and fix critical issues, but won't add new features.
+```
+
 Jarbunq is a Node.js / TypeScript based service to automate tasks on your [bunq](https://bunq.endtrk.com/RWXLS6/225JFQ/?sourceId=jarbunq) account(s).
 
 ## Features
